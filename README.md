@@ -15,14 +15,14 @@
   <br/>
 
   <h3 align="center">
-    ⚡ Run your own local TradingView + AI quant research lab in 5 minutes.
+    Local-first quantitative trading infrastructure
   </h3>
 
   <p align="center">
-    <strong>🤖 AI-Native · 🔒 Privacy-First · 🚀 All-in-One Quant Workspace</strong>
+    <strong>🔒 Privacy-First · 🛠️ Self-Hosted · 📊 Multi-Market</strong>
   </p>
   <p align="center">
-    <i>The Next-Gen Local Quant Platform: Multi-Market Data, AI Research, Visual Backtesting, and Automated Trading.</i>
+    <i>Run your own trading infrastructure: data, analysis, backtesting, and execution.</i>
   </p>
 
   <p align="center">
@@ -49,32 +49,34 @@
 
 ---
 
-<div align="center">
-
-### 🌟 **Join the QuantDinger DAO Community - Early Contributors Get QDT Tokens!**
-
-[![Join Contributors](https://img.shields.io/badge/🌟_Join_Contributors-Get_QDT_Tokens-FF6B6B?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTORS.md)
-[![DAO Community](https://img.shields.io/badge/DAO_Community-Build_Together-4ECDC4?style=for-the-badge&logo=handshake&logoColor=white)](CONTRIBUTORS.md)
-
-**We're building a decentralized, community-driven trading platform. Early contributors receive QDT governance tokens!**
-
-[📖 Learn More](CONTRIBUTORS.md) · [💬 Join Telegram](https://t.me/quantdinger) · [🎮 Join Discord](https://discord.gg/vwJ8zxFh9Q)
-
-</div>
-
----
-
 ## 📖 Introduction
 
-**QuantDinger** is a **Local-First** quantitative trading workspace designed for traders, researchers, and geeks.
+### What is QuantDinger?
 
-Unlike expensive SaaS platforms, QuantDinger returns **data ownership** to you. It features a built-in **LLM-based Multi-Agent Research Team** that autonomously gathers financial intelligence from the web, combines it with local market data, generates professional analysis reports, and seamlessly integrates with your strategy development, backtesting, and live trading workflows.
+QuantDinger is a **local-first, privacy-first quantitative trading infrastructure**. It runs entirely on your machine, giving you full control over your strategies, trading data, and API keys.
+
+### Why Local-First?
+
+Unlike SaaS platforms that lock your data and strategies in the cloud, QuantDinger runs locally. Your strategies, trading logs, API keys, and analysis results stay on your machine. No vendor lock-in, no subscription fees, no data exfiltration.
+
+### Who is this for?
+
+QuantDinger is built for traders, researchers, and engineers who:
+- Value data sovereignty and privacy
+- Want transparent, auditable trading infrastructure
+- Prefer engineering over marketing
+- Need a complete workflow: data, analysis, backtesting, and execution
+
+### Core Features
+
+QuantDinger includes a built-in **LLM-based multi-agent research system** that gathers financial intelligence from the web, combines it with local market data, and generates analysis reports. This integrates with strategy development, backtesting, and live trading workflows.
 
 ### Core Value
-- **🛡️ Privacy First**: All strategies, trading logs, and API keys are stored locally in your SQLite database.
-- **🧠 AI Empowered**: Not just code completion, but a real AI Research Analyst (powered by OpenRouter/LLM).
-- **⚡ Multi-Market**: Native support for **Crypto**, **US Stocks**, **CN/HK Stocks**, **Forex**, and **Futures**.
-- **🔌 Out-of-the-Box**: One-click deployment via Docker. No complex environment setup required.
+
+- **Privacy First**: All strategies, trading logs, and API keys are stored locally in SQLite
+- **AI-Powered Analysis**: LLM-based research agents (OpenRouter/LLM) for market analysis
+- **Multi-Market Support**: Cryptocurrency, US stocks, CN/HK stocks, forex, and futures
+- **Docker Deployment**: One-command setup with Docker Compose
 
 ---
 
@@ -134,18 +136,22 @@ Unlike expensive SaaS platforms, QuantDinger returns **data ownership** to you. 
 ## ✨ Key Features
 
 ### 1. Universal Data Engine
-Stop worrying about data APIs. QuantDinger features a powerful Data Source Factory pattern:
-- **Crypto**: **Direct API connection** for trading (10+ exchanges) combined with **CCXT** for market data (100+ sources).
-- **Stocks**: Integrates Yahoo Finance, Finnhub, Tiingo (US), and AkShare (CN/HK).
-- **Futures/Forex**: Supports OANDA and major futures data sources.
-- **Proxy Support**: Built-in proxy configuration for restricted network environments.
+
+QuantDinger provides a unified data interface across multiple markets:
+
+- **Cryptocurrency**: Direct API connections for trading (10+ exchanges) and CCXT integration for market data (100+ sources)
+- **Stocks**: Yahoo Finance, Finnhub, Tiingo (US stocks), and AkShare (CN/HK stocks)
+- **Futures/Forex**: OANDA and major futures data sources
+- **Proxy Support**: Built-in proxy configuration for restricted network environments
 
 ### 2. AI Multi-Agent Research
-Your tireless team of analysts:
-- **Coordinator Agent**: Decomposes tasks and manages workflows.
-- **Research Agent**: Performs full-web searches (Google/Bing) for macro news.
-- **Crypto/Stock Agent**: Specializes in technical and capital flow analysis for specific markets.
-- **Report Generation**: Automatically produces structured Daily/Weekly research reports.
+
+The system includes a multi-agent workflow for market analysis:
+
+- **Coordinator Agent**: Task decomposition and workflow management
+- **Research Agent**: Web search (Google/Bing) for macro news and events
+- **Market-Specific Agents**: Technical and capital flow analysis for crypto and stocks
+- **Report Generation**: Structured daily/weekly research reports
 
 ### 2.1 🧠 Memory-Augmented Agents (Local RAG + Reflection Loop)
 QuantDinger’s agents don’t start from scratch every time. The backend includes a **local memory store** and an optional **reflection/verification loop**:
@@ -238,37 +244,35 @@ score = w_{sim}\cdot sim + w_{recency}\cdot recency + w_{returns}\cdot returns\_
 
 Config lives in `.env` (see `backend_api_python/env.example`): `ENABLE_AGENT_MEMORY`, `AGENT_MEMORY_TOP_K`, `AGENT_MEMORY_ENABLE_VECTOR`, `AGENT_MEMORY_HALF_LIFE_DAYS`, and `ENABLE_REFLECTION_WORKER`.
 
-### 3. Robust Strategy Runtime
-- **Thread-Based Executor**: Independent thread pool management for strategy execution.
-- **Auto-Restore**: Automatically resumes running strategies after system restarts.
-- **Pending Order Worker**: Reliable background queue ensures precise signal execution and prevents slippage.
+### 3. Strategy Runtime
 
-### 4. Modern Tech Stack
-- **Backend**: Python (Flask) + SQLite + Redis (Optional) — Simple, powerful, extensible.
-- **Frontend**: Vue 2 + Ant Design Vue + KlineCharts/ECharts — Responsive and interactive.
-- **Deployment**: Docker Compose orchestration.
+- **Thread-Based Executor**: Independent thread pool for strategy execution
+- **Auto-Restore**: Resumes running strategies after system restarts
+- **Order Queue**: Background worker for order execution
+
+### 4. Tech Stack
+
+- **Backend**: Python (Flask) + SQLite + Redis (optional)
+- **Frontend**: Vue 2 + Ant Design Vue + KlineCharts/ECharts
+- **Deployment**: Docker Compose
 
 ---
 
-## 🏦 Supported Exchanges & Rebates
+## 🔌 Supported Exchanges
 
-QuantDinger supports **direct connection** to major cryptocurrency exchanges for low-latency execution, while using **CCXT** for broad market data coverage.
+QuantDinger supports direct API connections to major cryptocurrency exchanges for execution, and uses CCXT for broad market data coverage.
 
-> 💡 **Exclusive Benefits**: Create accounts through our partner links below to enjoy **reduced trading fees** and **exclusive bonuses**. It helps support the project at no extra cost to you!
+### Direct API Support
 
-| Exchange | Features | Sign Up Bonus |
-|:--------:|:---------|:-------------:|
-| <img src="https://img.shields.io/badge/Binance-F0B90B?style=for-the-badge&logo=binance&logoColor=white" height="35"/> | 🥇 **World's Largest**<br/>Spot, Futures, Margin | <a href="https://www.bmwweb.ac/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_9OSOJ"><img src="https://img.shields.io/badge/💰_Save_20%25_Fees-FF4D4F?style=for-the-badge" height="38" style="border-radius:10px; box-shadow:0 8px 18px rgba(255,77,79,.35);"/></a> |
-| <img src="https://img.shields.io/badge/OKX-000000?style=for-the-badge&logo=okx&logoColor=white" height="35"/> | 🚀 **Web3 & Derivatives**<br/>Spot, Perpetual, Options | <a href="https://www.bjwebptyiou.com/join/14449926"><img src="https://img.shields.io/badge/🎁_Get_Mystery_Box-722ED1?style=for-the-badge" height="38" style="border-radius:10px; box-shadow:0 8px 18px rgba(114,46,209,.35);"/></a> |
-| <img src="https://img.shields.io/badge/Bitget-00C7B1?style=for-the-badge&logoColor=white" height="35"/> | 👥 **Social Trading**<br/>Copy Trading, Futures | <a href="https://share.glassgs.com/u/H8XZGS71"><img src="https://img.shields.io/badge/🔥_Claim_Bonus-FA8C16?style=for-the-badge" height="38" style="border-radius:10px; box-shadow:0 8px 18px rgba(250,140,22,.35);"/></a> |
+| Exchange | Markets |
+|:--------:|:---------|
+| Binance | Spot, Futures, Margin |
+| OKX | Spot, Perpetual, Options |
+| Bitget | Spot, Futures, Copy Trading |
 
-<br>
+### Also Supported via CCXT
 
-**Also Supported (Direct/CCXT):**
-
-| <img src="https://img.shields.io/badge/Bybit-F7931A?style=for-the-badge&logoColor=white"/> | <img src="https://img.shields.io/badge/Gate.io-17E6A1?style=for-the-badge&logoColor=white"/> | <img src="https://img.shields.io/badge/Kraken-5741D9?style=for-the-badge&logo=kraken&logoColor=white"/> | <img src="https://img.shields.io/badge/KuCoin-24AE8F?style=for-the-badge&logoColor=white"/> | <img src="https://img.shields.io/badge/HTX-1A73E8?style=for-the-badge&logoColor=white"/> |
-|:---:|:---:|:---:|:---:|:---:|
-
+Bybit, Gate.io, Kraken, KuCoin, HTX, and 100+ other exchanges for market data.
 
 ---
 
@@ -619,21 +623,21 @@ Licensed under the **Apache License 2.0**. See `LICENSE`.
 
 ## 🤝 Community & Support
 
-Join our global community for strategy sharing and technical support:
-
-- **🌟 Want to Contribute?**: [Join as a Contributor](CONTRIBUTORS.md) - Early contributors receive QDT governance tokens!
-- **Telegram (Group)**: [Join QuantDinger Telegram Group](https://t.me/quantdinger)
+- **Contributing**: [Contributing Guide](CONTRIBUTING.md) · [Contributors](CONTRIBUTORS.md)
+- **Telegram**: [QuantDinger Group](https://t.me/quantdinger)
 - **Discord**: [Join Server](https://discord.gg/vwJ8zxFh9Q)
-- **📺 Video Demo**: [Watch Project Introduction Video](https://youtu.be/HPTVpqL7knM)
+- **📺 Video Demo**: [Project Introduction](https://youtu.be/HPTVpqL7knM)
 - **YouTube**: [@quantdinger](https://youtube.com/@quantdinger)
 - **Email**: [brokermr810@gmail.com](mailto:brokermr810@gmail.com)
 - **GitHub Issues**: [Report bugs / Request features](https://github.com/brokermr810/QuantDinger/issues)
 
 ---
 
-## ☕ Support the Project
+## 💰 Project Sustainability
 
-If QuantDinger helps you profit, consider buying the developers a coffee. Your support keeps the project alive!
+QuantDinger is open-source and free to use. If you find it useful, here are ways to support ongoing development:
+
+### Direct Donations
 
 **ERC-20 / BEP-20 / Polygon / Arbitrum**
 ```
@@ -642,11 +646,21 @@ If QuantDinger helps you profit, consider buying the developers a coffee. Your s
 <img src="https://img.shields.io/badge/USDT-Accepted-26A17B?style=flat-square&logo=tether" alt="USDT">
 <img src="https://img.shields.io/badge/ETH-Accepted-3C3C3D?style=flat-square&logo=ethereum" alt="ETH">
 
+### Exchange Referral Links
+
+If you're signing up for supported exchanges, using the links below provides referral benefits that help support the project. These are optional and do not affect your trading fees or account functionality.
+
+| Exchange | Referral Link |
+|:--------:|:-------------|
+| Binance | [Sign up with referral](https://www.bmwweb.ac/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_9OSOJ) |
+| OKX | [Sign up with referral](https://www.bjwebptyiou.com/join/14449926) |
+| Bitget | [Sign up with referral](https://share.glassgs.com/u/H8XZGS71) |
+
 ---
 
-### Commercial Services
+### Professional Services
 
-We offer professional services to help you get the most out of QuantDinger:
+Professional services are available:
 
 | Service | Description |
 |---------|-------------|

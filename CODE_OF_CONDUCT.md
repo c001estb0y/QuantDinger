@@ -1,68 +1,116 @@
 # Code of Conduct
 
-QuantDinger is an open, inclusive, and respectful community. We expect all participants to help maintain a harassment-free experience for everyone.
+QuantDinger is a technical, builder-first open-source project.
+We value clear thinking, respectful collaboration, and long-term credibility.
+
+This Code of Conduct exists to ensure that all contributors and users
+can participate in a professional, constructive environment.
 
 ---
 
-## 1) Our Pledge
+## 1) Our Commitment
 
-We pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.
+We are committed to providing a harassment-free and respectful experience
+for everyone involved in the QuantDinger community, regardless of:
 
----
+- age, gender identity, or expression
+- sexual orientation
+- disability or medical condition
+- ethnicity, nationality, or religion
+- level of experience or background
 
-## 2) Our Standards
-
-Examples of behavior that contributes to a positive environment include:
-
-- Being respectful and kind
-- Being open to feedback and different viewpoints
-- Focusing on what is best for the community and users
-- Showing empathy towards other community members
-
-Examples of unacceptable behavior include:
-
-- Harassment, intimidation, or discrimination
-- Insults or derogatory comments
-- Trolling, personal attacks, or sustained disruption
-- Publishing others’ private information without explicit permission
-- Sexual language or imagery in non-appropriate contexts
+Participation in this project requires mutual respect and good faith.
 
 ---
 
-## 3) Scope
+## 2) Expected Behavior
 
-This Code of Conduct applies to all community spaces, including:
+We expect all participants to:
+
+- Communicate clearly and respectfully
+- Focus discussions on ideas, code, and design — not individuals
+- Be open to technical critique and alternative viewpoints
+- Assume good intent in others unless clearly proven otherwise
+- Keep discussions relevant and constructive
+
+Disagreement is normal.
+Personal attacks are not.
+
+---
+
+## 3) Unacceptable Behavior
+
+The following behaviors are not tolerated:
+
+- Harassment, discrimination, or intimidation of any kind
+- Personal attacks, insults, or derogatory comments
+- Trolling, bad-faith arguments, or repeated disruption
+- Publishing private information without explicit permission
+- Sexualized language or imagery in inappropriate contexts
+- Persistent off-topic or promotional spam
+
+---
+
+## 4) Scope
+
+This Code of Conduct applies to all official QuantDinger spaces, including:
 
 - GitHub issues, pull requests, discussions, and code reviews
-- Any official community channels linked from this repository (e.g., Telegram/Discord)
-- Project-related events and communications
+- Any community channels linked from this repository
+- Project-related communication and collaboration spaces
 
 ---
 
-## 4) Reporting
+## 5) Reporting Issues
 
-If you experience or witness unacceptable behavior, please report it as soon as possible.
+If you experience or witness behavior that violates this Code of Conduct,
+please report it through one of the following channels:
 
-Preferred channels (choose one):
+1. **GitHub**  
+   Open an issue labeled `conduct`.  
+   Please avoid including sensitive or private information.
 
-1. GitHub: open an issue labeled **conduct** (do not include sensitive private info).
-2. Email: contact the maintainers via the email listed in `README.md`.
+2. **Email**  
+   Contact the project maintainer via the email listed in `README.md`.
 
-If there is an immediate safety risk, please contact your local emergency services first.
+If there is an immediate safety concern, contact your local emergency services.
 
----
-
-## 5) Enforcement
-
-Project maintainers are responsible for clarifying and enforcing our standards of acceptable behavior. They may take any action they deem appropriate, including:
-
-- Warning
-- Temporary ban from community spaces
-- Permanent ban from community spaces
-- Reverting/rejecting contributions that violate this Code of Conduct
+All reports will be reviewed seriously and confidentially.
 
 ---
 
-## 6) Attribution
+## 6) Enforcement
 
-This document is inspired by the Contributor Covenant and common open-source community standards.
+Project maintainers are responsible for enforcing this Code of Conduct.
+
+Actions may include, but are not limited to:
+
+- Private warning or clarification
+- Temporary restriction from community participation
+- Permanent removal from project spaces
+- Rejection or reversal of contributions
+
+Enforcement decisions are made to protect the project
+and its contributors, not to punish individuals.
+
+---
+
+## 7) Maintainer Discretion
+
+Maintainers reserve the right to moderate discussions
+and take action in the interest of:
+
+- project integrity
+- contributor safety
+- long-term community health
+
+Good faith participation is always welcome.
+Disruptive behavior is not.
+
+---
+
+## 8) Attribution
+
+This Code of Conduct is informed by widely adopted open-source standards,
+including the Contributor Covenant, and adapted for QuantDinger’s
+engineering-focused environment.
