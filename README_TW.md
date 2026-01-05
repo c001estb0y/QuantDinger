@@ -15,14 +15,14 @@
   <h1 align="center">QuantDinger</h1>
 
   <h3 align="center">
-    ⚡ 5 分鐘啟動你自己的本地 TradingView + AI 量化投研實驗室
+    本地優先的量化交易基礎設施
   </h3>
 
   <p align="center">
-    <strong>🤖 AI 原生 · 🔒 隱私優先 · 🚀 全能量化工作台</strong>
+    <strong>🔒 隱私優先 · 🛠️ 自託管 · 📊 多市場</strong>
   </p>
   <p align="center">
-    <i>下一代本地量化平台：多市場數據、AI 投研、可視化回測與自動交易。</i>
+    <i>運行你自己的交易基礎設施：數據、分析、回測和執行。</i>
   </p>
 
   <p align="center">
@@ -49,32 +49,34 @@
 
 ---
 
-<div align="center">
-
-### 🌟 **加入 QuantDinger DAO 社區 - 早期貢獻者獲得 QDT 代幣！**
-
-[![加入貢獻者](https://img.shields.io/badge/🌟_加入貢獻者-獲得_QDT_代幣-FF6B6B?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTORS.md)
-[![DAO社區](https://img.shields.io/badge/DAO社區-共建未來-4ECDC4?style=for-the-badge&logo=handshake&logoColor=white)](CONTRIBUTORS.md)
-
-**我們正在構建一個去中心化、社區驅動的交易平台。早期貢獻者將獲得 QDT 治理代幣！**
-
-[📖 了解更多](CONTRIBUTORS.md) · [💬 加入 Telegram](https://t.me/quantdinger) · [🎮 加入 Discord](https://discord.gg/vwJ8zxFh9Q)
-
-</div>
-
----
-
 ## 📖 簡介
 
-**QuantDinger** 是一個專為交易員、研究員和極客設計的**本地優先**（Local-First）量化交易工作台。
+### QuantDinger 是什麼？
 
-與昂貴的 SaaS 平台不同，QuantDinger 將**數據所有權**歸還給你。它內置了一個**基於 LLM 的多智能體投研團隊**，能夠自動從網絡收集金融情報，結合本地行情數據，生成專業的分析報告，並與你的策略開發、回測及實盤交易流程無縫集成。
+QuantDinger 是一個**本地優先、隱私優先的量化交易基礎設施**。它完全運行在你的機器上，讓你完全控制自己的策略、交易數據和 API 密鑰。
+
+### 為什麼選擇本地優先？
+
+與將你的數據和策略鎖定在雲端的 SaaS 平台不同，QuantDinger 在本地運行。你的策略、交易日誌、API 密鑰和分析結果都保留在你的機器上。沒有供應商鎖定，沒有訂閱費用，沒有數據洩露風險。
+
+### 適合誰使用？
+
+QuantDinger 為以下用戶而構建：
+- 重視數據主權和隱私的交易員、研究員和工程師
+- 需要透明、可審計的交易基礎設施
+- 更偏好工程而非營銷
+- 需要完整的工作流：數據、分析、回測和執行
+
+### 核心功能
+
+QuantDinger 包含一個內置的**基於 LLM 的多智能體研究系統**，能夠從網絡收集金融情報，結合本地市場數據，生成分析報告。這與策略開發、回測和實盤交易工作流無縫集成。
 
 ### 核心價值
-- **🛡️ 隱私優先**：所有策略、交易日誌和 API 密鑰都存儲在你的本地 SQLite 數據庫中。
-- **🧠 AI 賦能**：不僅是代碼補全，更是真正的 AI 投研分析師（由 OpenRouter/LLM 驅動）。
-- **⚡ 多市場支持**：原生支持 **加密貨幣**、**美股**、**A股/港股**、**外匯** 和 **期貨**。
-- **🔌 開箱即用**：通過 Docker 一鍵部署。無需復雜的環境配置。
+
+- **隱私優先**：所有策略、交易日誌和 API 密鑰都存儲在本地 SQLite 數據庫中
+- **AI 驅動的分析**：基於 LLM 的研究智能體（OpenRouter/LLM）進行市場分析
+- **多市場支持**：加密貨幣、美股、A股/港股、外匯和期貨
+- **Docker 部署**：使用 Docker Compose 一鍵部署
 
 ---
 
@@ -247,36 +249,35 @@ score = w_{sim}\cdot sim + w_{recency}\cdot recency + w_{returns}\cdot returns\_
 - `AGENT_MEMORY_HALF_LIFE_DAYS`, `AGENT_MEMORY_W_SIM`, `AGENT_MEMORY_W_RECENCY`, `AGENT_MEMORY_W_RETURNS`
 - `ENABLE_REFLECTION_WORKER`, `REFLECTION_WORKER_INTERVAL_SEC`
 
-### 3. 穩健的策略運行時
-- **基於線程的執行器**：獨立的線程池管理策略執行。
-- **自動恢復**：系統重啟後自動恢復運行中的策略。
-- **掛單工作線程**：可靠的後台隊列確保信號精準執行，防止滑點。
+### 3. 策略運行時
 
-### 4. 現代技術棧
-- **後端**：Python (Flask) + SQLite + Redis (可選) — 簡潔、強大、易擴展。
-- **前端**：Vue 2 + Ant Design Vue + KlineCharts/ECharts — 響應式且交互豐富。
-- **部署**：Docker Compose 編排。
+- **基於線程的執行器**：獨立的線程池用於策略執行
+- **自動恢復**：系統重啟後恢復運行中的策略
+- **訂單隊列**：後台工作線程用於訂單執行
+
+### 4. 技術棧
+
+- **後端**：Python (Flask) + SQLite + Redis（可選）
+- **前端**：Vue 2 + Ant Design Vue + KlineCharts/ECharts
+- **部署**：Docker Compose
 
 ---
 
-## 🏦 支持的交易所與返傭
+## 🔌 支持的交易所
 
-QuantDinger 支持**直連**主要加密貨幣交易所進行低延遲執行，同時利用 **CCXT** 覆蓋廣泛的行情數據。
+QuantDinger 支持直接 API 連接到主要加密貨幣交易所進行執行，並使用 CCXT 獲取廣泛的行情數據。
 
-> 💡 **獨家福利**：通過下方的合作夥伴鏈接註冊賬戶，可享受**交易手續費減免**和**獨家贈金**。這將在不增加你成本的情況下支持本項目！
+### 直接 API 支持
 
-| 交易所 | 特點 | 註冊福利 |
-|:--------:|:---------|:-------------:|
-| <img src="https://img.shields.io/badge/Binance-F0B90B?style=for-the-badge&logo=binance&logoColor=white" height="35"/> | 🥇 **全球最大**<br/>現貨, 合約, 槓桿 | <a href="https://www.bmwweb.ac/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_9OSOJ"><img src="https://img.shields.io/badge/💰_節省_20%25_手續費-FF4D4F?style=for-the-badge" height="38" style="border-radius:10px; box-shadow:0 8px 18px rgba(255,77,79,.35);"/></a> |
-| <img src="https://img.shields.io/badge/OKX-000000?style=for-the-badge&logo=okx&logoColor=white" height="35"/> | 🚀 **Web3 & 衍生品**<br/>現貨, 永續, 期權 | <a href="https://www.bjwebptyiou.com/join/14449926"><img src="https://img.shields.io/badge/🎁_領取盲盒-722ED1?style=for-the-badge" height="38" style="border-radius:10px; box-shadow:0 8px 18px rgba(114,46,209,.35);"/></a> |
-| <img src="https://img.shields.io/badge/Bitget-00C7B1?style=for-the-badge&logoColor=white" height="35"/> | 👥 **社交交易**<br/>跟單交易, 合約 | <a href="https://share.glassgs.com/u/H8XZGS71"><img src="https://img.shields.io/badge/🔥_領取贈金-FA8C16?style=for-the-badge" height="38" style="border-radius:10px; box-shadow:0 8px 18px rgba(250,140,22,.35);"/></a> |
+| 交易所 | 市場 |
+|:--------:|:---------|
+| Binance | 現貨, 合約, 槓桿 |
+| OKX | 現貨, 永續, 期權 |
+| Bitget | 現貨, 合約, 跟單交易 |
 
-<br>
+### 也支持通過 CCXT
 
-**同時也支持 (直連/CCXT):**
-
-| <img src="https://img.shields.io/badge/Bybit-F7931A?style=for-the-badge&logoColor=white"/> | <img src="https://img.shields.io/badge/Gate.io-17E6A1?style=for-the-badge&logoColor=white"/> | <img src="https://img.shields.io/badge/Kraken-5741D9?style=for-the-badge&logo=kraken&logoColor=white"/> | <img src="https://img.shields.io/badge/KuCoin-24AE8F?style=for-the-badge&logoColor=white"/> | <img src="https://img.shields.io/badge/HTX-1A73E8?style=for-the-badge&logoColor=white"/> |
-|:---:|:---:|:---:|:---:|:---:|
+Bybit、Gate.io、Kraken、KuCoin、HTX 以及 100+ 其他交易所用於行情數據。
 
 
 ---
@@ -457,21 +458,21 @@ npm run serve
 
 ## 🤝 社區與支持
 
-加入我們的全球社區進行策略分享和技術支持：
-
-- **🌟 想要貢獻？**: [加入貢獻者計劃](CONTRIBUTORS.md) - 早期貢獻者將獲得 QDT 治理代幣！
-- **Telegram (Group)**: [Join QuantDinger Telegram Group](https://t.me/quantdinger)
-- **Discord**: [Join Server](https://discord.gg/vwJ8zxFh9Q)
-- **📺 視頻演示**: [觀看專案介紹視頻](https://youtu.be/HPTVpqL7knM)
+- **貢獻**: [貢獻指南](CONTRIBUTING.md) · [貢獻者](CONTRIBUTORS.md)
+- **Telegram**: [QuantDinger 群組](https://t.me/quantdinger)
+- **Discord**: [加入服務器](https://discord.gg/vwJ8zxFh9Q)
+- **📺 視頻演示**: [專案介紹](https://youtu.be/HPTVpqL7knM)
 - **YouTube**: [@quantdinger](https://youtube.com/@quantdinger)
 - **Email**: [brokermr810@gmail.com](mailto:brokermr810@gmail.com)
-- **GitHub Issues**: [提交 Bug / 功能請求](https://github.com/brokermr810/QuantDinger/issues)
+- **GitHub Issues**: [報告 Bug / 功能請求](https://github.com/brokermr810/QuantDinger/issues)
 
 ---
 
-## ☕ 支持本項目
+## 💰 專案可持續性
 
-如果 QuantDinger 幫助你獲利，請考慮給開發者買杯咖啡。你的支持讓項目持續發展！
+QuantDinger 是開源且免費使用的。如果你覺得它有用，以下是一些支持專案持續發展的方式：
+
+### 直接捐贈
 
 **ERC-20 / BEP-20 / Polygon / Arbitrum**
 ```
@@ -479,6 +480,16 @@ npm run serve
 ```
 <img src="https://img.shields.io/badge/USDT-Accepted-26A17B?style=flat-square&logo=tether" alt="USDT">
 <img src="https://img.shields.io/badge/ETH-Accepted-3C3C3D?style=flat-square&logo=ethereum" alt="ETH">
+
+### 交易所推薦鏈接
+
+如果你正在註冊支持的交易所，使用下面的鏈接可以提供推薦收益，幫助支持專案。這些是可選的，不會影響你的交易費用或賬戶功能。
+
+| 交易所 | 推薦鏈接 |
+|:--------:|:-------------|
+| Binance | [使用推薦鏈接註冊](https://www.bmwweb.ac/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_9OSOJ) |
+| OKX | [使用推薦鏈接註冊](https://www.bjwebptyiou.com/join/14449926) |
+| Bitget | [使用推薦鏈接註冊](https://share.glassgs.com/u/H8XZGS71) |
 
 ---
 

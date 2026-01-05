@@ -15,14 +15,14 @@
   <h1 align="center">QuantDinger</h1>
 
   <h3 align="center">
-    ⚡ 5분 만에 시작하는 나만의 로컬 TradingView + AI 퀀트 리서치 랩
+    로컬 우선 정량 거래 인프라
   </h3>
 
   <p align="center">
-    <strong>🤖 AI 네이티브 · 🔒 프라이버시 우선 · 🚀 올인원 퀀트 워크스페이스</strong>
+    <strong>🔒 프라이버시 우선 · 🛠️ 셀프 호스팅 · 📊 멀티 마켓</strong>
   </p>
   <p align="center">
-    <i>차세대 로컬 퀀트 플랫폼: 멀티 마켓 데이터, AI 리서치, 시각적 백테스팅 및 자동 거래.</i>
+    <i>자신만의 거래 인프라 실행: 데이터, 분석, 백테스팅 및 실행.</i>
   </p>
 
   <p align="center">
@@ -49,32 +49,34 @@
 
 ---
 
-<div align="center">
-
-### 🌟 **QuantDinger DAO 커뮤니티에 참여하세요 - 초기 기여자는 QDT 토큰을 받습니다!**
-
-[![기여자 참여](https://img.shields.io/badge/🌟_기여자_참여-QDT_토큰_획득-FF6B6B?style=for-the-badge&logo=github&logoColor=white)](CONTRIBUTORS.md)
-[![DAO_커뮤니티](https://img.shields.io/badge/DAO_커뮤니티-함께_구축-4ECDC4?style=for-the-badge&logo=handshake&logoColor=white)](CONTRIBUTORS.md)
-
-**분산형 커뮤니티 주도 거래 플랫폼을 구축하고 있습니다. 초기 기여자는 QDT 거버넌스 토큰을 받습니다!**
-
-[📖 자세히 보기](CONTRIBUTORS.md) · [💬 Telegram 참여](https://t.me/quantdinger) · [🎮 Discord 참여](https://discord.gg/vwJ8zxFh9Q)
-
-</div>
-
----
-
 ## 📖 소개
 
-**QuantDinger**는 트레이더, 연구원 및 괴짜들을 위해 설계된 **로컬 우선(Local-First)** 퀀트 거래 워크스페이스입니다.
+### QuantDinger란 무엇인가요?
 
-비싼 SaaS 플랫폼과 달리, QuantDinger는 **데이터 소유권**을 귀하에게 돌려드립니다. **LLM 기반 멀티 에이전트 리서치 팀**이 내장되어 있어 웹에서 금융 정보를 자율적으로 수집하고, 로컬 시장 데이터와 결합하여 전문 분석 보고서를 생성하며, 전략 개발, 백테스팅 및 실거래 워크플로우와 원활하게 통합됩니다.
+QuantDinger는 **로컬 우선, 프라이버시 우선의 정량 거래 인프라**입니다. 완전히 귀하의 머신에서 실행되며, 전략, 거래 데이터 및 API 키를 완전히 제어할 수 있습니다.
+
+### 왜 로컬 우선인가요?
+
+데이터와 전략을 클라우드에 잠그는 SaaS 플랫폼과 달리, QuantDinger는 로컬에서 실행됩니다. 귀하의 전략, 거래 로그, API 키 및 분석 결과는 모두 귀하의 머신에 저장됩니다. 벤더 잠금 없음, 구독료 없음, 데이터 유출 없음.
+
+### 누구를 위한 것인가요?
+
+QuantDinger는 다음을 위한 사용자를 위해 구축되었습니다:
+- 데이터 주권과 프라이버시를 중시하는 트레이더, 연구원 및 엔지니어
+- 투명하고 감사 가능한 거래 인프라를 원하는 사람
+- 마케팅보다 엔지니어링을 선호하는 사람
+- 완전한 워크플로우가 필요한 사람: 데이터, 분석, 백테스팅 및 실행
+
+### 핵심 기능
+
+QuantDinger는 웹에서 금융 정보를 수집하고, 로컬 시장 데이터와 결합하여 분석 보고서를 생성하는 내장 **LLM 기반 멀티 에이전트 리서치 시스템**을 포함합니다. 이것은 전략 개발, 백테스팅 및 실거래 워크플로우와 통합됩니다.
 
 ### 핵심 가치
-- **🛡️ 프라이버시 우선**: 모든 전략, 거래 로그 및 API 키는 로컬 SQLite 데이터베이스에 저장됩니다.
-- **🧠 AI 강화**: 단순한 코드 완성이 아닌, OpenRouter/LLM으로 구동되는 진정한 AI 리서치 애널리스트입니다.
-- **⚡ 멀티 마켓**: **암호화폐**, **미국 주식**, **중국/홍콩 주식**, **외환** 및 **선물**을 기본 지원합니다.
-- **🔌 즉시 사용 가능**: Docker를 통한 원클릭 배포. 복잡한 환경 설정이 필요 없습니다.
+
+- **프라이버시 우선**: 모든 전략, 거래 로그 및 API 키는 로컬 SQLite 데이터베이스에 저장됩니다
+- **AI 기반 분석**: 시장 분석을 위한 LLM 기반 리서치 에이전트（OpenRouter/LLM）
+- **멀티 마켓 지원**: 암호화폐, 미국 주식, 중국/홍콩 주식, 외환 및 선물
+- **Docker 배포**: Docker Compose를 통한 원클릭 설정
 
 ---
 
@@ -134,18 +136,22 @@
 ## ✨ 주요 기능
 
 ### 1. 범용 데이터 엔진
-더 이상 데이터 API에 대해 걱정하지 마세요. QuantDinger는 강력한 데이터 소스 팩토리 패턴을 갖추고 있습니다:
-- **암호화폐**: 거래를 위한 **직접 API 연결**(10개 이상의 거래소)과 시장 데이터를 위한 **CCXT**(100개 이상의 소스) 결합.
-- **주식**: Yahoo Finance, Finnhub, Tiingo(미국) 및 AkShare(중국/홍콩) 통합.
-- **선물/외환**: OANDA 및 주요 선물 데이터 소스 지원.
-- **프록시 지원**: 제한된 네트워크 환경을 위한 내장 프록시 구성.
+
+QuantDinger는 여러 시장에 걸친 통합 데이터 인터페이스를 제공합니다:
+
+- **암호화폐**: 거래를 위한 직접 API 연결（10개 이상의 거래소）및 시장 데이터를 위한 CCXT 통합（100개 이상의 소스）
+- **주식**: Yahoo Finance, Finnhub, Tiingo（미국 주식）및 AkShare（중국/홍콩 주식）
+- **선물/외환**: OANDA 및 주요 선물 데이터 소스
+- **프록시 지원**: 제한된 네트워크 환경을 위한 내장 프록시 구성
 
 ### 2. AI 멀티 에이전트 리서치
-지치지 않는 분석가 팀:
-- **코디네이터 에이전트**: 작업을 분해하고 워크플로우를 관리합니다.
-- **리서치 에이전트**: 거시 뉴스를 위해 전체 웹(Google/Bing)을 검색합니다.
-- **암호화폐/주식 에이전트**: 특정 시장에 대한 기술적 분석 및 자금 흐름 분석을 전문으로 합니다.
-- **보고서 생성**: 구조화된 일일/주간 리서치 보고서를 자동으로 생성합니다.
+
+시스템에는 시장 분석을 위한 멀티 에이전트 워크플로우가 포함되어 있습니다:
+
+- **코디네이터 에이전트**: 작업 분해 및 워크플로우 관리
+- **리서치 에이전트**: 거시 뉴스 및 이벤트를 위한 웹 검색（Google/Bing）
+- **시장별 에이전트**: 암호화폐 및 주식에 대한 기술적 분석 및 자금 흐름 분석
+- **보고서 생성**: 구조화된 일일/주간 리서치 보고서
 
 ### 2.1 🧠 메모리 증강 에이전트(Memory-Augmented Agents)
 QuantDinger의 에이전트는 매번 “처음부터” 시작하지 않습니다. 백엔드에는 **로컬 메모리 DB + 리플렉션(검증) 루프**가 내장되어 있어, 과거 경험을 검색해 system prompt에 주입하는 RAG 스타일의 강화가 동작합니다.
@@ -247,36 +253,35 @@ score = w_{sim}\cdot sim + w_{recency}\cdot recency + w_{returns}\cdot returns\_
 - `AGENT_MEMORY_HALF_LIFE_DAYS`, `AGENT_MEMORY_W_SIM`, `AGENT_MEMORY_W_RECENCY`, `AGENT_MEMORY_W_RETURNS`
 - `ENABLE_REFLECTION_WORKER`, `REFLECTION_WORKER_INTERVAL_SEC`
 
-### 3. 강력한 전략 런타임
-- **스레드 기반 실행기**: 전략 실행을 위한 독립적인 스레드 풀 관리.
-- **자동 복구**: 시스템 재시작 후 실행 중인 전략을 자동으로 재개합니다.
-- **지정가 주문 워커**: 안정적인 백그라운드 대기열은 정확한 신호 실행을 보장하고 슬리피지를 방지합니다.
+### 3. 전략 런타임
 
-### 4. 최신 기술 스택
-- **백엔드**: Python (Flask) + SQLite + Redis (옵션) — 간단하고 강력하며 확장이 용이합니다.
-- **프론트엔드**: Vue 2 + Ant Design Vue + KlineCharts/ECharts — 반응형이며 인터랙티브합니다.
-- **배포**: Docker Compose 오케스트레이션.
+- **스레드 기반 실행기**: 전략 실행을 위한 독립적인 스레드 풀
+- **자동 복구**: 시스템 재시작 후 실행 중인 전략 재개
+- **주문 대기열**: 주문 실행을 위한 백그라운드 워커
+
+### 4. 기술 스택
+
+- **백엔드**: Python (Flask) + SQLite + Redis（옵션）
+- **프론트엔드**: Vue 2 + Ant Design Vue + KlineCharts/ECharts
+- **배포**: Docker Compose
 
 ---
 
-## 🏦 지원되는 거래소 및 리베이트
+## 🔌 지원되는 거래소
 
-QuantDinger는 저지연 실행을 위해 주요 암호화폐 거래소에 **직접 연결**을 지원하며, 광범위한 시장 데이터 커버리지를 위해 **CCXT**를 사용합니다.
+QuantDinger는 실행을 위한 주요 암호화폐 거래소에 대한 직접 API 연결을 지원하며, 광범위한 시장 데이터 커버리지를 위해 CCXT를 사용합니다.
 
-> 💡 **독점 혜택**: 아래 파트너 링크를 통해 계정을 생성하면 **거래 수수료 할인** 및 **독점 보너스**를 받을 수 있습니다. 이는 추가 비용 없이 프로젝트를 지원하는 데 도움이 됩니다!
+### 직접 API 지원
 
-| 거래소 | 특징 | 가입 보너스 |
-|:--------:|:---------|:-------------:|
-| <img src="https://img.shields.io/badge/Binance-F0B90B?style=for-the-badge&logo=binance&logoColor=white" height="35"/> | 🥇 **세계 최대**<br/>현물, 선물, 마진 | <a href="https://www.bmwweb.ac/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_9OSOJ"><img src="https://img.shields.io/badge/💰_수수료_20%25_절약-FF4D4F?style=for-the-badge" height="38" style="border-radius:10px; box-shadow:0 8px 18px rgba(255,77,79,.35);"/></a> |
-| <img src="https://img.shields.io/badge/OKX-000000?style=for-the-badge&logo=okx&logoColor=white" height="35"/> | 🚀 **Web3 & 파생상품**<br/>현물, 무기한, 옵션 | <a href="https://www.bjwebptyiou.com/join/14449926"><img src="https://img.shields.io/badge/🎁_미스터리_박스-722ED1?style=for-the-badge" height="38" style="border-radius:10px; box-shadow:0 8px 18px rgba(114,46,209,.35);"/></a> |
-| <img src="https://img.shields.io/badge/Bitget-00C7B1?style=for-the-badge&logoColor=white" height="35"/> | 👥 **소셜 트레이딩**<br/>카피 트레이딩, 선물 | <a href="https://share.glassgs.com/u/H8XZGS71"><img src="https://img.shields.io/badge/🔥_보너스_청구-FA8C16?style=for-the-badge" height="38" style="border-radius:10px; box-shadow:0 8px 18px rgba(250,140,22,.35);"/></a> |
+| 거래소 | 시장 |
+|:--------:|:---------|
+| Binance | 현물, 선물, 마진 |
+| OKX | 현물, 무기한, 옵션 |
+| Bitget | 현물, 선물, 카피 트레이딩 |
 
-<br>
+### CCXT를 통해서도 지원
 
-**또한 지원됨 (Direct/CCXT):**
-
-| <img src="https://img.shields.io/badge/Bybit-F7931A?style=for-the-badge&logoColor=white"/> | <img src="https://img.shields.io/badge/Gate.io-17E6A1?style=for-the-badge&logoColor=white"/> | <img src="https://img.shields.io/badge/Kraken-5741D9?style=for-the-badge&logo=kraken&logoColor=white"/> | <img src="https://img.shields.io/badge/KuCoin-24AE8F?style=for-the-badge&logoColor=white"/> | <img src="https://img.shields.io/badge/HTX-1A73E8?style=for-the-badge&logoColor=white"/> |
-|:---:|:---:|:---:|:---:|:---:|
+Bybit, Gate.io, Kraken, KuCoin, HTX 및 100개 이상의 기타 거래소가 시장 데이터용으로 지원됩니다.
 
 ---
 
@@ -456,21 +461,21 @@ npm run serve
 
 ## 🤝 커뮤니티 및 지원
 
-전략 공유 및 기술 지원을 위해 글로벌 커뮤니티에 참여하십시오:
-
-- **🌟 기여하고 싶으신가요？**: [기여자 프로그램 참여](CONTRIBUTORS.md) - 초기 기여자는 QDT 거버넌스 토큰을 받습니다！
-- **Telegram (Group)**: [Join QuantDinger Telegram Group](https://t.me/quantdinger)
+- **기여**: [기여 가이드](CONTRIBUTING.md) · [기여자](CONTRIBUTORS.md)
+- **Telegram**: [QuantDinger 그룹](https://t.me/quantdinger)
 - **Discord**: [서버 참여](https://discord.gg/vwJ8zxFh9Q)
-- **📺 동영상 데모**: [프로젝트 소개 동영상 보기](https://youtu.be/HPTVpqL7knM)
+- **📺 동영상 데모**: [프로젝트 소개](https://youtu.be/HPTVpqL7knM)
 - **YouTube**: [@quantdinger](https://youtube.com/@quantdinger)
 - **Email**: [brokermr810@gmail.com](mailto:brokermr810@gmail.com)
 - **GitHub Issues**: [버그 신고 / 기능 요청](https://github.com/brokermr810/QuantDinger/issues)
 
 ---
 
-## ☕ 프로젝트 후원
+## 💰 프로젝트 지속 가능성
 
-QuantDinger가 수익을 내는 데 도움이 되었다면 개발자에게 커피 한 잔을 사주시는 것을 고려해 보십시오. 귀하의 후원은 프로젝트를 살아있게 합니다!
+QuantDinger는 오픈소스이며 무료로 사용할 수 있습니다. 유용하다고 생각되면 다음은 지속적인 개발을 지원하는 방법입니다:
+
+### 직접 기부
 
 **ERC-20 / BEP-20 / Polygon / Arbitrum**
 ```
@@ -479,11 +484,21 @@ QuantDinger가 수익을 내는 데 도움이 되었다면 개발자에게 커�
 <img src="https://img.shields.io/badge/USDT-Accepted-26A17B?style=flat-square&logo=tether" alt="USDT">
 <img src="https://img.shields.io/badge/ETH-Accepted-3C3C3D?style=flat-square&logo=ethereum" alt="ETH">
 
+### 거래소 추천 링크
+
+지원되는 거래소에 가입하는 경우, 아래 링크를 사용하면 추천 혜택이 제공되어 프로젝트 지원에 도움이 됩니다. 이는 선택 사항이며 거래 수수료나 계정 기능에 영향을 주지 않습니다.
+
+| 거래소 | 추천 링크 |
+|:--------:|:-------------|
+| Binance | [추천 링크로 가입](https://www.bmwweb.ac/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_9OSOJ) |
+| OKX | [추천 링크로 가입](https://www.bjwebptyiou.com/join/14449926) |
+| Bitget | [추천 링크로 가입](https://share.glassgs.com/u/H8XZGS71) |
+
 ---
 
 ### 상용 서비스
 
-QuantDinger를 최대한 활용할 수 있도록 전문 서비스를 제공합니다:
+다음 전문 서비스를 제공합니다:
 
 | 서비스 | 설명 |
 |---------|-------------|
