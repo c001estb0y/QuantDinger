@@ -81,6 +81,72 @@ QuantDinger 包含一個內置的**基於 LLM 的多智能體研究系統**，�
 
 ---
 
+## 🏆 我們的合作夥伴與贊助商
+
+<div align="center">
+
+### 💼 值得信賴的交易所合作夥伴
+
+我們很自豪能與領先的加密貨幣交易所合作，為量化交易提供可靠的基礎設施。這些合作夥伴關係有助於支持 QuantDinger 的持續發展。
+
+<table>
+  <tr>
+    <td align="center" width="33.33%">
+      <a href="https://www.bmwweb.ac/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_9OSOJ" target="_blank">
+        <img src="https://img.shields.io/badge/Binance-Exchange-F0B90B?style=for-the-badge&logo=binance&logoColor=white" alt="Binance" />
+      </a>
+      <br/><br/>
+      <strong>全球最大的加密貨幣交易所</strong><br/>
+      <small>現貨 • 期貨 • 槓桿交易</small>
+    </td>
+    <td align="center" width="33.33%">
+      <a href="https://www.bjwebptyiou.com/join/14449926" target="_blank">
+        <img src="https://img.shields.io/badge/OKX-Exchange-000000?style=for-the-badge&logo=okx&logoColor=white" alt="OKX" />
+      </a>
+      <br/><br/>
+      <strong>領先的衍生品平台</strong><br/>
+      <small>現貨 • 永續合約 • 期權</small>
+    </td>
+    <td align="center" width="33.33%">
+      <a href="https://share.glassgs.com/u/H8XZGS71" target="_blank">
+        <img src="https://img.shields.io/badge/Bitget-Exchange-1F2937?style=for-the-badge&logo=bitget&logoColor=white" alt="Bitget" />
+      </a>
+      <br/><br/>
+      <strong>創新的跟單交易</strong><br/>
+      <small>現貨 • 期貨 • 社交交易</small>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <em>使用我們的合作夥伴鏈接，在享受相同交易體驗的同時支持 QuantDinger 的發展。</em>
+</p>
+
+---
+
+### 💝 直接支持
+
+您的貢獻幫助我們維護和改進 QuantDinger。每一份捐贈都意義重大！
+
+**加密貨幣捐贈 (ERC-20 / BEP-20 / Polygon / Arbitrum)**
+
+```
+0x96fa4962181bea077f8c7240efe46afbe73641a7
+```
+
+<p>
+  <img src="https://img.shields.io/badge/USDT-Accepted-26A17B?style=for-the-badge&logo=tether&logoColor=white" alt="USDT">
+  <img src="https://img.shields.io/badge/ETH-Accepted-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white" alt="ETH">
+</p>
+
+<p align="center">
+  <em>感謝您支持開源開發！🙏</em>
+</p>
+
+</div>
+
+---
+
 ## 📺 視頻演示
 
 <div align="center">
@@ -526,25 +592,6 @@ npm run serve
 ## 💰 專案可持續性
 
 QuantDinger 是開源且免費使用的。如果你覺得它有用，以下是一些支持專案持續發展的方式：
-
-### 直接捐贈
-
-**ERC-20 / BEP-20 / Polygon / Arbitrum**
-```
-0x96fa4962181bea077f8c7240efe46afbe73641a7
-```
-<img src="https://img.shields.io/badge/USDT-Accepted-26A17B?style=flat-square&logo=tether" alt="USDT">
-<img src="https://img.shields.io/badge/ETH-Accepted-3C3C3D?style=flat-square&logo=ethereum" alt="ETH">
-
-### 交易所推薦鏈接
-
-如果你正在註冊支持的交易所，使用下面的鏈接可以提供推薦收益，幫助支持專案。這些是可選的，不會影響你的交易費用或賬戶功能。
-
-| 交易所 | 推薦鏈接 |
-|:--------:|:-------------|
-| Binance | [使用推薦鏈接註冊](https://www.bmwweb.ac/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_9OSOJ) |
-| OKX | [使用推薦鏈接註冊](https://www.bjwebptyiou.com/join/14449926) |
-| Bitget | [使用推薦鏈接註冊](https://share.glassgs.com/u/H8XZGS71) |
 
 ---
 

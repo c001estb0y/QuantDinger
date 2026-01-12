@@ -81,6 +81,72 @@ QuantDinger includes a built-in **LLM-based multi-agent research system** that g
 
 ---
 
+## 🏆 Our Partners & Sponsors
+
+<div align="center">
+
+### 💼 Trusted Exchange Partners
+
+We're proud to partner with leading cryptocurrency exchanges that provide reliable infrastructure for quantitative trading. These partnerships help support the ongoing development of QuantDinger.
+
+<table>
+  <tr>
+    <td align="center" width="33.33%">
+      <a href="https://www.bmwweb.ac/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_9OSOJ" target="_blank">
+        <img src="https://img.shields.io/badge/Binance-Exchange-F0B90B?style=for-the-badge&logo=binance&logoColor=white" alt="Binance" />
+      </a>
+      <br/><br/>
+      <strong>World's Largest Crypto Exchange</strong><br/>
+      <small>Spot • Futures • Margin Trading</small>
+    </td>
+    <td align="center" width="33.33%">
+      <a href="https://www.bjwebptyiou.com/join/14449926" target="_blank">
+        <img src="https://img.shields.io/badge/OKX-Exchange-000000?style=for-the-badge&logo=okx&logoColor=white" alt="OKX" />
+      </a>
+      <br/><br/>
+      <strong>Leading Derivatives Platform</strong><br/>
+      <small>Spot • Perpetual • Options</small>
+    </td>
+    <td align="center" width="33.33%">
+      <a href="https://share.glassgs.com/u/H8XZGS71" target="_blank">
+        <img src="https://img.shields.io/badge/Bitget-Exchange-1F2937?style=for-the-badge&logo=bitget&logoColor=white" alt="Bitget" />
+      </a>
+      <br/><br/>
+      <strong>Innovative Copy Trading</strong><br/>
+      <small>Spot • Futures • Social Trading</small>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <em>By using our partner links, you support QuantDinger's development while enjoying the same trading experience.</em>
+</p>
+
+---
+
+### 💝 Direct Support
+
+Your contributions help us maintain and improve QuantDinger. Every donation makes a difference!
+
+**Crypto Donations (ERC-20 / BEP-20 / Polygon / Arbitrum)**
+
+```
+0x96fa4962181bea077f8c7240efe46afbe73641a7
+```
+
+<p>
+  <img src="https://img.shields.io/badge/USDT-Accepted-26A17B?style=for-the-badge&logo=tether&logoColor=white" alt="USDT">
+  <img src="https://img.shields.io/badge/ETH-Accepted-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white" alt="ETH">
+</p>
+
+<p align="center">
+  <em>Thank you for supporting open-source development! 🙏</em>
+</p>
+
+</div>
+
+---
+
 ## 📺 Video Demo
 
 <div align="center">
@@ -688,27 +754,6 @@ Licensed under the **Apache License 2.0**. See `LICENSE`.
 ## 💰 Project Sustainability
 
 QuantDinger is open-source and free to use. If you find it useful, here are ways to support ongoing development:
-
-### Direct Donations
-
-**ERC-20 / BEP-20 / Polygon / Arbitrum**
-```
-0x96fa4962181bea077f8c7240efe46afbe73641a7
-```
-<img src="https://img.shields.io/badge/USDT-Accepted-26A17B?style=flat-square&logo=tether" alt="USDT">
-<img src="https://img.shields.io/badge/ETH-Accepted-3C3C3D?style=flat-square&logo=ethereum" alt="ETH">
-
-### Exchange Referral Links
-
-If you're signing up for supported exchanges, using the links below provides referral benefits that help support the project. These are optional and do not affect your trading fees or account functionality.
-
-| Exchange | Referral Link |
-|:--------:|:-------------|
-| Binance | [Sign up with referral](https://www.bmwweb.ac/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_9OSOJ) |
-| OKX | [Sign up with referral](https://www.bjwebptyiou.com/join/14449926) |
-| Bitget | [Sign up with referral](https://share.glassgs.com/u/H8XZGS71) |
-
----
 
 ### Professional Services
 

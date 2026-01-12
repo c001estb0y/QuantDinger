@@ -81,6 +81,72 @@ QuantDingerには、ウェブから金融情報を収集し、ローカル市場
 
 ---
 
+## 🏆 パートナーとスポンサー
+
+<div align="center">
+
+### 💼 信頼できる取引所パートナー
+
+私たちは、定量取引に信頼性の高いインフラストラクチャを提供する主要な暗号通貨取引所と提携できることを誇りに思います。これらのパートナーシップは、QuantDingerの継続的な開発を支援するのに役立ちます。
+
+<table>
+  <tr>
+    <td align="center" width="33.33%">
+      <a href="https://www.bmwweb.ac/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_9OSOJ" target="_blank">
+        <img src="https://img.shields.io/badge/Binance-Exchange-F0B90B?style=for-the-badge&logo=binance&logoColor=white" alt="Binance" />
+      </a>
+      <br/><br/>
+      <strong>世界最大の暗号通貨取引所</strong><br/>
+      <small>現物 • 先物 • マージン取引</small>
+    </td>
+    <td align="center" width="33.33%">
+      <a href="https://www.bjwebptyiou.com/join/14449926" target="_blank">
+        <img src="https://img.shields.io/badge/OKX-Exchange-000000?style=for-the-badge&logo=okx&logoColor=white" alt="OKX" />
+      </a>
+      <br/><br/>
+      <strong>主要なデリバティブプラットフォーム</strong><br/>
+      <small>現物 • パーペチュアル • オプション</small>
+    </td>
+    <td align="center" width="33.33%">
+      <a href="https://share.glassgs.com/u/H8XZGS71" target="_blank">
+        <img src="https://img.shields.io/badge/Bitget-Exchange-1F2937?style=for-the-badge&logo=bitget&logoColor=white" alt="Bitget" />
+      </a>
+      <br/><br/>
+      <strong>革新的なコピートレード</strong><br/>
+      <small>現物 • 先物 • ソーシャルトレード</small>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <em>パートナーリンクを使用することで、同じ取引体験を楽しみながらQuantDingerの開発を支援できます。</em>
+</p>
+
+---
+
+### 💝 直接サポート
+
+あなたの貢献は、QuantDingerの維持と改善に役立ちます。すべての寄付が重要です！
+
+**暗号通貨寄付 (ERC-20 / BEP-20 / Polygon / Arbitrum)**
+
+```
+0x96fa4962181bea077f8c7240efe46afbe73641a7
+```
+
+<p>
+  <img src="https://img.shields.io/badge/USDT-Accepted-26A17B?style=for-the-badge&logo=tether&logoColor=white" alt="USDT">
+  <img src="https://img.shields.io/badge/ETH-Accepted-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white" alt="ETH">
+</p>
+
+<p align="center">
+  <em>オープンソース開発へのご支援ありがとうございます！🙏</em>
+</p>
+
+</div>
+
+---
+
 ## 📺 動画デモ
 
 <div align="center">
@@ -512,25 +578,6 @@ npm run serve
 ## 💰 プロジェクトの持続可能性
 
 QuantDingerはオープンソースで無料で使用できます。有用だと思われる場合は、以下が継続的な開発を支援する方法です：
-
-### 直接寄付
-
-**ERC-20 / BEP-20 / Polygon / Arbitrum**
-```
-0x96fa4962181bea077f8c7240efe46afbe73641a7
-```
-<img src="https://img.shields.io/badge/USDT-Accepted-26A17B?style=flat-square&logo=tether" alt="USDT">
-<img src="https://img.shields.io/badge/ETH-Accepted-3C3C3D?style=flat-square&logo=ethereum" alt="ETH">
-
-### 取引所紹介リンク
-
-サポートされている取引所に登録する場合、以下のリンクを使用すると紹介特典が提供され、プロジェクトの支援に役立ちます。これらはオプションであり、取引手数料やアカウント機能には影響しません。
-
-| 取引所 | 紹介リンク |
-|:--------:|:-------------|
-| Binance | [紹介リンクで登録](https://www.bmwweb.ac/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_9OSOJ) |
-| OKX | [紹介リンクで登録](https://www.bjwebptyiou.com/join/14449926) |
-| Bitget | [紹介リンクで登録](https://share.glassgs.com/u/H8XZGS71) |
 
 ---
 
