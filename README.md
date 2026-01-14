@@ -749,7 +749,7 @@ Licensed under the **Apache License 2.0**. See `LICENSE`.
 QuantDinger is licensed under **Apache License 2.0** (code). However, **Apache 2.0 does NOT grant trademark rights**. Our branding assets (name/logo) are protected as trademarks and are governed separately from the code license:
 
 - **Copyright/Attribution**: You must keep required copyright and license notices (including any NOTICE/attribution in the repo and in the UI where applicable).
-- **Trademarks (Name/Logo/Branding)**: You may not use the QuantDinger name/logo/branding to imply endorsement or misrepresent origin. If you redistribute a modified version, you should remove/replace QuantDinger branding unless you have written permission.
+- **Trademarks (Name/Logo/Branding)**: Without permission, you may not modify QuantDinger branding (name/logo/UI brand), or use it to imply endorsement or misrepresent origin. If you redistribute a modified version, you should remove QuantDinger branding and rebrand unless you have a commercial license.
 
 If you need to keep/modify QuantDinger branding in a redistribution (including UI branding and logo usage), please contact us for a **commercial license**.
 
@@ -764,7 +764,7 @@ See: `TRADEMARKS.md`
 
 ### Contact
 
-- **Telegram**: [QuantDinger Group](https://t.me/quantdinger)
+- **Telegram**: `https://t.me/worldinbroker`
 - **Email**: [brokermr810@gmail.com](mailto:brokermr810@gmail.com)
 
 ---

@@ -529,7 +529,7 @@ QuantDinger のコードは **Apache License 2.0** で提供されています�
 
 ### 連絡先
 
-- **Telegram**: [QuantDinger Group](https://t.me/quantdinger)
+- **Telegram**: [QuantDinger Group](https://t.me/worldinbroker)
 - **Email**: [brokermr810@gmail.com](mailto:brokermr810@gmail.com)
 
 ---

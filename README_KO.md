@@ -542,7 +542,7 @@ QuantDinger의 코드는 **Apache License 2.0**으로 제공됩니다. 다만 **
 
 ### 연락처
 
-- **Telegram**: [QuantDinger Group](https://t.me/quantdinger)
+- **Telegram**: [QuantDinger Group](https://t.me/worldinbroker)
 - **Email**: [brokermr810@gmail.com](mailto:brokermr810@gmail.com)
 
 ---

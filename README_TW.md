@@ -543,7 +543,7 @@ QuantDinger 的代碼使用 **Apache License 2.0** 授權。但請注意：**Apa
 
 ### 聯繫方式
 
-- **Telegram**： [QuantDinger Group](https://t.me/quantdinger)
+- **Telegram**： [QuantDinger Group](https://t.me/worldinbroker)
 - **Email**： [brokermr810@gmail.com](mailto:brokermr810@gmail.com)
 
 ---

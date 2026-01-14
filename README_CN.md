@@ -573,7 +573,7 @@ QuantDinger 的代码使用 **Apache License 2.0** 授权。但需要注意：**
 
 ### 联系方式
 
-- **Telegram**： [QuantDinger Group](https://t.me/quantdinger)
+- **Telegram**： [QuantDinger Group](https://t.me/worldinbroker)
 - **Email**： [brokermr810@gmail.com](mailto:brokermr810@gmail.com)
 
 ---

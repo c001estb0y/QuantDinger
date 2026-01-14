@@ -33,7 +33,7 @@ You may:
 
 - **Accurately refer** to the project as “QuantDinger” when discussing the unmodified project (e.g., tutorials, reviews, bug reports).
 - Use the name “QuantDinger” to **link to this repository** or the official community channels.
-- Use the logo/name for **non-commercial editorial references** (e.g., blog posts) as long as it does not imply endorsement.
+- Use the logo/name for **non-commercial editorial references** (e.g., blog posts) as long as it does not imply endorsement, and the logo is used **unmodified**.
 
 ---
 
@@ -43,6 +43,8 @@ You may **not**, without written permission:
 
 - Use QuantDinger trademarks/branding in a way that **suggests endorsement**, sponsorship, affiliation, or official status when it is not true.
 - Redistribute a **modified** version of the software while keeping QuantDinger branding in a way that could confuse users about the origin.
+- **Modify, adapt, recolor, distort, crop, or create derivative works** of the QuantDinger logo or other brand assets.
+- **Replace/alter/remove** QuantDinger branding in a redistribution **while still using the QuantDinger name/logo/brand** (including in-app UI branding), unless you have a commercial license.
 - Use QuantDinger branding to market a competing product/service as “official”, “certified”, or “approved” by QuantDinger.
 - Register or use confusingly similar names/domains/social accounts that may mislead users.
 
@@ -53,7 +55,7 @@ You may **not**, without written permission:
 If you fork and distribute a modified version:
 
 - **Do not** use “QuantDinger” as the primary product name.
-- **Remove/replace** QuantDinger logos and other brand identifiers in the UI and distribution materials, unless you have written permission.
+- **Do not modify** QuantDinger logos/brand assets. If you do not have a commercial license, you should **remove QuantDinger branding and rebrand** your distribution to avoid confusion.
 - Keep required Apache 2.0 notices (LICENSE/NOTICE) and do not misrepresent authorship.
 
 If you distribute an **unmodified** build, you may keep QuantDinger branding, but you must not imply that your organization is the official owner unless authorized.
@@ -65,6 +67,7 @@ If you distribute an **unmodified** build, you may keep QuantDinger branding, bu
 If you need any of the following, please contact us for a **commercial license / written permission**:
 
 - Keeping QuantDinger branding in a redistributed modified version
+- **Changing/replacing/removing** QuantDinger branding in the UI/distribution (as agreed)
 - Modifying/removing copyright display as agreed
 - White-labeling / OEM / enterprise deployments
 
