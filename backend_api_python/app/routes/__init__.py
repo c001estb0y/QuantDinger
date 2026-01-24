@@ -22,6 +22,7 @@ def register_routes(app: Flask):
     from app.routes.ibkr import ibkr_bp
     from app.routes.mt5 import mt5_bp
     from app.routes.user import user_bp
+    from app.routes.global_market import global_market_bp
     
     app.register_blueprint(health_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth')   # Auth routes
@@ -39,3 +40,4 @@ def register_routes(app: Flask):
     app.register_blueprint(portfolio_bp, url_prefix='/api/portfolio')
     app.register_blueprint(ibkr_bp, url_prefix='/api/ibkr')
     app.register_blueprint(mt5_bp, url_prefix='/api/mt5')
+    app.register_blueprint(global_market_bp, url_prefix='/api/global-market')

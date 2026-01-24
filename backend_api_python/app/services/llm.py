@@ -387,8 +387,9 @@ class LLMService:
                 logger.error(f"{p.value} API HTTP error ({current_model}): {error_detail}")
                 last_error = str(e)
                 
-                # Check for payment/quota errors
-                if e.response and e.response.status_code in (402, 429):
+                # Check for recoverable errors - try fallback model
+                # 402: Payment required, 403: Forbidden (invalid key), 404: Model not found, 429: Rate limit
+                if e.response and e.response.status_code in (402, 403, 404, 429):
                     logger.warning(f"{p.value} returned {e.response.status_code} for model {current_model}; trying fallback...")
                     continue
                 

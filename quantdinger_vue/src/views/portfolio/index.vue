@@ -727,9 +727,9 @@
         >
           <template #message>
             <span>
-              {{ $t('portfolio.form.notificationFromProfile') || '通知将发送到您在个人中心配置的地址' }}
+              {{ $t('portfolio.form.notificationFromProfile') }}
               <router-link to="/profile" style="margin-left: 8px">
-                <a-icon type="setting" /> {{ $t('portfolio.form.goToProfile') || '前往配置' }}
+                <a-icon type="setting" /> {{ $t('portfolio.form.goToProfile') }}
               </router-link>
             </span>
           </template>
@@ -806,9 +806,9 @@
         >
           <template #message>
             <span>
-              {{ $t('portfolio.form.notificationFromProfile') || '通知将发送到您在个人中心配置的地址' }}
+              {{ $t('portfolio.form.notificationFromProfile') }}
               <router-link to="/profile" style="margin-left: 8px">
-                <a-icon type="setting" /> {{ $t('portfolio.form.goToProfile') || '前往配置' }}
+                <a-icon type="setting" /> {{ $t('portfolio.form.goToProfile') }}
               </router-link>
             </span>
           </template>
@@ -836,15 +836,21 @@
               :key="pos.id"
               class="position-checkbox-item"
             >
-              <a-checkbox :value="pos.id">
-                <span class="position-checkbox-label">
-                  <a-tag :color="getMarketColor(pos.market)" size="small">{{ pos.market }}</a-tag>
-                  <span class="symbol">{{ pos.symbol }}</span>
-                  <span class="name">{{ pos.name }}</span>
-                  <span :class="['pnl', pos.pnl >= 0 ? 'positive' : 'negative']">
-                    {{ pos.pnl >= 0 ? '+' : '' }}{{ formatNumber(pos.pnl_percent) }}%
-                  </span>
-                </span>
+              <a-checkbox :value="pos.id" class="position-checkbox">
+                <div class="position-checkbox-label">
+                  <div class="position-left">
+                    <a-tag :color="getMarketColor(pos.market)" size="small">{{ pos.market }}</a-tag>
+                    <span class="symbol">{{ pos.symbol }}</span>
+                  </div>
+                  <div class="position-middle">
+                    <span class="name" :title="pos.name">{{ pos.name }}</span>
+                  </div>
+                  <div class="position-right">
+                    <span :class="['pnl', pos.pnl >= 0 ? 'positive' : 'negative']">
+                      {{ pos.pnl >= 0 ? '+' : '' }}{{ formatNumber(pos.pnl_percent) }}%
+                    </span>
+                  </div>
+                </div>
               </a-checkbox>
             </div>
           </a-checkbox-group>
@@ -2615,34 +2621,64 @@ export default {
   }
 }
 
+.position-checkbox {
+  width: 100%;
+
+  // Override Ant Design checkbox label width
+  ::v-deep .ant-checkbox + span {
+    width: calc(100% - 24px);
+    padding-left: 8px;
+    padding-right: 0;
+  }
+}
+
 .position-checkbox-label {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
   font-size: 13px;
+  width: 100%;
 
-  .symbol {
-    font-weight: 600;
-    color: #262626;
-    min-width: 60px;
+  .position-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+
+    .symbol {
+      font-weight: 600;
+      color: #262626;
+      min-width: 50px;
+    }
   }
 
-  .name {
-    color: #8c8c8c;
-    font-size: 12px;
+  .position-middle {
     flex: 1;
+    min-width: 0;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 120px;
+
+    .name {
+      color: #8c8c8c;
+      font-size: 12px;
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
-  .pnl {
-    font-weight: 500;
-    font-size: 12px;
+  .position-right {
+    flex-shrink: 0;
+    margin-left: auto;
 
-    &.positive { color: @green; }
-    &.negative { color: @red; }
+    .pnl {
+      font-weight: 500;
+      font-size: 12px;
+      white-space: nowrap;
+
+      &.positive { color: @green; }
+      &.negative { color: @red; }
+    }
   }
 }
 
@@ -2676,8 +2712,8 @@ export default {
   }
 
   .position-checkbox-label {
-    .symbol { color: #d1d4dc; }
-    .name { color: #868993; }
+    .position-left .symbol { color: #d1d4dc; }
+    .position-middle .name { color: #868993; }
   }
 
   .position-select-actions {

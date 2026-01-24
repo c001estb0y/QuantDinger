@@ -16,6 +16,13 @@ export const asyncRouterMap = [
         component: () => import('@/views/dashboard'),
         meta: { title: 'menu.dashboard', keepAlive: true, icon: 'dashboard', permission: ['dashboard'] }
       },
+      // 全球金融面板
+      {
+        path: '/global-market',
+        name: 'GlobalMarket',
+        component: () => import('@/views/global-market'),
+        meta: { title: 'menu.dashboard.globalMarket', keepAlive: true, icon: 'global', permission: ['dashboard'] }
+      },
       // AI 分析
       {
         path: '/ai-analysis/:pageNo([1-9]\\d*)?',
@@ -44,13 +51,6 @@ export const asyncRouterMap = [
         component: () => import('@/views/portfolio'),
         meta: { title: 'menu.dashboard.portfolio', keepAlive: true, icon: 'fund', permission: ['dashboard'] }
       },
-      // 指标社区（keepAlive disabled intentionally for iframe page)
-      {
-        path: '/indicator-community',
-        name: 'IndicatorCommunity',
-        component: () => import('@/views/indicator-community'),
-        meta: { title: 'menu.dashboard.community', keepAlive: false, icon: 'shop', permission: ['dashboard'] }
-      },
       // 系统设置 (admin only)
       {
         path: '/settings',
@@ -71,6 +71,13 @@ export const asyncRouterMap = [
         name: 'Profile',
         component: () => import('@/views/profile'),
         meta: { title: 'menu.myProfile', keepAlive: false, icon: 'user', permission: ['dashboard'] }
+      },
+      // 官方社区（keepAlive disabled intentionally for iframe page）
+      {
+        path: '/indicator-community',
+        name: 'IndicatorCommunity',
+        component: () => import('@/views/indicator-community'),
+        meta: { title: 'menu.dashboard.community', keepAlive: false, icon: 'shop', permission: ['dashboard'] }
       }
 
       // other
