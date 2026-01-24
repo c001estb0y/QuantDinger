@@ -290,7 +290,30 @@ export default {
     },
     formatTime (timestamp) {
       if (!timestamp) return ''
-      const date = new Date(timestamp * 1000)
+      // 支持多种时间格式：ISO字符串、秒级时间戳、毫秒级时间戳
+      let date
+      if (typeof timestamp === 'number') {
+        // 数字类型：判断是秒级还是毫秒级时间戳
+        date = new Date(timestamp < 1e12 ? timestamp * 1000 : timestamp)
+      } else if (typeof timestamp === 'string') {
+        // 字符串类型
+        if (/^\d+$/.test(timestamp)) {
+          // 纯数字字符串（时间戳）
+          const ts = parseInt(timestamp, 10)
+          date = new Date(ts < 1e12 ? ts * 1000 : ts)
+        } else {
+          // ISO 日期字符串或其他格式
+          date = new Date(timestamp)
+        }
+      } else {
+        return ''
+      }
+
+      // 检查日期是否有效
+      if (isNaN(date.getTime())) {
+        return ''
+      }
+
       const now = new Date()
       const diff = now - date
       const minutes = Math.floor(diff / 60000)
@@ -311,7 +334,24 @@ export default {
     },
     formatFullTime (timestamp) {
       if (!timestamp) return ''
-      const date = new Date(timestamp * 1000)
+      // 支持多种时间格式：ISO字符串、秒级时间戳、毫秒级时间戳
+      let date
+      if (typeof timestamp === 'number') {
+        date = new Date(timestamp < 1e12 ? timestamp * 1000 : timestamp)
+      } else if (typeof timestamp === 'string') {
+        if (/^\d+$/.test(timestamp)) {
+          const ts = parseInt(timestamp, 10)
+          date = new Date(ts < 1e12 ? ts * 1000 : ts)
+        } else {
+          date = new Date(timestamp)
+        }
+      } else {
+        return ''
+      }
+
+      if (isNaN(date.getTime())) {
+        return ''
+      }
       return date.toLocaleString()
     },
     formatMessageHtml (message) {

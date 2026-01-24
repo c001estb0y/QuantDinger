@@ -21,7 +21,9 @@ backtest_service = BacktestService()
 
 
 def _openrouter_base_and_key() -> tuple[str, str]:
-    key = os.getenv("OPENROUTER_API_KEY", "").strip()
+    from app.config import APIKeys
+    # Use APIKeys to get the key (handles env var + config cache properly)
+    key = APIKeys.OPENROUTER_API_KEY or ""
     base = os.getenv("OPENROUTER_BASE_URL", "").strip()
     if not base:
         api_url = os.getenv("OPENROUTER_API_URL", "").strip()

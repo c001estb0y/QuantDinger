@@ -296,25 +296,7 @@ CREATE TABLE IF NOT EXISTS qd_indicator_codes (
 CREATE INDEX IF NOT EXISTS idx_indicator_codes_user_id ON qd_indicator_codes(user_id);
 
 -- =============================================================================
--- 8. Strategy Codes
--- =============================================================================
-
-CREATE TABLE IF NOT EXISTS qd_strategy_codes (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL DEFAULT 1 REFERENCES qd_users(id) ON DELETE CASCADE,
-    name VARCHAR(255) NOT NULL DEFAULT '',
-    code TEXT,
-    description TEXT DEFAULT '',
-    createtime BIGINT,
-    updatetime BIGINT,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_strategy_codes_user_id ON qd_strategy_codes(user_id);
-
--- =============================================================================
--- 9. AI Decisions
+-- 8. AI Decisions
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS qd_ai_decisions (
@@ -329,7 +311,7 @@ CREATE TABLE IF NOT EXISTS qd_ai_decisions (
 CREATE INDEX IF NOT EXISTS idx_ai_decisions_user_id ON qd_ai_decisions(user_id);
 
 -- =============================================================================
--- 10. Addon Config
+-- 9. Addon Config
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS qd_addon_config (
@@ -339,7 +321,7 @@ CREATE TABLE IF NOT EXISTS qd_addon_config (
 );
 
 -- =============================================================================
--- 11. Watchlist
+-- 10. Watchlist
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS qd_watchlist (
@@ -356,7 +338,7 @@ CREATE TABLE IF NOT EXISTS qd_watchlist (
 CREATE INDEX IF NOT EXISTS idx_watchlist_user_id ON qd_watchlist(user_id);
 
 -- =============================================================================
--- 12. Analysis Tasks
+-- 11. Analysis Tasks
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS qd_analysis_tasks (
@@ -376,7 +358,7 @@ CREATE TABLE IF NOT EXISTS qd_analysis_tasks (
 CREATE INDEX IF NOT EXISTS idx_analysis_tasks_user_id ON qd_analysis_tasks(user_id);
 
 -- =============================================================================
--- 13. Backtest Runs
+-- 12. Backtest Runs
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS qd_backtest_runs (
@@ -404,7 +386,7 @@ CREATE INDEX IF NOT EXISTS idx_backtest_runs_user_id ON qd_backtest_runs(user_id
 CREATE INDEX IF NOT EXISTS idx_backtest_runs_indicator_id ON qd_backtest_runs(indicator_id);
 
 -- =============================================================================
--- 14. Exchange Credentials
+-- 13. Exchange Credentials
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS qd_exchange_credentials (
@@ -421,7 +403,7 @@ CREATE TABLE IF NOT EXISTS qd_exchange_credentials (
 CREATE INDEX IF NOT EXISTS idx_exchange_credentials_user_id ON qd_exchange_credentials(user_id);
 
 -- =============================================================================
--- 15. Manual Positions
+-- 14. Manual Positions
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS qd_manual_positions (
@@ -445,7 +427,7 @@ CREATE TABLE IF NOT EXISTS qd_manual_positions (
 CREATE INDEX IF NOT EXISTS idx_manual_positions_user_id ON qd_manual_positions(user_id);
 
 -- =============================================================================
--- 16. Position Alerts
+-- 15. Position Alerts
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS qd_position_alerts (
@@ -471,7 +453,7 @@ CREATE INDEX IF NOT EXISTS idx_position_alerts_user_id ON qd_position_alerts(use
 CREATE INDEX IF NOT EXISTS idx_position_alerts_position_id ON qd_position_alerts(position_id);
 
 -- =============================================================================
--- 17. Position Monitors
+-- 16. Position Monitors
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS qd_position_monitors (
@@ -494,7 +476,7 @@ CREATE TABLE IF NOT EXISTS qd_position_monitors (
 CREATE INDEX IF NOT EXISTS idx_position_monitors_user_id ON qd_position_monitors(user_id);
 
 -- =============================================================================
--- 18. Market Symbols (Seed Data)
+-- 17. Market Symbols (Seed Data)
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS qd_market_symbols (
@@ -585,7 +567,7 @@ INSERT INTO qd_market_symbols (market, symbol, name, exchange, currency, is_acti
 ON CONFLICT (market, symbol) DO NOTHING;
 
 -- =============================================================================
--- 19. Agent Memories (AI Learning System)
+-- 18. Agent Memories (AI Learning System)
 -- =============================================================================
 -- Stores agent decision experiences for RAG-style retrieval during analysis.
 -- Each agent (trader, risk_analyst, etc.) shares this table but is identified by agent_name.
@@ -611,7 +593,7 @@ CREATE INDEX IF NOT EXISTS idx_agent_memories_created ON qd_agent_memories(agent
 CREATE INDEX IF NOT EXISTS idx_agent_memories_market ON qd_agent_memories(agent_name, market, symbol);
 
 -- =============================================================================
--- 20. Reflection Records (AI Auto-Verification System)
+-- 19. Reflection Records (AI Auto-Verification System)
 -- =============================================================================
 -- Records analysis predictions for future auto-verification and closed-loop learning.
 

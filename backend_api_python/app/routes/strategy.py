@@ -316,8 +316,29 @@ def get_trades():
             )
             rows = cur.fetchall() or []
             cur.close()
+        
+        # Convert created_at to UTC timestamp (seconds) for frontend
+        # This ensures consistent timezone handling
+        processed_rows = []
+        for row in rows:
+            trade = dict(row)
+            created_at = trade.get('created_at')
+            if created_at:
+                if hasattr(created_at, 'timestamp'):
+                    # datetime object - convert to UTC timestamp
+                    trade['created_at'] = int(created_at.timestamp())
+                elif isinstance(created_at, str):
+                    # ISO string - parse and convert
+                    try:
+                        from datetime import datetime
+                        dt = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                        trade['created_at'] = int(dt.timestamp())
+                    except Exception:
+                        pass
+            processed_rows.append(trade)
+        
         # Frontend expects data.trades; keep data.items for compatibility with list-style components.
-        return jsonify({'code': 1, 'msg': 'success', 'data': {'trades': rows, 'items': rows}})
+        return jsonify({'code': 1, 'msg': 'success', 'data': {'trades': processed_rows, 'items': processed_rows}})
     except Exception as e:
         logger.error(f"get_trades failed: {str(e)}")
         logger.error(traceback.format_exc())
@@ -833,7 +854,24 @@ def get_strategy_notifications():
             rows = cur.fetchall() or []
             cur.close()
 
-        return jsonify({'code': 1, 'msg': 'success', 'data': {'items': rows}})
+        # Convert created_at to UTC timestamp (seconds) for frontend
+        processed_rows = []
+        for row in rows:
+            item = dict(row)
+            created_at = item.get('created_at')
+            if created_at:
+                if hasattr(created_at, 'timestamp'):
+                    item['created_at'] = int(created_at.timestamp())
+                elif isinstance(created_at, str):
+                    try:
+                        from datetime import datetime
+                        dt = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                        item['created_at'] = int(dt.timestamp())
+                    except Exception:
+                        pass
+            processed_rows.append(item)
+
+        return jsonify({'code': 1, 'msg': 'success', 'data': {'items': processed_rows}})
     except Exception as e:
         logger.error(f"get_strategy_notifications failed: {str(e)}")
         logger.error(traceback.format_exc())

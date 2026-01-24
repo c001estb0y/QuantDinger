@@ -40,11 +40,9 @@ if (typeof window !== 'undefined') {
 // mount axios to `Vue.$http` and `this.$http`
 Vue.use(VueAxios)
 // use pro-layout components
-/* eslint-disable vue/component-definition-name-casing */
 Vue.component('pro-layout', ProLayout)
 Vue.component('page-container', PageHeaderWrapper)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
-/* eslint-enable vue/component-definition-name-casing */
 
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
 

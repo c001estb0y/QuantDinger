@@ -493,30 +493,24 @@ IMPORTANT: Output Python code directly, without explanations, without descriptio
             header = "# Existing code was provided as context.\n" + header
         return header + body
 
-    def _openrouter_base_and_key() -> tuple[str, str]:
-        """
-        Support both:
-          - OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
-          - OPENROUTER_API_URL=https://openrouter.ai/api/v1/chat/completions
-        """
-        key = os.getenv("OPENROUTER_API_KEY", "").strip()
-        base = os.getenv("OPENROUTER_BASE_URL", "").strip()
-        if not base:
-            api_url = os.getenv("OPENROUTER_API_URL", "").strip()
-            if api_url.endswith("/chat/completions"):
-                base = api_url[: -len("/chat/completions")]
-        if not base:
-            base = "https://openrouter.ai/api/v1"
-        return base, key
-
-    def _generate_code_via_openrouter() -> str:
-        base_url, api_key = _openrouter_base_and_key()
-        if not api_key:
+    def _generate_code_via_llm() -> str:
+        """Use unified LLMService to support all configured providers (OpenRouter, OpenAI, Grok, etc.)."""
+        from app.services.llm import LLMService
+        
+        llm = LLMService()
+        
+        # Get provider and model from env config (no frontend override)
+        current_provider = llm.provider
+        current_model = llm.get_default_model()
+        current_api_key = llm.get_api_key()
+        base_url = llm.get_base_url()
+        
+        logger.info(f"AI Code Generation - Provider: {current_provider.value}, Model: {current_model}, Base URL: {base_url}, API Key configured: {bool(current_api_key)}")
+        
+        # Check if any LLM provider is configured
+        if not current_api_key:
+            logger.warning("No LLM API key configured, using template code")
             return _template_code()
-
-        model = os.getenv("OPENROUTER_MODEL", "openai/gpt-4o-mini").strip() or "openai/gpt-4o-mini"
-        # Match legacy PHP default more closely
-        temperature = float(os.getenv("OPENROUTER_TEMPERATURE", "0.7") or 0.7)
 
         # Build user prompt (match PHP behavior)
         user_prompt = prompt
@@ -529,36 +523,36 @@ IMPORTANT: Output Python code directly, without explanations, without descriptio
                 + "\n\nPlease generate complete new Python code based on the existing code above and my modification requirements. Output the complete Python code directly, without explanations, without segmentation."
             )
 
-        payload = {
-            "model": model,
-            "temperature": temperature,
-            "stream": False,
-            "messages": [
+        temperature = float(os.getenv("OPENROUTER_TEMPERATURE", "0.7") or 0.7)
+        
+        # Call LLM using the unified API (auto-selects provider based on LLM_PROVIDER env)
+        # use_json_mode=False because we want raw Python code output
+        content = llm.call_llm_api(
+            messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_prompt},
             ],
-        }
-
-        resp = requests.post(
-            f"{base_url}/chat/completions",
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json",
-            },
-            json=payload,
-            timeout=120,
+            temperature=temperature,
+            use_json_mode=False  # Code generation doesn't need JSON mode
         )
-        resp.raise_for_status()
-        j = resp.json()
-        content = (((j.get("choices") or [{}])[0]).get("message") or {}).get("content") or ""
+        
+        # Clean up markdown code blocks if present
+        content = content.strip()
+        if content.startswith("```python"):
+            content = content[9:]
+        elif content.startswith("```"):
+            content = content[3:]
+        if content.endswith("```"):
+            content = content[:-3]
+        
         return content.strip() or _template_code()
 
     def stream():
         # 不扣任何 QDT：开源本地版直接生成/返回代码
         try:
-            code_text = _generate_code_via_openrouter()
+            code_text = _generate_code_via_llm()
         except Exception as e:
-            logger.warning(f"ai_generate openrouter failed, fallback to template: {e}")
+            logger.error(f"ai_generate LLM failed, fallback to template. Error: {type(e).__name__}: {e}")
             code_text = _template_code()
 
         # Stream in chunks (front-end appends).

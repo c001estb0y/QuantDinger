@@ -6,6 +6,7 @@ Uses ib_insync library to connect to TWS or IB Gateway for trading.
 
 import time
 import threading
+import asyncio
 from dataclasses import dataclass, field
 from typing import Optional, Dict, Any, List
 
@@ -13,6 +14,25 @@ from app.utils.logger import get_logger
 from app.services.ibkr_trading.symbols import normalize_symbol, format_display_symbol
 
 logger = get_logger(__name__)
+
+
+def _ensure_event_loop():
+    """
+    Ensure there is an event loop in the current thread.
+    
+    ib_insync requires an asyncio event loop to function.
+    When called from Flask request threads, there may not be one.
+    """
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_closed():
+            raise RuntimeError("Event loop is closed")
+    except RuntimeError:
+        # No event loop exists in this thread, create one
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        logger.debug("Created new event loop for IBKR client")
+    return loop
 
 # Lazy import ib_insync to allow other features to work without it installed
 ib_insync = None
@@ -99,6 +119,9 @@ class IBKRClient:
                 return True
             
             try:
+                # Ensure event loop exists in this thread (required by ib_insync)
+                _ensure_event_loop()
+                
                 _ensure_ib_insync()
                 
                 if self._ib is None:
@@ -145,6 +168,8 @@ class IBKRClient:
     
     def _ensure_connected(self):
         """Ensure connection is established."""
+        # Ensure event loop exists (may be called from different threads)
+        _ensure_event_loop()
         if not self.connected:
             if not self.connect():
                 raise ConnectionError("Cannot connect to IBKR")

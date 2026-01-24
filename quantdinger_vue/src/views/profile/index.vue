@@ -1640,4 +1640,396 @@ export default {
     }
   }
 }
+
+// ==================== Mobile Responsive Styles ====================
+@media screen and (max-width: 768px) {
+  .profile-page {
+    padding: 12px;
+
+    .page-header {
+      margin-bottom: 16px;
+
+      .page-title {
+        font-size: 20px;
+
+        .anticon {
+          font-size: 22px;
+        }
+      }
+
+      .page-desc {
+        font-size: 13px;
+      }
+    }
+
+    // Profile cards row - stack vertically
+    .profile-cards-row {
+      flex-direction: column;
+
+      .profile-card-col {
+        margin-bottom: 12px;
+      }
+
+      .right-cards-col {
+        .right-cards-row {
+          flex-direction: column;
+
+          .ant-col {
+            margin-bottom: 12px;
+          }
+        }
+      }
+    }
+
+    // Profile card adjustments
+    .profile-card {
+      border-radius: 10px;
+
+      .avatar-section {
+        padding: 16px 0;
+
+        /deep/ .ant-avatar {
+          width: 80px !important;
+          height: 80px !important;
+          line-height: 80px !important;
+        }
+
+        .username {
+          font-size: 18px;
+          margin: 12px 0 6px;
+        }
+      }
+
+      .profile-info {
+        .info-item {
+          padding: 10px 0;
+          flex-wrap: wrap;
+
+          .anticon {
+            font-size: 14px;
+            margin-right: 8px;
+          }
+
+          .label {
+            font-size: 13px;
+          }
+
+          .value {
+            font-size: 13px;
+            word-break: break-all;
+          }
+        }
+      }
+    }
+
+    // Credits card adjustments
+    .credits-card {
+      border-radius: 10px;
+
+      .credits-header {
+        .credits-title {
+          font-size: 15px;
+
+          .anticon {
+            font-size: 16px;
+          }
+        }
+      }
+
+      .credits-body {
+        padding: 16px 0;
+
+        .credits-amount {
+          .amount-value {
+            font-size: 32px;
+          }
+
+          .amount-label {
+            font-size: 14px;
+          }
+        }
+
+        .vip-status {
+          font-size: 12px;
+          margin-top: 10px;
+        }
+      }
+
+      .credits-actions {
+        .ant-btn {
+          height: 34px;
+          padding: 0 20px;
+          font-size: 14px;
+        }
+      }
+
+      .credits-hint {
+        font-size: 11px;
+        margin-top: 10px;
+      }
+    }
+
+    // Referral card adjustments
+    .referral-card {
+      border-radius: 10px;
+
+      .referral-header {
+        .referral-title {
+          font-size: 15px;
+
+          .anticon {
+            font-size: 16px;
+          }
+        }
+      }
+
+      .referral-body {
+        padding: 10px 0;
+
+        .referral-stats {
+          .stat-item {
+            .stat-value {
+              font-size: 24px;
+            }
+
+            .stat-label {
+              font-size: 11px;
+            }
+          }
+        }
+
+        .referral-link-section {
+          .link-label {
+            font-size: 11px;
+          }
+
+          .link-box {
+            /deep/ .ant-input {
+              font-size: 12px;
+            }
+          }
+        }
+
+        .referral-hint {
+          font-size: 11px;
+          padding-top: 8px;
+        }
+      }
+    }
+
+    // Edit card adjustments
+    .edit-card {
+      border-radius: 10px;
+      margin-top: 12px !important;
+
+      /deep/ .ant-card-body {
+        padding: 12px;
+      }
+
+      /deep/ .ant-tabs-nav {
+        .ant-tabs-tab {
+          padding: 10px 12px;
+          font-size: 13px;
+        }
+      }
+
+      // Allow horizontal scroll for tabs on mobile
+      /deep/ .ant-tabs-nav-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+
+      .profile-form,
+      .password-form {
+        max-width: 100%;
+
+        /deep/ .ant-form-item-label {
+          padding-bottom: 4px;
+
+          label {
+            font-size: 13px;
+          }
+        }
+
+        /deep/ .ant-input,
+        /deep/ .ant-input-password {
+          font-size: 14px;
+        }
+
+        .email-hint {
+          font-size: 11px;
+        }
+      }
+
+      // Password form - verification code section
+      .password-form {
+        /deep/ .ant-alert {
+          font-size: 12px;
+          padding: 8px 12px;
+        }
+      }
+
+      // Notification settings form
+      .notification-settings-form {
+        /deep/ .ant-alert {
+          font-size: 12px;
+          padding: 8px 12px;
+          margin-bottom: 16px !important;
+        }
+
+        /deep/ .ant-form {
+          max-width: 100%;
+        }
+
+        /deep/ .ant-checkbox-group {
+          .ant-row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+
+            .ant-col {
+              padding-left: 0 !important;
+              padding-right: 8px !important;
+            }
+          }
+
+          .ant-checkbox-wrapper {
+            font-size: 13px;
+            margin-bottom: 6px;
+          }
+        }
+
+        .field-hint {
+          font-size: 11px;
+          flex-wrap: wrap;
+        }
+
+        /deep/ .ant-form-item {
+          margin-bottom: 16px;
+        }
+
+        // Action buttons
+        /deep/ .ant-form-item:last-child {
+          .ant-btn {
+            width: 100%;
+            margin-bottom: 8px;
+
+            & + .ant-btn {
+              margin-left: 0 !important;
+            }
+          }
+        }
+      }
+
+      // Tables in tabs
+      /deep/ .ant-table-wrapper {
+        overflow-x: auto;
+
+        .ant-table {
+          min-width: 500px;
+        }
+      }
+    }
+
+    // Referral user cell in table
+    .referral-user-cell {
+      gap: 8px;
+
+      /deep/ .ant-avatar {
+        width: 28px !important;
+        height: 28px !important;
+        line-height: 28px !important;
+      }
+
+      .user-info {
+        .nickname {
+          font-size: 13px;
+        }
+
+        .username {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}
+
+// Extra small devices (phones in portrait)
+@media screen and (max-width: 480px) {
+  .profile-page {
+    padding: 8px;
+
+    .page-header {
+      margin-bottom: 12px;
+
+      .page-title {
+        font-size: 18px;
+        gap: 8px;
+
+        .anticon {
+          font-size: 20px;
+        }
+      }
+    }
+
+    // Credits card
+    .credits-card {
+      .credits-body {
+        .credits-amount {
+          .amount-value {
+            font-size: 28px;
+          }
+
+          .amount-label {
+            font-size: 13px;
+          }
+        }
+      }
+
+      .credits-actions {
+        .ant-btn {
+          width: 100%;
+        }
+      }
+    }
+
+    // Referral card
+    .referral-card {
+      .referral-body {
+        .referral-stats {
+          .stat-item {
+            .stat-value {
+              font-size: 20px;
+            }
+          }
+        }
+      }
+    }
+
+    // Edit card
+    .edit-card {
+      /deep/ .ant-tabs-nav {
+        .ant-tabs-tab {
+          padding: 8px 10px;
+          font-size: 12px;
+        }
+      }
+
+      // Notification settings - stack checkboxes
+      .notification-settings-form {
+        /deep/ .ant-checkbox-group {
+          .ant-row {
+            .ant-col {
+              flex: 0 0 50%;
+              max-width: 50%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
 </style>

@@ -70,6 +70,28 @@ def load_addon_config() -> Dict[str, Any]:
         ('OPENROUTER_TIMEOUT', 'openrouter.timeout', 'int'),
         ('OPENROUTER_CONNECT_TIMEOUT', 'openrouter.connect_timeout', 'int'),
         ('AI_MODELS_JSON', 'ai.models', 'json'),
+        
+        # OpenAI Direct
+        ('OPENAI_API_KEY', 'openai.api_key', 'string'),
+        ('OPENAI_BASE_URL', 'openai.base_url', 'string'),
+        ('OPENAI_MODEL', 'openai.model', 'string'),
+        
+        # Google Gemini
+        ('GOOGLE_API_KEY', 'google.api_key', 'string'),
+        ('GOOGLE_MODEL', 'google.model', 'string'),
+        
+        # DeepSeek
+        ('DEEPSEEK_API_KEY', 'deepseek.api_key', 'string'),
+        ('DEEPSEEK_BASE_URL', 'deepseek.base_url', 'string'),
+        ('DEEPSEEK_MODEL', 'deepseek.model', 'string'),
+        
+        # xAI Grok
+        ('GROK_API_KEY', 'grok.api_key', 'string'),
+        ('GROK_BASE_URL', 'grok.base_url', 'string'),
+        ('GROK_MODEL', 'grok.model', 'string'),
+        
+        # LLM Provider Selection
+        ('LLM_PROVIDER', 'llm.provider', 'string'),
 
         # App
         ('CORS_ORIGINS', 'app.cors_origins', 'string'),

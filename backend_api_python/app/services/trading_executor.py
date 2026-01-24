@@ -2370,11 +2370,14 @@ class TradingExecutor:
                 cooldown_sec = 30  # keep small; worker already retries the claimed order via attempts/max_attempts
                 try:
                     stsig = int(signal_ts or 0)
-                    # Strict "same candle" de-dup should ONLY apply to open signals.
-                    # Rationale: on higher timeframes (e.g. 1D), scale-in signals (add_*) may legitimately trigger
-                    # multiple times within the same candle/day as price evolves; we must not block them by candle key.
+                    # Strict "same candle" de-dup applies to open and close signals.
+                    # Rationale: 
+                    # - open_* signals should only trigger once per candle (prevents repeated entries)
+                    # - close_* signals should only trigger once per candle (prevents repeated close attempts)
+                    # - add_*/reduce_* signals may legitimately trigger multiple times within same candle
+                    #   as price evolves for DCA/scaling strategies
                     sig_norm = str(signal_type or "").strip().lower()
-                    strict_candle_dedup = stsig > 0 and sig_norm in ("open_long", "open_short")
+                    strict_candle_dedup = stsig > 0 and sig_norm in ("open_long", "open_short", "close_long", "close_short")
 
                     if strict_candle_dedup:
                         cur.execute(

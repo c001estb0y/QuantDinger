@@ -379,9 +379,9 @@
               {{ getSignalTypeText(text) }}
             </span>
           </template>
-          <template slot="profit" slot-scope="text">
-            <span :class="text >= 0 ? 'positive' : 'negative'">
-              {{ text >= 0 ? '+' : '' }}${{ formatNumber(text) }}
+          <template slot="profit" slot-scope="text, record">
+            <span :class="formatProfitValue(text, record) !== '--' ? (text >= 0 ? 'positive' : 'negative') : ''">
+              {{ formatProfitValue(text, record) }}
             </span>
           </template>
           <template slot="time" slot-scope="text">
@@ -957,6 +957,30 @@ export default {
     formatNumber (num, digits = 2) {
       if (num === undefined || num === null) return '0.00'
       return Number(num).toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits })
+    },
+    // 格式化盈亏值（处理信号模式下没有实盘的情况）
+    formatProfitValue (value, record) {
+      if (value === null || value === undefined) return '--'
+
+      const numValue = parseFloat(value)
+
+      // 如果值为0且是开仓信号（open_long/open_short），显示--
+      const openTypes = ['open_long', 'open_short', 'add_long', 'add_short']
+      if (numValue === 0 && record && openTypes.includes(record.type)) {
+        return '--'
+      }
+
+      // 如果值极小（科学计数法如0E-8），视为0
+      if (Math.abs(numValue) < 0.000001) {
+        if (record && openTypes.includes(record.type)) {
+          return '--'
+        }
+        return '$0.00'
+      }
+
+      // 正常显示
+      const sign = numValue >= 0 ? '+' : ''
+      return `${sign}$${this.formatNumber(numValue)}`
     },
     formatCompactNumber (num) {
       if (num === undefined || num === null) return '0'

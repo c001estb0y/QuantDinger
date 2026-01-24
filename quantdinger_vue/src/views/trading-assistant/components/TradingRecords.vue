@@ -27,10 +27,13 @@
       <template slot="value" slot-scope="text">
         ${{ parseFloat(text).toFixed(2) }}
       </template>
-      <template slot="profit" slot-scope="text">
+      <template slot="profit" slot-scope="text, record">
         <span :style="{ color: text > 0 ? '#52c41a' : text < 0 ? '#f5222d' : '#666' }">
-          {{ formatMoney(text) }}
+          {{ formatProfit(text, record) }}
         </span>
+      </template>
+      <template slot="commission" slot-scope="text">
+        {{ formatCommission(text) }}
       </template>
       <template slot="time" slot-scope="text, record">
         {{ formatTime(record.created_at || text) }}
@@ -103,7 +106,8 @@ export default {
           title: this.$t('trading-assistant.table.commission'),
           dataIndex: 'commission',
           key: 'commission',
-          width: 100
+          width: 100,
+          scopedSlots: { customRender: 'commission' }
         }
       ]
     }
@@ -242,6 +246,46 @@ export default {
       // 正数显示+，负数显示-
       const sign = value >= 0 ? '+' : '-'
       return `${sign}$${Math.abs(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    },
+    // 格式化盈亏（处理信号模式下没有实盘的情况）
+    formatProfit (value, record) {
+      // 如果是信号模式（没有实盘交易），profit为0或null时显示--
+      // 判断依据：如果是开仓信号且profit为0，或者record.is_signal_only为true
+      if (value === null || value === undefined) return '--'
+
+      const numValue = parseFloat(value)
+
+      // 如果值为0且是开仓信号（open_long/open_short），显示--
+      // 因为开仓时还没有盈亏
+      const openTypes = ['open_long', 'open_short', 'add_long', 'add_short']
+      if (numValue === 0 && record && openTypes.includes(record.type)) {
+        return '--'
+      }
+
+      // 如果值极小（科学计数法如0E-8），视为0
+      if (Math.abs(numValue) < 0.000001) {
+        // 开仓类型显示--，平仓类型显示$0.00
+        if (record && openTypes.includes(record.type)) {
+          return '--'
+        }
+        return '$0.00'
+      }
+
+      return this.formatMoney(numValue)
+    },
+    // 格式化手续费（避免科学计数法如0E-8）
+    formatCommission (value) {
+      if (value === null || value === undefined) return '--'
+
+      const numValue = parseFloat(value)
+
+      // 如果值极小（科学计数法如0E-8），显示为0或--
+      if (isNaN(numValue) || Math.abs(numValue) < 0.000001) {
+        return '--'
+      }
+
+      // 正常格式化显示
+      return `$${numValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`
     }
   }
 }

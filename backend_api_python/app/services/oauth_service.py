@@ -429,6 +429,12 @@ class OAuthService:
                      oauth_info.get('refresh_token'))
                 )
                 
+                # Update last_login_at for new OAuth users
+                cur.execute(
+                    "UPDATE qd_users SET last_login_at = NOW() WHERE id = ?",
+                    (user_id,)
+                )
+                
                 db.commit()
                 cur.close()
 

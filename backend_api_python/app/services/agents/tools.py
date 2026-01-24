@@ -137,7 +137,8 @@ class AgentTools:
             
             elif market == 'Crypto':
                 exchange = self._ccxt_exchange()
-                symbol_pair = f'{symbol}/USDT'
+                # Handle symbol format: ETH/USDT -> ETH/USDT, ETH -> ETH/USDT
+                symbol_pair = symbol if '/' in symbol else f'{symbol}/USDT'
                 start_time = int((datetime.now() - timedelta(days=days)).timestamp())
                 # CCXT timeframes: 1d, 1h, 4h ...
                 ccxt_tf = tf if tf in ["1d", "1h", "4h"] else "1d"
@@ -233,7 +234,8 @@ class AgentTools:
                     }
             elif market == 'Crypto':
                 exchange = self._ccxt_exchange()
-                symbol_pair = f'{symbol}/USDT'
+                # Handle symbol format: ETH/USDT -> ETH/USDT, ETH -> ETH/USDT
+                symbol_pair = symbol if '/' in symbol else f'{symbol}/USDT'
                 ticker = exchange.fetch_ticker(symbol_pair)
                 if ticker:
                     return {

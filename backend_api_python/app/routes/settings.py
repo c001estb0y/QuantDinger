@@ -93,43 +93,147 @@ CONFIG_SCHEMA = {
         'order': 3,
         'items': [
             {
+                'key': 'LLM_PROVIDER',
+                'label': 'LLM Provider',
+                'type': 'select',
+                'default': 'openrouter',
+                'options': [
+                    {'value': 'openrouter', 'label': 'OpenRouter (Multi-model gateway)'},
+                    {'value': 'openai', 'label': 'OpenAI Direct'},
+                    {'value': 'google', 'label': 'Google Gemini'},
+                    {'value': 'deepseek', 'label': 'DeepSeek'},
+                    {'value': 'grok', 'label': 'xAI Grok'},
+                ],
+                'description': 'Select your preferred LLM provider'
+            },
+            # OpenRouter
+            {
                 'key': 'OPENROUTER_API_KEY',
                 'label': 'OpenRouter API Key',
                 'type': 'password',
                 'required': False,
                 'link': 'https://openrouter.ai/keys',
                 'link_text': 'settings.link.getApiKey',
-                'description': 'OpenRouter API key for AI model access. Supports multiple LLM providers'
-            },
-            {
-                'key': 'OPENROUTER_API_URL',
-                'label': 'OpenRouter API URL',
-                'type': 'text',
-                'default': 'https://openrouter.ai/api/v1/chat/completions',
-                'description': 'OpenRouter API endpoint URL'
+                'description': 'OpenRouter API key. Supports 100+ models via single API',
+                'group': 'openrouter'
             },
             {
                 'key': 'OPENROUTER_MODEL',
-                'label': 'Default Model',
+                'label': 'OpenRouter Model',
                 'type': 'text',
                 'default': 'openai/gpt-4o',
                 'link': 'https://openrouter.ai/models',
                 'link_text': 'settings.link.viewModels',
-                'description': 'Default LLM model ID, e.g. openai/gpt-4o, anthropic/claude-3.5-sonnet'
+                'description': 'Model ID, e.g. openai/gpt-4o, anthropic/claude-3.5-sonnet',
+                'group': 'openrouter'
             },
+            # OpenAI Direct
+            {
+                'key': 'OPENAI_API_KEY',
+                'label': 'OpenAI API Key',
+                'type': 'password',
+                'required': False,
+                'link': 'https://platform.openai.com/api-keys',
+                'link_text': 'settings.link.getApiKey',
+                'description': 'OpenAI official API key',
+                'group': 'openai'
+            },
+            {
+                'key': 'OPENAI_MODEL',
+                'label': 'OpenAI Model',
+                'type': 'text',
+                'default': 'gpt-4o',
+                'description': 'Model name: gpt-4o, gpt-4o-mini, gpt-4-turbo, etc.',
+                'group': 'openai'
+            },
+            {
+                'key': 'OPENAI_BASE_URL',
+                'label': 'OpenAI Base URL',
+                'type': 'text',
+                'default': 'https://api.openai.com/v1',
+                'description': 'Custom API endpoint (for proxies or Azure)',
+                'group': 'openai'
+            },
+            # Google Gemini
+            {
+                'key': 'GOOGLE_API_KEY',
+                'label': 'Google API Key',
+                'type': 'password',
+                'required': False,
+                'link': 'https://aistudio.google.com/apikey',
+                'link_text': 'settings.link.getApiKey',
+                'description': 'Google AI Studio API key for Gemini',
+                'group': 'google'
+            },
+            {
+                'key': 'GOOGLE_MODEL',
+                'label': 'Gemini Model',
+                'type': 'text',
+                'default': 'gemini-1.5-flash',
+                'description': 'Model: gemini-1.5-flash, gemini-1.5-pro, gemini-2.0-flash-exp',
+                'group': 'google'
+            },
+            # DeepSeek
+            {
+                'key': 'DEEPSEEK_API_KEY',
+                'label': 'DeepSeek API Key',
+                'type': 'password',
+                'required': False,
+                'link': 'https://platform.deepseek.com/api_keys',
+                'link_text': 'settings.link.getApiKey',
+                'description': 'DeepSeek API key',
+                'group': 'deepseek'
+            },
+            {
+                'key': 'DEEPSEEK_MODEL',
+                'label': 'DeepSeek Model',
+                'type': 'text',
+                'default': 'deepseek-chat',
+                'description': 'Model: deepseek-chat, deepseek-coder',
+                'group': 'deepseek'
+            },
+            {
+                'key': 'DEEPSEEK_BASE_URL',
+                'label': 'DeepSeek Base URL',
+                'type': 'text',
+                'default': 'https://api.deepseek.com/v1',
+                'description': 'DeepSeek API endpoint',
+                'group': 'deepseek'
+            },
+            # xAI Grok
+            {
+                'key': 'GROK_API_KEY',
+                'label': 'Grok API Key',
+                'type': 'password',
+                'required': False,
+                'link': 'https://console.x.ai/',
+                'link_text': 'settings.link.getApiKey',
+                'description': 'xAI Grok API key',
+                'group': 'grok'
+            },
+            {
+                'key': 'GROK_MODEL',
+                'label': 'Grok Model',
+                'type': 'text',
+                'default': 'grok-beta',
+                'description': 'Model: grok-beta, grok-2',
+                'group': 'grok'
+            },
+            {
+                'key': 'GROK_BASE_URL',
+                'label': 'Grok Base URL',
+                'type': 'text',
+                'default': 'https://api.x.ai/v1',
+                'description': 'xAI Grok API endpoint',
+                'group': 'grok'
+            },
+            # Common settings
             {
                 'key': 'OPENROUTER_TEMPERATURE',
                 'label': 'Temperature',
                 'type': 'number',
                 'default': '0.7',
-                'description': 'Model creativity (0-1). Lower = more deterministic, Higher = more creative'
-            },
-            {
-                'key': 'OPENROUTER_MAX_TOKENS',
-                'label': 'Max Tokens',
-                'type': 'number',
-                'default': '4000',
-                'description': 'Maximum output tokens per request'
+                'description': 'Model creativity (0-1). Lower = more deterministic'
             },
             {
                 'key': 'OPENROUTER_TIMEOUT',
@@ -137,13 +241,6 @@ CONFIG_SCHEMA = {
                 'type': 'number',
                 'default': '300',
                 'description': 'API request timeout in seconds'
-            },
-            {
-                'key': 'OPENROUTER_CONNECT_TIMEOUT',
-                'label': 'Connect Timeout (sec)',
-                'type': 'number',
-                'default': '30',
-                'description': 'Connection establishment timeout in seconds'
             },
             {
                 'key': 'AI_MODELS_JSON',

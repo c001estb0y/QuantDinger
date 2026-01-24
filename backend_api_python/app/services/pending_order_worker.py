@@ -948,6 +948,98 @@ class PendingOrderWorker:
         def _current_avg() -> float:
             return float(total_quote / total_base) if total_base > 0 else 0.0
 
+        # For close/reduce signals, query actual exchange position to avoid insufficient balance due to fees
+        # The exchange position may be smaller than our recorded amount due to trading fees
+        if reduce_only and market_type == "swap":
+            try:
+                actual_pos_size = 0.0
+                if isinstance(client, OkxClient):
+                    inst_id = to_okx_swap_inst_id(str(symbol))
+                    pos_resp = client.get_positions(inst_id=inst_id)
+                    pos_data = (pos_resp.get("data") or []) if isinstance(pos_resp, dict) else []
+                    for pos in pos_data:
+                        if not isinstance(pos, dict):
+                            continue
+                        pos_inst = str(pos.get("instId") or "").strip()
+                        pos_ps = str(pos.get("posSide") or "").strip().lower()
+                        # Match instrument and position side
+                        if pos_inst == inst_id and pos_ps == pos_side:
+                            # OKX pos field is signed for net mode; use abs for simplicity
+                            pos_qty = abs(float(pos.get("pos") or 0.0))
+                            # Convert contracts to base amount using ctVal
+                            ct_val = float(pos.get("ctVal") or 0.0)
+                            if ct_val > 0:
+                                actual_pos_size = pos_qty * ct_val
+                            else:
+                                actual_pos_size = pos_qty
+                            break
+                elif isinstance(client, BinanceFuturesClient):
+                    pos_resp = client.get_positions() or []
+                    pos_list = pos_resp if isinstance(pos_resp, list) else []
+                    # Normalize symbol for matching (remove / or -)
+                    norm_sym = str(symbol or "").replace("/", "").replace("-", "").upper()
+                    for pos in pos_list:
+                        if not isinstance(pos, dict):
+                            continue
+                        pos_sym = str(pos.get("symbol") or "").upper()
+                        if pos_sym != norm_sym:
+                            continue
+                        # Match position side
+                        p_side = str(pos.get("positionSide") or "").strip().lower()
+                        if p_side == pos_side or (p_side == "both" and pos_side in ("long", "short")):
+                            pos_amt = abs(float(pos.get("positionAmt") or 0.0))
+                            if pos_amt > 0:
+                                actual_pos_size = pos_amt
+                                break
+                elif isinstance(client, BybitClient):
+                    pos_resp = client.get_positions() or {}
+                    pos_list = (pos_resp.get("result") or {}).get("list") or [] if isinstance(pos_resp, dict) else []
+                    for pos in pos_list:
+                        if not isinstance(pos, dict):
+                            continue
+                        pos_sym = str(pos.get("symbol") or "")
+                        if pos_sym != str(symbol or "").replace("/", ""):
+                            continue
+                        p_side = str(pos.get("side") or "").strip().lower()
+                        if (p_side == "buy" and pos_side == "long") or (p_side == "sell" and pos_side == "short"):
+                            pos_sz = abs(float(pos.get("size") or 0.0))
+                            if pos_sz > 0:
+                                actual_pos_size = pos_sz
+                                break
+                elif isinstance(client, BitgetMixClient):
+                    product_type = str(exchange_config.get("product_type") or exchange_config.get("productType") or "USDT-FUTURES")
+                    pos_resp = client.get_positions(product_type=product_type) or {}
+                    pos_list = (pos_resp.get("data") or []) if isinstance(pos_resp, dict) else []
+                    for pos in pos_list:
+                        if not isinstance(pos, dict):
+                            continue
+                        pos_sym = str(pos.get("symbol") or "")
+                        if pos_sym != str(symbol or ""):
+                            continue
+                        p_side = str(pos.get("holdSide") or "").strip().lower()
+                        if p_side == pos_side:
+                            pos_sz = abs(float(pos.get("total") or pos.get("available") or 0.0))
+                            if pos_sz > 0:
+                                actual_pos_size = pos_sz
+                                break
+                
+                # If we found actual position and it's smaller than requested, use actual size
+                if actual_pos_size > 0 and actual_pos_size < float(amount or 0.0):
+                    logger.info(
+                        f"Close position adjustment: pending_id={order_id}, strategy_id={strategy_id}, "
+                        f"requested={amount}, actual_pos={actual_pos_size}, using actual"
+                    )
+                    phases["pos_adjustment"] = {
+                        "requested": float(amount or 0.0),
+                        "actual_position": actual_pos_size,
+                        "using": actual_pos_size,
+                    }
+                    amount = actual_pos_size
+            except Exception as e:
+                # Best-effort only; log and continue with original amount
+                logger.warning(f"Failed to query position for close adjustment: pending_id={order_id}, err={e}")
+                phases["pos_query_error"] = str(e)
+
         # Decide if we should use limit-first flow.
         use_limit_first = order_mode in ("maker", "limit", "limit_first", "maker_then_market")
 
