@@ -170,9 +170,14 @@ class UserService:
                     (user['id'],)
                 )
                 db.commit()
+                affected = cur.rowcount
                 cur.close()
+                if affected == 0:
+                    logger.error(f"Failed to update last_login_at: no rows affected for user_id={user['id']}")
+                else:
+                    logger.info(f"Updated last_login_at for user_id={user['id']}")
         except Exception as e:
-            logger.warning(f"Failed to update last_login_at: {e}")
+            logger.error(f"Failed to update last_login_at for user_id={user.get('id')}: {e}")
         
         # Remove password_hash from return value
         user.pop('password_hash', None)

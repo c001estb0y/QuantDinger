@@ -768,8 +768,9 @@ def _send_monitor_notification(
                             cur.close()
                     elif ch == 'telegram':
                         chat_id = targets.get('telegram', '')
+                        token_override = targets.get('telegram_bot_token', '')
                         if chat_id:
-                            notifier._notify_telegram(chat_id=chat_id, text=f"<b>{error_title}</b>\n\n{error_msg}", parse_mode="HTML")
+                            notifier._notify_telegram(chat_id=chat_id, text=f"<b>{error_title}</b>\n\n{error_msg}", token_override=token_override, parse_mode="HTML")
                     elif ch == 'email':
                         to_email = targets.get('email', '')
                         if to_email:
@@ -815,11 +816,13 @@ def _send_monitor_notification(
                 
                 elif ch == 'telegram':
                     chat_id = targets.get('telegram', '')
+                    token_override = targets.get('telegram_bot_token', '')
                     if chat_id:
                         # Use Telegram-optimized format
                         notifier._notify_telegram(
                             chat_id=chat_id,
                             text=telegram_report,
+                            token_override=token_override,
                             parse_mode="HTML"
                         )
                 
@@ -1099,8 +1102,9 @@ def _check_position_alerts():
                                     cur.close()
                             elif ch == 'telegram':
                                 chat_id = targets.get('telegram', '')
+                                token_override = targets.get('telegram_bot_token', '')
                                 if chat_id:
-                                    notifier._notify_telegram(chat_id=chat_id, text=alert_message, parse_mode="HTML")
+                                    notifier._notify_telegram(chat_id=chat_id, text=alert_message, token_override=token_override, parse_mode="HTML")
                             elif ch == 'email':
                                 to_email = targets.get('email', '')
                                 if to_email:

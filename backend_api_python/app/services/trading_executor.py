@@ -52,29 +52,48 @@ class TradingExecutor:
         self._ensure_db_columns()
 
     def _ensure_db_columns(self):
-        """确保必要的数据库字段存在"""
+        """确保必要的数据库字段存在（支持 SQLite 和 PostgreSQL）"""
         try:
+            db_type = os.getenv('DB_TYPE', 'sqlite').lower()
             with get_db_connection() as db:
                 cursor = db.cursor()
+                col_names = set()
 
-                # SQLite 兼容：使用 PRAGMA table_info 检查列是否存在
-                try:
-                    cursor.execute("PRAGMA table_info(qd_strategy_positions)")
-                    cols = cursor.fetchall() or []
-                    col_names = {c.get('name') for c in cols if isinstance(c, dict)}
-                except Exception:
-                    col_names = set()
+                if db_type == 'postgresql':
+                    # PostgreSQL: 使用 information_schema 查询列
+                    try:
+                        cursor.execute("""
+                            SELECT column_name FROM information_schema.columns 
+                            WHERE table_name = 'qd_strategy_positions'
+                        """)
+                        cols = cursor.fetchall() or []
+                        col_names = {c.get('column_name') or c.get('COLUMN_NAME') for c in cols if isinstance(c, dict)}
+                    except Exception:
+                        col_names = set()
+                else:
+                    # SQLite: 使用 PRAGMA table_info
+                    try:
+                        cursor.execute("PRAGMA table_info(qd_strategy_positions)")
+                        cols = cursor.fetchall() or []
+                        col_names = {c.get('name') for c in cols if isinstance(c, dict)}
+                    except Exception:
+                        col_names = set()
 
                 if 'highest_price' not in col_names:
-                    logger.info("Adding highest_price column to qd_strategy_positions (SQLite)...")
-                    # SQLite 不支持 AFTER 子句，类型用 REAL 即可
-                    cursor.execute("ALTER TABLE qd_strategy_positions ADD COLUMN highest_price REAL DEFAULT 0")
+                    logger.info(f"Adding highest_price column to qd_strategy_positions ({db_type})...")
+                    if db_type == 'postgresql':
+                        cursor.execute("ALTER TABLE qd_strategy_positions ADD COLUMN IF NOT EXISTS highest_price DOUBLE PRECISION DEFAULT 0")
+                    else:
+                        cursor.execute("ALTER TABLE qd_strategy_positions ADD COLUMN highest_price REAL DEFAULT 0")
                     db.commit()
                     logger.info("highest_price column added")
 
                 if 'lowest_price' not in col_names:
-                    logger.info("Adding lowest_price column to qd_strategy_positions (SQLite)...")
-                    cursor.execute("ALTER TABLE qd_strategy_positions ADD COLUMN lowest_price REAL DEFAULT 0")
+                    logger.info(f"Adding lowest_price column to qd_strategy_positions ({db_type})...")
+                    if db_type == 'postgresql':
+                        cursor.execute("ALTER TABLE qd_strategy_positions ADD COLUMN IF NOT EXISTS lowest_price DOUBLE PRECISION DEFAULT 0")
+                    else:
+                        cursor.execute("ALTER TABLE qd_strategy_positions ADD COLUMN lowest_price REAL DEFAULT 0")
                     db.commit()
                     logger.info("lowest_price column added")
 

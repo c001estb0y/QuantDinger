@@ -107,6 +107,14 @@ QuantDingerには、ウェブから金融情報を収集し、ローカル市場
 ## 📸 ビジュアルツアー
 
 <div align="center">
+  <h3>🗺️ システムアーキテクチャ概要</h3>
+  <p>QuantDinger の AI 駆動型リサーチ、バックテスト、自動取引機能の全体像。</p>
+  <img src="docs/screenshots/tuopu.png" alt="QuantDinger システムトポロジー" width="100%" style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 800px;">
+</div>
+
+<br/>
+
+<div align="center">
   <h3>📊 プロフェッショナル・クオンツダッシュボード</h3>
   <p>市場の動向、資産、戦略ステータスをリアルタイムで監視。</p>
   <img src="docs/screenshots/dashboard.png" alt="QuantDinger Dashboard" width="100%" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
@@ -296,9 +304,31 @@ score = w_{sim}\cdot sim + w_{recency}\cdot recency + w_{returns}\cdot returns\_
 - **自動復元**: システム再起動後に実行中の戦略を再開
 - **注文キュー**: 注文実行のためのバックグラウンドワーカー
 
-### 7. 技術スタック
+### 7. マルチLLMプロバイダーサポート
 
-- **バックエンド**: Python (Flask) + SQLite + Redis（オプション）
+QuantDinger は複数の AI プロバイダーをサポートし、自動検出機能を備えています：
+
+| プロバイダー | 特徴 |
+|------------|------|
+| **OpenRouter** | マルチモデルゲートウェイ（デフォルト）、100+ モデル |
+| **OpenAI** | GPT-4o, GPT-4o-mini |
+| **Google Gemini** | Gemini 1.5 Flash/Pro |
+| **DeepSeek** | DeepSeek Chat（コスパ良好） |
+| **xAI Grok** | Grok Beta |
+
+`.env` でお好みのプロバイダーの API キーを設定するだけで、システムが利用可能なプロバイダーを自動検出します。
+
+### 8. ユーザー管理とセキュリティ
+
+- **マルチユーザーサポート**：PostgreSQL ベースのユーザーアカウント、ロールベースの権限管理
+- **OAuth ログイン**：Google および GitHub OAuth 統合
+- **メール認証**：メール認証コードによる登録とパスワードリセット
+- **セキュリティ機能**：Cloudflare Turnstile キャプチャ、IP/アカウントレート制限
+- **デモモード**：公開デモ用の読み取り専用モード
+
+### 9. 技術スタック
+
+- **バックエンド**: Python (Flask) + PostgreSQL + Redis（オプション）
 - **フロントエンド**: Vue 2 + Ant Design Vue + KlineCharts/ECharts
 - **デプロイ**: Docker Compose
 
@@ -491,9 +521,14 @@ npm run serve
 
 - **認証**: `SECRET_KEY`, `ADMIN_USER`, `ADMIN_PASSWORD`
 - **サーバー**: `PYTHON_API_HOST`, `PYTHON_API_PORT`, `PYTHON_API_DEBUG`
-- **AI / LLM**: `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`
+- **データベース**: `DATABASE_URL` (PostgreSQL 接続文字列)
+- **AI / LLM**: `LLM_PROVIDER` (openrouter/openai/google/deepseek/grok), 各プロバイダー API キー
+- **OAuth**: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`
+- **セキュリティ**: `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `ENABLE_REGISTRATION`
 - **ウェブ検索**: `SEARCH_PROVIDER`, `SEARCH_GOOGLE_*`, `SEARCH_BING_API_KEY`
+- **注文執行**: `ORDER_MODE` (maker/market), `MAKER_WAIT_SEC`, `MAKER_OFFSET_BPS`
 - **プロキシ (オプション)**: `PROXY_PORT` または `PROXY_URL`
+- **バックグラウンドサービス**: `ENABLE_PENDING_ORDER_WORKER`, `ENABLE_PORTFOLIO_MONITOR`
 
 ---
 
@@ -585,6 +620,30 @@ QuantDinger のコードは **Apache License 2.0** で提供されています�
   <img src="https://img.shields.io/badge/USDT-Accepted-26A17B?style=for-the-badge&logo=tether&logoColor=white" alt="USDT">
   <img src="https://img.shields.io/badge/ETH-Accepted-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white" alt="ETH">
 </p>
+
+---
+
+### 🎓 サポートパートナー
+
+量的金融の教育と研究を推進する学術機関や組織からのサポートを光栄に思います。
+
+<div align="center">
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <a href="https://beinvolved.indiana.edu/organization/quantfiniu" target="_blank">
+        <img src="docs/screenshots/qfs_logo.png" alt="インディアナ大学量的金融学会" width="280" style="border-radius: 8px;">
+      </a>
+      <br/><br/>
+      <strong>量的金融学会 (QFS)</strong><br/>
+      <small>インディアナ大学ブルーミントン校</small><br/>
+      <small>次世代の量的金融専門家を育成</small>
+    </td>
+  </tr>
+</table>
+</div>
+
+> 💡 **サポートパートナーになりませんか？** 大学、研究機関、組織との協力を歓迎します。[brokermr810@gmail.com](mailto:brokermr810@gmail.com) または [Telegram](https://t.me/worldinbroker) でお問い合わせください。
 
 ---
 

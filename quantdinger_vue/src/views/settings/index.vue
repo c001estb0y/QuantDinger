@@ -171,8 +171,12 @@
                         v-decorator="[item.key, { initialValue: getFieldValue(groupKey, item.key) || item.default }]"
                         :placeholder="item.default ? `${$t('settings.default')}: ${item.default}` : $t('settings.pleaseSelect')"
                       >
-                        <a-select-option v-for="opt in item.options" :key="opt" :value="opt">
-                          {{ opt }}
+                        <a-select-option
+                          v-for="opt in getSelectOptions(item.options)"
+                          :key="opt.value"
+                          :value="opt.value"
+                        >
+                          {{ opt.label }}
                         </a-select-option>
                       </a-select>
                     </template>
@@ -249,6 +253,21 @@ export default {
     this.loadSettings()
   },
   methods: {
+    // 兼容后端 schema options 两种格式：
+    // - string[]: ['openrouter','openai', ...]
+    // - {value,label}[]: [{value:'openrouter',label:'OpenRouter'}, ...]
+    getSelectOptions (options) {
+      const arr = Array.isArray(options) ? options : []
+      return arr.map(opt => {
+        if (opt && typeof opt === 'object') {
+          return {
+            value: opt.value != null ? String(opt.value) : '',
+            label: opt.label != null ? String(opt.label) : String(opt.value || '')
+          }
+        }
+        return { value: String(opt), label: String(opt) }
+      }).filter(o => o.value !== '')
+    },
     async loadSettings () {
       this.loading = true
       try {

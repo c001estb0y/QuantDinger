@@ -66,7 +66,7 @@ def get_public_config():
                 'google/gemini-2.5-pro': 'Google: Gemini 2.5 Pro',
                 'openai/gpt-4o-mini': 'OpenAI: GPT-4o-mini',
                 'openai/gpt-5-mini': 'OpenAI: GPT-5 Mini',
-                'openai/gpt-oss-120b': 'OpenAI: gpt-oss-120b',
+                'openai/gpt-4.1-mini': 'OpenAI: GPT-4.1 Mini',
                 'deepseek/deepseek-v3.2': 'DeepSeek: DeepSeek V3.2',
                 'minimax/minimax-m2': 'MiniMax: MiniMax M2',
                 'anthropic/claude-sonnet-4': 'Anthropic: Claude Sonnet 4',

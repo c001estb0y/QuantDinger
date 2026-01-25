@@ -816,9 +816,6 @@ def get_strategy_notifications():
             user_strategy_ids = [r.get('id') for r in rows if r.get('id')]
             cur.close()
         
-        if not user_strategy_ids:
-            return jsonify({'code': 1, 'msg': 'success', 'data': {'items': []}})
-
         where = []
         args = []
         
@@ -830,9 +827,15 @@ def get_strategy_notifications():
             else:
                 return jsonify({'code': 1, 'msg': 'success', 'data': {'items': []}})
         else:
-            placeholders = ",".join(["?"] * len(user_strategy_ids))
-            where.append(f"strategy_id IN ({placeholders})")
-            args.extend(user_strategy_ids)
+            if user_strategy_ids:
+                placeholders = ",".join(["?"] * len(user_strategy_ids))
+                where.append(f"(strategy_id IN ({placeholders}) OR (strategy_id IS NULL AND user_id = ?))")
+                args.extend(user_strategy_ids)
+                args.append(user_id)
+            else:
+                # Only portfolio monitor notifications (strategy_id is NULL)
+                where.append("strategy_id IS NULL AND user_id = ?")
+                args.append(user_id)
         
         if since_id:
             where.append("id > ?")
@@ -889,15 +892,18 @@ def mark_notification_read():
         if not notification_id:
             return jsonify({'code': 0, 'msg': 'Missing id'}), 400
 
-        # Only update notifications for user's strategies
+        # Update notifications for user's strategies OR portfolio monitor notifications
         with get_db_connection() as db:
             cur = db.cursor()
             cur.execute(
                 """
                 UPDATE qd_strategy_notifications SET is_read = 1 
-                WHERE id = ? AND strategy_id IN (SELECT id FROM qd_strategies_trading WHERE user_id = ?)
+                WHERE id = ? AND (
+                    strategy_id IN (SELECT id FROM qd_strategies_trading WHERE user_id = ?)
+                    OR (strategy_id IS NULL AND user_id = ?)
+                )
                 """,
-                (int(notification_id), user_id)
+                (int(notification_id), user_id, user_id)
             )
             db.commit()
             cur.close()
@@ -920,8 +926,9 @@ def mark_all_notifications_read():
                 """
                 UPDATE qd_strategy_notifications SET is_read = 1 
                 WHERE strategy_id IN (SELECT id FROM qd_strategies_trading WHERE user_id = ?)
+                   OR (strategy_id IS NULL AND user_id = ?)
                 """,
-                (user_id,)
+                (user_id, user_id)
             )
             db.commit()
             cur.close()
@@ -944,8 +951,9 @@ def clear_notifications():
                 """
                 DELETE FROM qd_strategy_notifications 
                 WHERE strategy_id IN (SELECT id FROM qd_strategies_trading WHERE user_id = ?)
+                   OR (strategy_id IS NULL AND user_id = ?)
                 """,
-                (user_id,)
+                (user_id, user_id)
             )
             db.commit()
             cur.close()

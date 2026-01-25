@@ -107,6 +107,14 @@ QuantDinger includes a built-in **LLM-based multi-agent research system** that g
 ## 📸 Visual Tour
 
 <div align="center">
+  <h3>🗺️ System Architecture Overview</h3>
+  <p>A comprehensive view of QuantDinger's AI-powered research, backtesting, and automated trading capabilities.</p>
+  <img src="docs/screenshots/tuopu.png" alt="QuantDinger System Topology" width="100%" style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 800px;">
+</div>
+
+<br/>
+
+<div align="center">
   <h3>📊 Professional Quant Dashboard</h3>
   <p>Real-time monitoring of market dynamics, assets, and strategy status.</p>
   <img src="docs/screenshots/dashboard.png" alt="QuantDinger Dashboard" width="100%" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
@@ -288,7 +296,29 @@ Config lives in `.env` (see `backend_api_python/env.example`): `ENABLE_AGENT_MEM
 - **Auto-Restore**: Resumes running strategies after system restarts
 - **Order Queue**: Background worker for order execution
 
-### 7. Tech Stack
+### 7. Multi-LLM Provider Support
+
+QuantDinger supports multiple AI providers with auto-detection:
+
+| Provider | Features |
+|----------|----------|
+| **OpenRouter** | Multi-model gateway (default), 100+ models |
+| **OpenAI** | GPT-4o, GPT-4o-mini |
+| **Google Gemini** | Gemini 1.5 Flash/Pro |
+| **DeepSeek** | DeepSeek Chat (cost-effective) |
+| **xAI Grok** | Grok Beta |
+
+Simply configure your preferred provider's API key in `.env`. The system auto-detects available providers.
+
+### 8. User Management & Security
+
+- **Multi-User Support**: PostgreSQL-backed user accounts with role-based permissions
+- **OAuth Login**: Google and GitHub OAuth integration
+- **Email Verification**: Registration and password reset via email codes
+- **Security Features**: Cloudflare Turnstile captcha, IP/account rate limiting
+- **Demo Mode**: Read-only mode for public demonstrations
+
+### 9. Tech Stack
 
 - **Backend**: Python (Flask) + PostgreSQL + Redis (optional)
 - **Frontend**: Vue 2 + Ant Design Vue + KlineCharts/ECharts
@@ -708,10 +738,13 @@ Use `backend_api_python/env.example` as a template. Common settings include:
 - **Auth**: `SECRET_KEY`, `ADMIN_USER`, `ADMIN_PASSWORD`
 - **Server**: `PYTHON_API_HOST`, `PYTHON_API_PORT`, `PYTHON_API_DEBUG`
 - **Database**: `DATABASE_URL` (PostgreSQL connection string)
-- **AI / LLM**: `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, timeouts
+- **AI / LLM**: `LLM_PROVIDER` (openrouter/openai/google/deepseek/grok), provider-specific API keys
+- **OAuth**: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`
+- **Security**: `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `ENABLE_REGISTRATION`
 - **Web search**: `SEARCH_PROVIDER`, `SEARCH_GOOGLE_*`, `SEARCH_BING_API_KEY`
+- **Order Execution**: `ORDER_MODE` (maker/market), `MAKER_WAIT_SEC`, `MAKER_OFFSET_BPS`
 - **Proxy (optional)**: `PROXY_PORT` or `PROXY_URL`
-- **Workers**: `ENABLE_PENDING_ORDER_WORKER`, `DISABLE_RESTORE_RUNNING_STRATEGIES`
+- **Workers**: `ENABLE_PENDING_ORDER_WORKER`, `ENABLE_PORTFOLIO_MONITOR`
 
 ---
 
@@ -820,6 +853,30 @@ Your contributions help us maintain and improve QuantDinger.
   <img src="https://img.shields.io/badge/USDT-Accepted-26A17B?style=for-the-badge&logo=tether&logoColor=white" alt="USDT">
   <img src="https://img.shields.io/badge/ETH-Accepted-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white" alt="ETH">
 </p>
+
+---
+
+### 🎓 Supporting Partners
+
+We are proud to be supported by academic institutions and organizations advancing quantitative finance education and research.
+
+<div align="center">
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <a href="https://beinvolved.indiana.edu/organization/quantfiniu" target="_blank">
+        <img src="docs/screenshots/qfs_logo.png" alt="Indiana University Quantitative Finance Society" width="280" style="border-radius: 8px;">
+      </a>
+      <br/><br/>
+      <strong>Quantitative Finance Society (QFS)</strong><br/>
+      <small>Indiana University Bloomington</small><br/>
+      <small>Fostering the next generation of quantitative finance professionals</small>
+    </td>
+  </tr>
+</table>
+</div>
+
+> 💡 **Interested in becoming a supporting partner?** We welcome collaborations with universities, research institutions, and organizations. Contact us at [brokermr810@gmail.com](mailto:brokermr810@gmail.com) or via [Telegram](https://t.me/worldinbroker).
 
 ---
 
