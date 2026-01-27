@@ -59,12 +59,18 @@ def create_client(exchange_config: Dict[str, Any], *, market_type: str = "swap")
         mt = "swap"
 
     if exchange_id == "binance":
+        # 检查是否启用模拟交易，支持布尔值和字符串
+        enable_demo = exchange_config.get("enable_demo_trading") or exchange_config.get("enableDemoTrading")
+        is_demo = bool(enable_demo) if isinstance(enable_demo, bool) else str(enable_demo).lower() in ("true", "1", "yes")
+        
         if mt == "spot":
-            base_url = _get(exchange_config, "base_url", "baseUrl") or "https://api.binance.com"
-            return BinanceSpotClient(api_key=api_key, secret_key=secret_key, base_url=base_url)
-        # Default to USDT-M futures
-        base_url = _get(exchange_config, "base_url", "baseUrl") or "https://fapi.binance.com"
-        return BinanceFuturesClient(api_key=api_key, secret_key=secret_key, base_url=base_url)
+            default_url = "https://demo-api.binance.com" if is_demo else "https://api.binance.com"
+            base_url = _get(exchange_config, "base_url", "baseUrl") or default_url
+            return BinanceSpotClient(api_key=api_key, secret_key=secret_key, base_url=base_url, enable_demo_trading=is_demo)
+        # Default to USDT-M futures  
+        default_url = "https://demo-fapi.binance.com" if is_demo else "https://fapi.binance.com"
+        base_url = _get(exchange_config, "base_url", "baseUrl") or default_url
+        return BinanceFuturesClient(api_key=api_key, secret_key=secret_key, base_url=base_url, enable_demo_trading=is_demo)
     if exchange_id == "okx":
         base_url = _get(exchange_config, "base_url", "baseUrl") or "https://www.okx.com"
         return OkxClient(api_key=api_key, secret_key=secret_key, passphrase=passphrase, base_url=base_url)

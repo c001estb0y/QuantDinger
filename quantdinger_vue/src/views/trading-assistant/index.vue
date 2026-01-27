@@ -22,18 +22,15 @@
             <a-empty v-if="!loading && strategies.length === 0" :description="$t('trading-assistant.noStrategy')" />
             <div v-else class="strategy-grouped-list">
               <!-- 策略组列表 -->
-              <div
-                v-for="group in groupedStrategies.groups"
-                :key="group.id"
-                class="strategy-group"
-              >
+              <div v-for="group in groupedStrategies.groups" :key="group.id" class="strategy-group">
                 <!-- 策略组头部 -->
                 <div class="strategy-group-header" @click="toggleGroup(group.id)">
                   <div class="group-header-left">
                     <a-icon :type="collapsedGroups[group.id] ? 'right' : 'down'" class="collapse-icon" />
                     <a-icon type="folder" class="group-icon" />
                     <span class="group-name">{{ group.baseName }}</span>
-                    <a-tag size="small" color="blue">{{ group.strategies.length }} {{ $t('trading-assistant.symbolCount') }}</a-tag>
+                    <a-tag size="small" color="blue">{{ group.strategies.length }} {{
+                      $t('trading-assistant.symbolCount') }}</a-tag>
                   </div>
                   <div class="group-header-right" @click.stop>
                     <span v-if="group.runningCount > 0" class="group-status running">
@@ -68,8 +65,7 @@
                     v-for="item in group.strategies"
                     :key="item.id"
                     :class="['strategy-list-item', { active: selectedStrategy && selectedStrategy.id === item.id }]"
-                    @click="handleSelectStrategy(item)"
-                  >
+                    @click="handleSelectStrategy(item)">
                     <div class="strategy-item-content">
                       <div class="strategy-item-header">
                         <div class="strategy-name-wrapper">
@@ -82,8 +78,7 @@
                             :class="[
                               item.status ? `status-${item.status}` : '',
                               { 'status-stopped': item.status === 'stopped' }
-                            ]"
-                          >
+                            ]">
                             {{ getStatusText(item.status) }}
                           </span>
                         </div>
@@ -123,8 +118,7 @@
                 v-for="item in groupedStrategies.ungrouped"
                 :key="item.id"
                 :class="['strategy-list-item', { active: selectedStrategy && selectedStrategy.id === item.id }]"
-                @click="handleSelectStrategy(item)"
-              >
+                @click="handleSelectStrategy(item)">
                 <div class="strategy-item-content">
                   <div class="strategy-item-header">
                     <div class="strategy-name-wrapper">
@@ -132,8 +126,7 @@
                         v-if="item.exchange_config && item.exchange_config.exchange_id"
                         :color="getExchangeTagColor(item.exchange_config.exchange_id)"
                         size="small"
-                        class="exchange-tag"
-                      >
+                        class="exchange-tag">
                         <a-icon type="bank" style="margin-right: 4px;" />
                         {{ getExchangeDisplayName(item.exchange_config.exchange_id) }}
                       </a-tag>
@@ -142,8 +135,7 @@
                         v-if="item.strategy_type === 'PromptBasedStrategy'"
                         color="purple"
                         size="small"
-                        class="strategy-type-tag"
-                      >
+                        class="strategy-type-tag">
                         <a-icon type="robot" style="margin-right: 2px;" />
                         AI
                       </a-tag>
@@ -159,8 +151,7 @@
                       :class="[
                         item.status ? `status-${item.status}` : '',
                         { 'status-stopped': item.status === 'stopped' }
-                      ]"
-                    >
+                      ]">
                       {{ getStatusText(item.status) }}
                     </span>
                   </div>
@@ -223,13 +214,16 @@
 
                 <!-- 关键数据卡片 -->
                 <div class="key-stats-grid">
-                  <div class="stat-card" v-if="selectedStrategy.initial_capital || (selectedStrategy.trading_config && selectedStrategy.trading_config.initial_capital)">
+                  <div
+                    class="stat-card"
+                    v-if="selectedStrategy.initial_capital || (selectedStrategy.trading_config && selectedStrategy.trading_config.initial_capital)">
                     <div class="stat-icon investment">
                       <a-icon type="wallet" />
                     </div>
                     <div class="stat-content">
                       <div class="stat-label">{{ $t('trading-assistant.detail.totalInvestment') }}</div>
-                      <div class="stat-value">${{ ((selectedStrategy.initial_capital || selectedStrategy.trading_config?.initial_capital) || 0).toLocaleString() }}</div>
+                      <div class="stat-value">${{ ((selectedStrategy.initial_capital ||
+                      selectedStrategy.trading_config?.initial_capital) || 0).toLocaleString() }}</div>
                     </div>
                   </div>
                   <div class="stat-card" v-if="currentEquity !== null">
@@ -241,7 +235,10 @@
                       <div class="stat-value" :class="getEquityColorClass">{{ formatCurrency(currentEquity) }}</div>
                     </div>
                   </div>
-                  <div class="stat-card pnl-card" v-if="totalPnl !== null" :class="{ 'profit': totalPnl > 0, 'loss': totalPnl < 0 }">
+                  <div
+                    class="stat-card pnl-card"
+                    v-if="totalPnl !== null"
+                    :class="{ 'profit': totalPnl > 0, 'loss': totalPnl < 0 }">
                     <div class="stat-icon pnl">
                       <a-icon :type="totalPnl >= 0 ? 'rise' : 'fall'" />
                     </div>
@@ -261,7 +258,9 @@
                     <a-icon type="stock" />
                     <span>{{ selectedStrategy.trading_config.symbol }}</span>
                   </div>
-                  <div class="tag-item" v-if="selectedStrategy.indicator_config && selectedStrategy.indicator_config.indicator_name">
+                  <div
+                    class="tag-item"
+                    v-if="selectedStrategy.indicator_config && selectedStrategy.indicator_config.indicator_name">
                     <a-icon type="line-chart" />
                     <span>{{ selectedStrategy.indicator_config.indicator_name }}</span>
                   </div>
@@ -269,11 +268,15 @@
                     <a-icon type="thunderbolt" />
                     <span>{{ selectedStrategy.trading_config.leverage || 1 }}x</span>
                   </div>
-                  <div class="tag-item" v-if="selectedStrategy.trading_config && selectedStrategy.trading_config.trade_direction">
+                  <div
+                    class="tag-item"
+                    v-if="selectedStrategy.trading_config && selectedStrategy.trading_config.trade_direction">
                     <a-icon type="swap" />
                     <span>{{ getTradeDirectionText(selectedStrategy.trading_config.trade_direction) }}</span>
                   </div>
-                  <div class="tag-item" v-if="selectedStrategy.trading_config && selectedStrategy.trading_config.timeframe">
+                  <div
+                    class="tag-item"
+                    v-if="selectedStrategy.trading_config && selectedStrategy.trading_config.timeframe">
                     <a-icon type="clock-circle" />
                     <span>{{ selectedStrategy.trading_config.timeframe }}</span>
                   </div>
@@ -285,8 +288,7 @@
                   type="primary"
                   size="large"
                   class="action-btn start-btn"
-                  @click="handleStartStrategy(selectedStrategy.id)"
-                >
+                  @click="handleStartStrategy(selectedStrategy.id)">
                   <a-icon type="play-circle" />
                   {{ $t('trading-assistant.startStrategy') }}
                 </a-button>
@@ -295,8 +297,7 @@
                   type="danger"
                   size="large"
                   class="action-btn stop-btn"
-                  @click="handleStopStrategy(selectedStrategy.id)"
-                >
+                  @click="handleStopStrategy(selectedStrategy.id)">
                   <a-icon type="pause-circle" />
                   {{ $t('trading-assistant.stopStrategy') }}
                 </a-button>
@@ -312,14 +313,10 @@
                   :strategy-id="selectedStrategy.id"
                   :market-type="(selectedStrategy.trading_config && selectedStrategy.trading_config.market_type) || 'swap'"
                   :leverage="(selectedStrategy.trading_config && selectedStrategy.trading_config.leverage) || 1"
-                  :loading="loadingRecords"
-                />
+                  :loading="loadingRecords" />
               </a-tab-pane>
               <a-tab-pane key="trades" :tab="$t('trading-assistant.tabs.tradingRecords')">
-                <trading-records
-                  :strategy-id="selectedStrategy.id"
-                  :loading="loadingRecords"
-                />
+                <trading-records :strategy-id="selectedStrategy.id" :loading="loadingRecords" />
               </a-tab-pane>
             </a-tabs>
           </a-card>
@@ -337,8 +334,7 @@
       @cancel="handleCloseModal"
       :maskClosable="false"
       :wrapClassName="isMobile ? 'mobile-modal' : ''"
-      :bodyStyle="{ maxHeight: '70vh', overflowY: 'auto' }"
-    >
+      :bodyStyle="{ maxHeight: '70vh', overflowY: 'auto' }">
       <a-spin :spinning="loadingIndicators">
         <a-steps :current="currentStep" class="steps-container">
           <a-step :title="$t('trading-assistant.form.step1')" />
@@ -361,13 +357,11 @@
                     @focus="handleIndicatorSelectFocus"
                     @change="handleIndicatorChange"
                     :loading="loadingIndicators"
-                    :getPopupContainer="(triggerNode) => triggerNode.parentNode"
-                  >
+                    :getPopupContainer="(triggerNode) => triggerNode.parentNode">
                     <a-select-option
                       v-for="indicator in availableIndicators"
                       :key="String(indicator.id)"
-                      :value="String(indicator.id)"
-                    >
+                      :value="String(indicator.id)">
                       <div class="indicator-option">
                         <span class="indicator-name">{{ indicator.name }}</span>
                         <a-tag v-if="indicator.type" size="small" :color="getIndicatorTypeColor(indicator.type)">
@@ -392,11 +386,11 @@
                 <a-form-item :label="$t('trading-assistant.form.strategyName')">
                   <a-input
                     v-decorator="['strategy_name', { rules: [{ required: true, message: $t('trading-assistant.validation.strategyNameRequired') }] }]"
-                    :placeholder="$t('trading-assistant.placeholders.inputStrategyName')"
-                  />
+                    :placeholder="$t('trading-assistant.placeholders.inputStrategyName')" />
                 </a-form-item>
 
-                <a-form-item :label="isEditMode ? $t('trading-assistant.form.symbol') : $t('trading-assistant.form.symbols')">
+                <a-form-item
+                  :label="isEditMode ? $t('trading-assistant.form.symbol') : $t('trading-assistant.form.symbols')">
                   <!-- 编辑模式：单选 -->
                   <a-select
                     v-if="isEditMode"
@@ -406,13 +400,11 @@
                     :filter-option="filterWatchlistOption"
                     :loading="loadingWatchlist"
                     @change="handleWatchlistSymbolChange"
-                    :getPopupContainer="(triggerNode) => triggerNode.parentNode"
-                  >
+                    :getPopupContainer="(triggerNode) => triggerNode.parentNode">
                     <a-select-option
                       v-for="item in watchlist"
                       :key="`${item.market}:${item.symbol}`"
-                      :value="`${item.market}:${item.symbol}`"
-                    >
+                      :value="`${item.market}:${item.symbol}`">
                       <div class="symbol-option">
                         <a-tag :color="getMarketColor(item.market)" style="margin-right: 8px; margin-bottom: 0;">
                           {{ item.market }}
@@ -433,13 +425,11 @@
                     :loading="loadingWatchlist"
                     @change="handleMultiSymbolChange"
                     :getPopupContainer="(triggerNode) => triggerNode.parentNode"
-                    :maxTagCount="3"
-                  >
+                    :maxTagCount="3">
                     <a-select-option
                       v-for="item in watchlist"
                       :key="`${item.market}:${item.symbol}`"
-                      :value="`${item.market}:${item.symbol}`"
-                    >
+                      :value="`${item.market}:${item.symbol}`">
                       <div class="symbol-option">
                         <a-tag :color="getMarketColor(item.market)" style="margin-right: 8px; margin-bottom: 0;">
                           {{ item.market }}
@@ -450,7 +440,8 @@
                     </a-select-option>
                   </a-select>
                   <div class="form-item-hint">
-                    {{ isEditMode ? $t('trading-assistant.form.symbolHintCrypto') : $t('trading-assistant.form.symbolsHint') }}
+                    {{ isEditMode ? $t('trading-assistant.form.symbolHintCrypto') :
+                      $t('trading-assistant.form.symbolsHint') }}
                   </div>
                 </a-form-item>
 
@@ -462,16 +453,14 @@
                         :min="10"
                         :step="100"
                         :precision="2"
-                        style="width: 100%"
-                      />
+                        style="width: 100%" />
                     </a-form-item>
                   </a-col>
                   <a-col :xs="24" :sm="24" :md="12" :lg="12">
                     <a-form-item :label="$t('trading-assistant.form.marketType')">
                       <a-radio-group
                         v-decorator="['market_type', { initialValue: 'swap' }]"
-                        @change="handleMarketTypeChange"
-                      >
+                        @change="handleMarketTypeChange">
                         <a-radio value="swap">{{ $t('trading-assistant.form.marketTypeFutures') }}</a-radio>
                         <a-radio value="spot">{{ $t('trading-assistant.form.marketTypeSpot') }}</a-radio>
                       </a-radio-group>
@@ -491,8 +480,7 @@
                         :max="form.getFieldValue('market_type') === 'spot' ? 1 : 125"
                         :step="1"
                         style="width: 100%"
-                        :disabled="form.getFieldValue('market_type') === 'spot'"
-                      />
+                        :disabled="form.getFieldValue('market_type') === 'spot'" />
                       <div class="form-item-hint">
                         <span v-if="form.getFieldValue('market_type') === 'spot'">
                           {{ $t('trading-assistant.form.spotLeverageFixed') }}
@@ -507,8 +495,7 @@
                     <a-form-item :label="$t('trading-assistant.form.tradeDirection')">
                       <a-radio-group
                         v-decorator="['trade_direction', { initialValue: 'long' }]"
-                        :disabled="form.getFieldValue('market_type') === 'spot'"
-                      >
+                        :disabled="form.getFieldValue('market_type') === 'spot'">
                         <a-radio value="long">{{ $t('trading-assistant.form.tradeDirectionLong') }}</a-radio>
                         <a-radio value="short" :disabled="form.getFieldValue('market_type') === 'spot'">
                           {{ $t('trading-assistant.form.tradeDirectionShort') }}
@@ -517,7 +504,10 @@
                           {{ $t('trading-assistant.form.tradeDirectionBoth') }}
                         </a-radio>
                       </a-radio-group>
-                      <div v-if="form.getFieldValue('market_type') === 'spot'" class="form-item-hint" style="color: #ff9800;">
+                      <div
+                        v-if="form.getFieldValue('market_type') === 'spot'"
+                        class="form-item-hint"
+                        style="color: #ff9800;">
                         {{ $t('trading-assistant.form.spotOnlyLongHint') }}
                       </div>
                     </a-form-item>
@@ -530,8 +520,7 @@
                       <a-select
                         v-decorator="['timeframe', { initialValue: '1H', rules: [{ required: true }] }]"
                         :placeholder="$t('trading-assistant.placeholders.selectKlinePeriod')"
-                        :getPopupContainer="(triggerNode) => triggerNode.parentNode"
-                      >
+                        :getPopupContainer="(triggerNode) => triggerNode.parentNode">
                         <a-select-option value="1m">{{ $t('trading-assistant.form.timeframe1m') }}</a-select-option>
                         <a-select-option value="5m">{{ $t('trading-assistant.form.timeframe5m') }}</a-select-option>
                         <a-select-option value="15m">{{ $t('trading-assistant.form.timeframe15m') }}</a-select-option>
@@ -567,8 +556,7 @@
                             :max="100"
                             :step="0.01"
                             :precision="4"
-                            style="width: 220px"
-                          />
+                            style="width: 220px" />
                         </a-form-item>
                       </a-col>
                       <a-col :span="12">
@@ -579,8 +567,7 @@
                             :max="1000"
                             :step="0.01"
                             :precision="4"
-                            style="width: 220px"
-                          />
+                            style="width: 220px" />
                         </a-form-item>
                       </a-col>
                     </a-row>
@@ -590,8 +577,7 @@
                         <a-form-item :label="$t('dashboard.indicator.backtest.field.trailingEnabled')">
                           <a-switch
                             v-decorator="['trailing_enabled', { valuePropName: 'checked', initialValue: false }]"
-                            @change="onTrailingToggle"
-                          />
+                            @change="onTrailingToggle" />
                         </a-form-item>
                       </a-col>
                       <a-col :span="12"></a-col>
@@ -607,8 +593,7 @@
                               :max="100"
                               :step="0.01"
                               :precision="4"
-                              style="width: 220px"
-                            />
+                              style="width: 220px" />
                           </a-form-item>
                         </a-col>
                         <a-col :span="12">
@@ -619,8 +604,7 @@
                               :max="1000"
                               :step="0.01"
                               :precision="4"
-                              style="width: 220px"
-                            />
+                              style="width: 220px" />
                           </a-form-item>
                         </a-col>
                       </a-row>
@@ -633,16 +617,14 @@
                         <a-form-item :label="$t('dashboard.indicator.backtest.field.trendAddEnabled')">
                           <a-switch
                             v-decorator="['trend_add_enabled', { valuePropName: 'checked', initialValue: false }]"
-                            @change="onTrendAddToggle"
-                          />
+                            @change="onTrendAddToggle" />
                         </a-form-item>
                       </a-col>
                       <a-col :span="12">
                         <a-form-item :label="$t('dashboard.indicator.backtest.field.dcaAddEnabled')">
                           <a-switch
                             v-decorator="['dca_add_enabled', { valuePropName: 'checked', initialValue: false }]"
-                            @change="onDcaAddToggle"
-                          />
+                            @change="onDcaAddToggle" />
                         </a-form-item>
                       </a-col>
                     </a-row>
@@ -656,8 +638,7 @@
                             :step="0.01"
                             :precision="4"
                             style="width: 220px"
-                            @change="onScaleParamsChange"
-                          />
+                            @change="onScaleParamsChange" />
                         </a-form-item>
                       </a-col>
                       <a-col :span="12">
@@ -669,8 +650,7 @@
                             :step="0.01"
                             :precision="4"
                             style="width: 220px"
-                            @change="onScaleParamsChange"
-                          />
+                            @change="onScaleParamsChange" />
                         </a-form-item>
                       </a-col>
                     </a-row>
@@ -684,8 +664,7 @@
                             :step="0.1"
                             :precision="4"
                             style="width: 220px"
-                            @change="onScaleParamsChange"
-                          />
+                            @change="onScaleParamsChange" />
                         </a-form-item>
                       </a-col>
                       <a-col :span="12">
@@ -697,8 +676,7 @@
                             :step="0.1"
                             :precision="4"
                             style="width: 220px"
-                            @change="onScaleParamsChange"
-                          />
+                            @change="onScaleParamsChange" />
                         </a-form-item>
                       </a-col>
                     </a-row>
@@ -712,8 +690,7 @@
                             :step="1"
                             :precision="0"
                             style="width: 220px"
-                            @change="onScaleParamsChange"
-                          />
+                            @change="onScaleParamsChange" />
                         </a-form-item>
                       </a-col>
                       <a-col :span="12">
@@ -725,8 +702,7 @@
                             :step="1"
                             :precision="0"
                             style="width: 220px"
-                            @change="onScaleParamsChange"
-                          />
+                            @change="onScaleParamsChange" />
                         </a-form-item>
                       </a-col>
                     </a-row>
@@ -736,12 +712,14 @@
                     <a-row :gutter="24">
                       <a-col :span="12">
                         <a-form-item :label="$t('dashboard.indicator.backtest.field.trendReduceEnabled')">
-                          <a-switch v-decorator="['trend_reduce_enabled', { valuePropName: 'checked', initialValue: false }]" />
+                          <a-switch
+                            v-decorator="['trend_reduce_enabled', { valuePropName: 'checked', initialValue: false }]" />
                         </a-form-item>
                       </a-col>
                       <a-col :span="12">
                         <a-form-item :label="$t('dashboard.indicator.backtest.field.adverseReduceEnabled')">
-                          <a-switch v-decorator="['adverse_reduce_enabled', { valuePropName: 'checked', initialValue: false }]" />
+                          <a-switch
+                            v-decorator="['adverse_reduce_enabled', { valuePropName: 'checked', initialValue: false }]" />
                         </a-form-item>
                       </a-col>
                     </a-row>
@@ -754,8 +732,7 @@
                             :max="1000"
                             :step="0.01"
                             :precision="4"
-                            style="width: 220px"
-                          />
+                            style="width: 220px" />
                         </a-form-item>
                       </a-col>
                       <a-col :span="12">
@@ -766,8 +743,7 @@
                             :max="1000"
                             :step="0.01"
                             :precision="4"
-                            style="width: 220px"
-                          />
+                            style="width: 220px" />
                         </a-form-item>
                       </a-col>
                     </a-row>
@@ -780,8 +756,7 @@
                             :max="100"
                             :step="0.1"
                             :precision="4"
-                            style="width: 220px"
-                          />
+                            style="width: 220px" />
                         </a-form-item>
                       </a-col>
                       <a-col :span="12">
@@ -792,8 +767,7 @@
                             :max="100"
                             :step="0.1"
                             :precision="4"
-                            style="width: 220px"
-                          />
+                            style="width: 220px" />
                         </a-form-item>
                       </a-col>
                     </a-row>
@@ -806,8 +780,7 @@
                             :max="50"
                             :step="1"
                             :precision="0"
-                            style="width: 100%"
-                          />
+                            style="width: 100%" />
                         </a-form-item>
                       </a-col>
                       <a-col :span="12">
@@ -818,8 +791,7 @@
                             :max="50"
                             :step="1"
                             :precision="0"
-                            style="width: 100%"
-                          />
+                            style="width: 100%" />
                         </a-form-item>
                       </a-col>
                     </a-row>
@@ -830,8 +802,7 @@
                       <a-col :span="12">
                         <a-form-item
                           :label="$t('dashboard.indicator.backtest.field.entryPct')"
-                          :help="$t('dashboard.indicator.backtest.hint.entryPctMax', { maxPct: Number(entryPctMaxUi || 0).toFixed(0) })"
-                        >
+                          :help="$t('dashboard.indicator.backtest.hint.entryPctMax', { maxPct: Number(entryPctMaxUi || 0).toFixed(0) })">
                           <a-input-number
                             v-decorator="['entry_pct', { initialValue: 100 }]"
                             :min="0"
@@ -839,8 +810,7 @@
                             :step="0.1"
                             :precision="4"
                             style="width: 220px"
-                            @change="onEntryPctChange"
-                          />
+                            @change="onEntryPctChange" />
                         </a-form-item>
                       </a-col>
                       <a-col :span="12"></a-col>
@@ -855,10 +825,7 @@
                       <a-icon type="robot" />
                       <span>{{ $t('trading-assistant.form.enableAiFilter') }}</span>
                     </div>
-                    <a-switch
-                      :checked="aiFilterEnabledUi"
-                      @change="onAiFilterToggle"
-                    />
+                    <a-switch :checked="aiFilterEnabledUi" @change="onAiFilterToggle" />
                   </div>
                   <div class="ai-filter-hint">{{ $t('trading-assistant.form.enableAiFilterHint') }}</div>
                 </div>
@@ -875,10 +842,10 @@
                 <a-radio-group
                   v-decorator="['execution_mode', { initialValue: 'signal' }]"
                   :disabled="!canUseLiveTrading"
-                  @change="onExecutionModeChange"
-                >
+                  @change="onExecutionModeChange">
                   <a-radio value="signal">{{ $t('trading-assistant.form.executionModeSignal') }}</a-radio>
-                  <a-radio value="live" :disabled="!canUseLiveTrading">{{ $t('trading-assistant.form.executionModeLive') }}</a-radio>
+                  <a-radio value="live" :disabled="!canUseLiveTrading">{{ $t('trading-assistant.form.executionModeLive')
+                  }}</a-radio>
                 </a-radio-group>
                 <div v-if="!canUseLiveTrading" class="form-item-hint" style="color: #ff9800;">
                   {{ $t('trading-assistant.form.liveTradingNotSupportedHint') }}
@@ -888,8 +855,7 @@
               <a-form-item :label="$t('trading-assistant.form.notifyChannels')">
                 <a-checkbox-group
                   v-decorator="['notify_channels', { initialValue: ['browser'] }]"
-                  @change="onNotifyChannelsChange"
-                >
+                  @change="onNotifyChannelsChange">
                   <a-checkbox value="browser">{{ $t('trading-assistant.notify.browser') }}</a-checkbox>
                   <a-checkbox value="email">{{ $t('trading-assistant.notify.email') }}</a-checkbox>
                   <a-checkbox value="telegram">{{ $t('trading-assistant.notify.telegram') }}</a-checkbox>
@@ -903,8 +869,7 @@
                 v-if="notifyChannelsUi.includes('telegram') || notifyChannelsUi.includes('email') || notifyChannelsUi.includes('discord')"
                 type="info"
                 showIcon
-                style="margin-bottom: 16px"
-              >
+                style="margin-bottom: 16px">
                 <template #message>
                   <span>
                     {{ $t('trading-assistant.form.notificationFromProfile') || '通知将发送到您在个人中心配置的地址' }}
@@ -924,8 +889,7 @@
                   show-icon
                   style="margin-bottom: 12px;"
                   :message="$t('trading-assistant.form.liveTradingConfigTitle')"
-                  :description="$t('trading-assistant.form.liveTradingConfigHint')"
-                />
+                  :description="$t('trading-assistant.form.liveTradingConfigHint')" />
 
                 <!-- ========== Broker Configuration (US/HK Stocks) ========== -->
                 <template v-if="isIBKRMarket">
@@ -937,13 +901,8 @@
                       }]"
                       :placeholder="$t('trading-assistant.placeholders.selectBroker')"
                       :getPopupContainer="getModalPopupContainer"
-                      @change="handleBrokerSelectChange"
-                    >
-                      <a-select-option
-                        v-for="broker in brokerOptions"
-                        :key="broker.value"
-                        :value="broker.value"
-                      >
+                      @change="handleBrokerSelectChange">
+                      <a-select-option v-for="broker in brokerOptions" :key="broker.value" :value="broker.value">
                         {{ broker.displayName }}
                       </a-select-option>
                     </a-select>
@@ -956,15 +915,13 @@
                       show-icon
                       style="margin-bottom: 16px;"
                       :message="$t('trading-assistant.form.ibkrConnectionTitle')"
-                      :description="$t('trading-assistant.form.ibkrConnectionHint')"
-                    />
+                      :description="$t('trading-assistant.form.ibkrConnectionHint')" />
 
                     <a-form-item :label="$t('trading-assistant.form.ibkrHost')">
                       <a-input
                         v-decorator="['ibkr_host', { initialValue: '127.0.0.1' }]"
                         placeholder="127.0.0.1"
-                        @change="handleApiConfigChange"
-                      />
+                        @change="handleApiConfigChange" />
                     </a-form-item>
 
                     <a-form-item :label="$t('trading-assistant.form.ibkrPort')">
@@ -974,8 +931,7 @@
                         :min="1"
                         :max="65535"
                         style="width: 100%"
-                        @change="handleApiConfigChange"
-                      />
+                        @change="handleApiConfigChange" />
                       <div class="form-item-hint">{{ $t('trading-assistant.form.ibkrPortHint') }}</div>
                     </a-form-item>
 
@@ -986,16 +942,14 @@
                         :min="1"
                         :max="999"
                         style="width: 100%"
-                        @change="handleApiConfigChange"
-                      />
+                        @change="handleApiConfigChange" />
                     </a-form-item>
 
                     <a-form-item :label="$t('trading-assistant.form.ibkrAccount')">
                       <a-input
                         v-decorator="['ibkr_account', { initialValue: '' }]"
                         :placeholder="$t('trading-assistant.placeholders.ibkrAccount')"
-                        @change="handleApiConfigChange"
-                      />
+                        @change="handleApiConfigChange" />
                       <div class="form-item-hint">{{ $t('trading-assistant.form.ibkrAccountHint') }}</div>
                     </a-form-item>
                   </template>
@@ -1014,13 +968,8 @@
                       }]"
                       :placeholder="$t('trading-assistant.placeholders.selectBroker')"
                       :getPopupContainer="getModalPopupContainer"
-                      @change="handleForexBrokerSelectChange"
-                    >
-                      <a-select-option
-                        v-for="broker in forexBrokerOptions"
-                        :key="broker.value"
-                        :value="broker.value"
-                      >
+                      @change="handleForexBrokerSelectChange">
+                      <a-select-option v-for="broker in forexBrokerOptions" :key="broker.value" :value="broker.value">
                         {{ broker.displayName }}
                       </a-select-option>
                     </a-select>
@@ -1033,8 +982,7 @@
                       show-icon
                       style="margin-bottom: 16px;"
                       :message="$t('trading-assistant.form.mt5ConnectionTitle')"
-                      :description="$t('trading-assistant.form.mt5ConnectionHint')"
-                    />
+                      :description="$t('trading-assistant.form.mt5ConnectionHint')" />
 
                     <a-form-item :label="$t('trading-assistant.form.mt5Server')">
                       <a-input
@@ -1042,8 +990,7 @@
                           rules: [{ required: true, message: $t('trading-assistant.validation.mt5ServerRequired') }]
                         }]"
                         :placeholder="$t('trading-assistant.placeholders.mt5Server')"
-                        @change="handleApiConfigChange"
-                      />
+                        @change="handleApiConfigChange" />
                       <div class="form-item-hint">{{ $t('trading-assistant.form.mt5ServerHint') }}</div>
                     </a-form-item>
 
@@ -1055,8 +1002,7 @@
                         :placeholder="$t('trading-assistant.placeholders.mt5Login')"
                         :min="1"
                         style="width: 100%"
-                        @change="handleApiConfigChange"
-                      />
+                        @change="handleApiConfigChange" />
                     </a-form-item>
 
                     <a-form-item :label="$t('trading-assistant.form.mt5Password')">
@@ -1065,16 +1011,14 @@
                           rules: [{ required: true, message: $t('trading-assistant.validation.mt5PasswordRequired') }]
                         }]"
                         :placeholder="$t('trading-assistant.placeholders.mt5Password')"
-                        @change="handleApiConfigChange"
-                      />
+                        @change="handleApiConfigChange" />
                     </a-form-item>
 
                     <a-form-item :label="$t('trading-assistant.form.mt5TerminalPath')">
                       <a-input
                         v-decorator="['mt5_terminal_path']"
                         :placeholder="$t('trading-assistant.placeholders.mt5TerminalPath')"
-                        @change="handleApiConfigChange"
-                      />
+                        @change="handleApiConfigChange" />
                       <div class="form-item-hint">{{ $t('trading-assistant.form.mt5TerminalPathHint') }}</div>
                     </a-form-item>
                   </template>
@@ -1093,13 +1037,8 @@
                       show-search
                       option-filter-prop="children"
                       :loading="loadingExchangeCredentials"
-                      @change="handleCredentialSelectChange"
-                    >
-                      <a-select-option
-                        v-for="cred in exchangeCredentials"
-                        :key="cred.id"
-                        :value="cred.id"
-                      >
+                      @change="handleCredentialSelectChange">
+                      <a-select-option v-for="cred in exchangeCredentials" :key="cred.id" :value="cred.id">
                         {{ formatCredentialLabel(cred) }}
                       </a-select-option>
                     </a-select>
@@ -1116,13 +1055,11 @@
                       allow-clear
                       show-search
                       option-filter-prop="children"
-                      @change="handleExchangeSelectChange"
-                    >
+                      @change="handleExchangeSelectChange">
                       <a-select-option
                         v-for="exchange in cryptoExchangeOptions"
                         :key="exchange.value"
-                        :value="exchange.value"
-                      >
+                        :value="exchange.value">
                         {{ exchange.displayName }}
                       </a-select-option>
                     </a-select>
@@ -1133,8 +1070,7 @@
                       v-decorator="['api_key', { rules: [{ required: true, message: $t('trading-assistant.validation.apiKeyRequired') }] }]"
                       :placeholder="$t('trading-assistant.placeholders.inputApiKey')"
                       autocomplete="new-password"
-                      @change="handleApiConfigChange"
-                    />
+                      @change="handleApiConfigChange" />
                   </a-form-item>
 
                   <a-form-item :label="$t('trading-assistant.form.secretKey')">
@@ -1142,50 +1078,45 @@
                       v-decorator="['secret_key', { rules: [{ required: true, message: $t('trading-assistant.validation.secretKeyRequired') }] }]"
                       :placeholder="$t('trading-assistant.placeholders.inputSecretKey')"
                       autocomplete="new-password"
-                      @change="handleApiConfigChange"
-                    />
+                      @change="handleApiConfigChange" />
                   </a-form-item>
 
-                  <a-form-item
-                    v-if="needsPassphrase"
-                    :label="$t('trading-assistant.form.passphrase')"
-                  >
+                  <a-form-item v-if="needsPassphrase" :label="$t('trading-assistant.form.passphrase')">
                     <a-input-password
                       v-decorator="['passphrase', { rules: [{ required: true, message: $t('trading-assistant.validation.passphraseRequired') }] }]"
                       :placeholder="$t('trading-assistant.placeholders.inputPassphrase')"
                       autocomplete="new-password"
-                      @change="handleApiConfigChange"
-                    />
+                      @change="handleApiConfigChange" />
+                  </a-form-item>
+
+                  <a-form-item
+                    v-if="showDemoTradingSwitch"
+                    :label="`${getExchangeDisplayName(currentExchangeId)} Demo Trading`"
+                    key="demo-trading-switch">
+                    <a-switch v-decorator="['enable_demo_trading', { valuePropName: 'checked', initialValue: false }]">
+                      <a-icon slot="checkedChildren" type="check" />
+                      <a-icon slot="unCheckedChildren" type="close" />
+                    </a-switch>
                   </a-form-item>
 
                   <a-form-item>
                     <a-checkbox
                       v-decorator="['save_credential', { valuePropName: 'checked', initialValue: false }]"
-                      @change="onSaveCredentialChange"
-                    >
+                      @change="onSaveCredentialChange">
                       {{ $t('trading-assistant.form.saveCredential') }}
                     </a-checkbox>
                   </a-form-item>
 
-                  <a-form-item
-                    v-if="saveCredentialUi"
-                    :label="$t('trading-assistant.form.credentialName')"
-                  >
+                  <a-form-item v-if="saveCredentialUi" :label="$t('trading-assistant.form.credentialName')">
                     <a-input
                       v-decorator="['credential_name']"
-                      :placeholder="$t('trading-assistant.placeholders.inputCredentialName')"
-                    />
+                      :placeholder="$t('trading-assistant.placeholders.inputCredentialName')" />
                   </a-form-item>
                 </template>
 
                 <!-- Test Connection Button (shared by both IBKR and Crypto) -->
                 <a-form-item>
-                  <a-button
-                    type="default"
-                    :loading="testing"
-                    @click="handleTestConnection"
-                    block
-                  >
+                  <a-button type="default" :loading="testing" @click="handleTestConnection" block>
                     <a-icon type="wallet" />
                     {{ $t('trading-assistant.form.testConnection') }}
                   </a-button>
@@ -1201,26 +1132,13 @@
 
       <template slot="footer">
         <a-button @click="handleCloseModal">{{ $t('trading-assistant.form.cancel') }}</a-button>
-        <a-button
-          v-show="currentStep > 0"
-          @click="handlePrev"
-        >
+        <a-button v-show="currentStep > 0" @click="handlePrev">
           {{ $t('trading-assistant.form.prev') }}
         </a-button>
-        <a-button
-          v-show="currentStep < 2"
-          type="primary"
-          @click="handleNext"
-          :loading="saving"
-        >
+        <a-button v-show="currentStep < 2" type="primary" @click="handleNext" :loading="saving">
           {{ $t('trading-assistant.form.next') }}
         </a-button>
-        <a-button
-          v-show="currentStep === 2"
-          type="primary"
-          @click="handleSubmit"
-          :loading="saving"
-        >
+        <a-button v-show="currentStep === 2" type="primary" @click="handleSubmit" :loading="saving">
           {{ editingStrategy ? $t('trading-assistant.form.confirmEdit') : $t('trading-assistant.form.confirmCreate') }}
         </a-button>
       </template>
@@ -1391,6 +1309,11 @@ export default {
       }
       return false
     },
+    // 是否显示模拟交易开关
+    showDemoTradingSwitch () {
+      // 目前仅支持 Binance 的 Demo Trading
+      return this.currentExchangeId && this.currentExchangeId.toLowerCase() === 'binance'
+    },
     // Broker options for US/HK stocks (with i18n support)
     brokerOptions () {
       return BROKER_OPTIONS.map(broker => {
@@ -1401,7 +1324,7 @@ export default {
           if (translated !== translationKey) {
             label = translated
           }
-        } catch (e) {}
+        } catch (e) { }
         if (!label) {
           label = broker.name || broker.value.toUpperCase()
         }
@@ -1421,7 +1344,7 @@ export default {
           if (translated !== translationKey) {
             label = translated
           }
-        } catch (e) {}
+        } catch (e) { }
         if (!label) {
           label = broker.name || broker.value.toUpperCase()
         }
@@ -1434,24 +1357,24 @@ export default {
     // Crypto exchange options only
     cryptoExchangeOptions () {
       return EXCHANGE_OPTIONS.map(exchange => {
-          let label = ''
-          try {
-            if (exchange.labelKey) {
-              const translationKey = `trading-assistant.exchangeNames.${exchange.labelKey}`
-              const translated = this.$t(translationKey)
-              if (translated !== translationKey) {
-                label = translated
-              }
+        let label = ''
+        try {
+          if (exchange.labelKey) {
+            const translationKey = `trading-assistant.exchangeNames.${exchange.labelKey}`
+            const translated = this.$t(translationKey)
+            if (translated !== translationKey) {
+              label = translated
             }
-          } catch (e) {}
-          if (!label) {
-            label = exchange.value.charAt(0).toUpperCase() + exchange.value.slice(1)
           }
-          return {
-            ...exchange,
-            displayName: label
-          }
-        })
+        } catch (e) { }
+        if (!label) {
+          label = exchange.value.charAt(0).toUpperCase() + exchange.value.slice(1)
+        }
+        return {
+          ...exchange,
+          displayName: label
+        }
+      })
     },
     // 策略分组显示
     groupedStrategies () {
@@ -1629,12 +1552,12 @@ export default {
         this.currentBrokerId = 'mt5'
         try {
           this.form && this.form.setFieldsValue && this.form.setFieldsValue({ forex_broker_id: 'mt5' })
-        } catch (e) {}
+        } catch (e) { }
       } else if (['USStock', 'HShare'].includes(this.selectedMarketCategory)) {
         this.currentBrokerId = 'ibkr'
         try {
           this.form && this.form.setFieldsValue && this.form.setFieldsValue({ broker_id: 'ibkr' })
-        } catch (e) {}
+        } catch (e) { }
       }
 
       // Markets without live trading support: force back to signal mode
@@ -1644,14 +1567,14 @@ export default {
         this.executionModeUi = 'signal'
         try {
           this.form && this.form.setFieldsValue && this.form.setFieldsValue({ execution_mode: 'signal' })
-        } catch (e) {}
+        } catch (e) { }
       }
 
       // Clear exchange selection when market changes (different markets use different exchanges)
       this.currentExchangeId = ''
       try {
         this.form && this.form.setFieldsValue && this.form.setFieldsValue({ exchange_id: undefined })
-      } catch (e) {}
+      } catch (e) { }
     },
     handleMultiSymbolChange (vals) {
       // vals: array like ["Crypto:BTC/USDT", "Crypto:ETH/USDT"]
@@ -1672,12 +1595,12 @@ export default {
         this.currentBrokerId = 'mt5'
         try {
           this.form && this.form.setFieldsValue && this.form.setFieldsValue({ forex_broker_id: 'mt5' })
-        } catch (e) {}
+        } catch (e) { }
       } else if (['USStock', 'HShare'].includes(this.selectedMarketCategory)) {
         this.currentBrokerId = 'ibkr'
         try {
           this.form && this.form.setFieldsValue && this.form.setFieldsValue({ broker_id: 'ibkr' })
-        } catch (e) {}
+        } catch (e) { }
       }
 
       // Markets without live trading support: force back to signal mode
@@ -1686,14 +1609,14 @@ export default {
         this.executionModeUi = 'signal'
         try {
           this.form && this.form.setFieldsValue && this.form.setFieldsValue({ execution_mode: 'signal' })
-        } catch (e) {}
+        } catch (e) { }
       }
 
       // Clear exchange selection when market changes
       this.currentExchangeId = ''
       try {
         this.form && this.form.setFieldsValue && this.form.setFieldsValue({ exchange_id: undefined })
-      } catch (e) {}
+      } catch (e) { }
     },
     async loadExchangeCredentials () {
       this.loadingExchangeCredentials = true
@@ -1774,7 +1697,7 @@ export default {
       this.saveCredentialUi = checked
       try {
         this.form && this.form.setFieldsValue && this.form.setFieldsValue({ save_credential: checked })
-      } catch (err) {}
+      } catch (err) { }
     },
     onExecutionModeChange (e) {
       const v = e && e.target ? e.target.value : e
@@ -1784,7 +1707,7 @@ export default {
         this.executionModeUi = 'signal'
         try {
           this.form && this.form.setFieldsValue && this.form.setFieldsValue({ execution_mode: 'signal' })
-        } catch (err) {}
+        } catch (err) { }
       }
     },
     onNotifyChannelsChange (vals) {
@@ -2521,7 +2444,7 @@ export default {
       // Ensure rc-form value is always in sync even if decorator event binding gets overridden.
       try {
         this.form && this.form.setFieldsValue && this.form.setFieldsValue({ enable_ai_filter: !!checked })
-      } catch (e) {}
+      } catch (e) { }
     },
     filterIndicatorOption (input, option) {
       const text = option.componentOptions.children[0].children[0].text
@@ -2642,11 +2565,13 @@ export default {
       }
 
       // Clear API fields when exchange changes, as we rely on "Saved credential"
+      // to auto-fill api_key/secret_key. User must re-enter if changing exchange.
       this.$nextTick(() => {
         const fieldsToClear = {
           api_key: undefined,
           secret_key: undefined,
-          passphrase: undefined
+          passphrase: undefined,
+          enable_demo_trading: false // Reset demo switch too
         }
         setTimeout(() => {
           this.form.setFieldsValue(fieldsToClear)
@@ -2836,7 +2761,8 @@ export default {
               exchange_id: values.exchange_id,
               api_key: values.api_key,
               secret_key: values.secret_key,
-              market_type: String(marketType || 'swap')
+              market_type: String(marketType || 'swap'),
+              enableDemoTrading: !!this.form.getFieldValue('enable_demo_trading')
             }
 
             if (this.needsPassphrase && values.passphrase) {
@@ -2910,7 +2836,7 @@ export default {
             if (marketType === 'spot') {
               this.form.setFieldsValue({ leverage: 1, trade_direction: 'long' })
             }
-          } catch (e) {}
+          } catch (e) { }
 
           // Init backtest-like UI states for Step 2 (Ant Form is not reactive).
           this.backtestCollapseKeys = ['risk']
@@ -2934,7 +2860,7 @@ export default {
           this.executionModeUi = execMode
           const chans = this.form.getFieldValue('notify_channels') || ['browser']
           this.notifyChannelsUi = Array.isArray(chans) ? chans : ['browser']
-        } catch (e) {}
+        } catch (e) { }
         this.currentStep++
       }
     },
@@ -3041,6 +2967,7 @@ export default {
                 credential_id: values.credential_id,
                 api_key: values.api_key,
                 secret_key: values.secret_key,
+                enableDemoTrading: !!values.enable_demo_trading,
                 passphrase: this.needsPassphrase ? values.passphrase : undefined
               }) : undefined,
               trading_config: {
@@ -3375,7 +3302,7 @@ export default {
                   }
 
                   // 确保文本可换行
-                  & > span {
+                  &>span {
                     word-break: break-word;
                     line-height: 1.5;
                     flex: 1;
@@ -3835,9 +3762,12 @@ export default {
             }
 
             @keyframes statusPulse {
-              0%, 100% {
+
+              0%,
+              100% {
                 opacity: 1;
               }
+
               50% {
                 opacity: 0.5;
               }
@@ -3870,14 +3800,14 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(248,250,252,0.9) 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.9) 100%);
       border-radius: @border-radius-lg;
       border: 2px dashed #e0e6ed;
       transition: all 0.3s ease;
 
       &:hover {
         border-color: @primary-color;
-        background: linear-gradient(135deg, rgba(24,144,255,0.02) 0%, rgba(24,144,255,0.05) 100%);
+        background: linear-gradient(135deg, rgba(24, 144, 255, 0.02) 0%, rgba(24, 144, 255, 0.05) 100%);
       }
 
       /deep/ .ant-empty-image {
@@ -4149,10 +4079,13 @@ export default {
       }
 
       @keyframes pulse {
-        0%, 100% {
+
+        0%,
+        100% {
           opacity: 1;
           transform: scale(1);
         }
+
         50% {
           opacity: 0.6;
           transform: scale(1.1);
@@ -4201,6 +4134,7 @@ export default {
             }
 
             .ant-tabs-tabpane {
+
               .trading-records,
               .position-records {
                 width: 100%;
@@ -4676,6 +4610,7 @@ export default {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -4721,5 +4656,4 @@ export default {
     }
   }
 }
-
 </style>
