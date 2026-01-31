@@ -498,9 +498,10 @@ IMPORTANT: Output Python code directly, without explanations, without descriptio
 
     def _template_code() -> str:
         # Fallback template that follows the project expectations.
+        clean_prompt = prompt.replace('\n', ' ')[:200]
         header = (
             f"my_indicator_name = \"Custom Indicator\"\n"
-            f"my_indicator_description = \"{prompt.replace('\\n', ' ')[:200]}\"\n\n"
+            f"my_indicator_description = \"{clean_prompt}\"\n\n"
         )
         body = (
             "df = df.copy()\n\n"

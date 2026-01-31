@@ -105,9 +105,6 @@ def login():
     user_agent = _get_user_agent()
     
     try:
-        from app.services.security_service import get_security_service
-        security = get_security_service()
-        
         data = request.get_json()
         if not data:
             return jsonify({'code': 400, 'msg': 'No data provided', 'data': None}), 400
@@ -119,18 +116,24 @@ def login():
         if not username or not password:
             return jsonify({'code': 400, 'msg': 'Missing username/email or password', 'data': None}), 400
         
-        # Step 1: Verify Turnstile (if enabled)
-        turnstile_ok, turnstile_msg = security.verify_turnstile(turnstile_token, ip_address)
-        if not turnstile_ok:
-            return jsonify({'code': 0, 'msg': turnstile_msg, 'data': None}), 400
-        
-        # Step 2: Check rate limiting
-        allowed, block_msg = security.check_login_allowed(username, ip_address)
-        if not allowed:
-            return jsonify({'code': 0, 'msg': block_msg, 'data': {'blocked': True}}), 429
-        
         is_demo = os.getenv('IS_DEMO_MODE', 'false').lower() == 'true'
         user = None
+        security = None
+        
+        # Skip security checks in single-user mode
+        if not _is_single_user_mode():
+            from app.services.security_service import get_security_service
+            security = get_security_service()
+            
+            # Step 1: Verify Turnstile (if enabled)
+            turnstile_ok, turnstile_msg = security.verify_turnstile(turnstile_token, ip_address)
+            if not turnstile_ok:
+                return jsonify({'code': 0, 'msg': turnstile_msg, 'data': None}), 400
+            
+            # Step 2: Check rate limiting
+            allowed, block_msg = security.check_login_allowed(username, ip_address)
+            if not allowed:
+                return jsonify({'code': 0, 'msg': block_msg, 'data': {'blocked': True}}), 429
         
         # Step 3: Authenticate
         if not _is_single_user_mode():
@@ -159,17 +162,19 @@ def login():
             user = authenticate_legacy(username, password)
         
         if not user:
-            # Record failed attempt
-            security.record_login_attempt(ip_address, 'ip', False, ip_address, user_agent)
-            security.record_login_attempt(username, 'account', False, ip_address, user_agent)
-            security.log_security_event('login_failed', None, ip_address, user_agent, 
-                                       {'username': username, 'reason': 'invalid_credentials'})
+            # Record failed attempt (skip in single-user mode)
+            if security:
+                security.record_login_attempt(ip_address, 'ip', False, ip_address, user_agent)
+                security.record_login_attempt(username, 'account', False, ip_address, user_agent)
+                security.log_security_event('login_failed', None, ip_address, user_agent, 
+                                           {'username': username, 'reason': 'invalid_credentials'})
             return jsonify({'code': 0, 'msg': 'Invalid credentials', 'data': None}), 401
         
         # Check user status
         if user.get('status') == 'disabled':
-            security.log_security_event('login_blocked', user.get('id'), ip_address, user_agent,
-                                       {'reason': 'account_disabled'})
+            if security:
+                security.log_security_event('login_blocked', user.get('id'), ip_address, user_agent,
+                                           {'reason': 'account_disabled'})
             return jsonify({'code': 0, 'msg': 'Account is disabled', 'data': None}), 403
         
         if user.get('status') == 'pending':
@@ -195,12 +200,13 @@ def login():
         if not token:
             return jsonify({'code': 500, 'msg': 'Token generation error', 'data': None}), 500
         
-        # Step 6: Record successful login
-        security.record_login_attempt(ip_address, 'ip', True, ip_address, user_agent)
-        security.record_login_attempt(username, 'account', True, ip_address, user_agent)
-        security.clear_login_attempts(ip_address, 'ip')
-        security.clear_login_attempts(username, 'account')
-        security.log_security_event('login_success', user.get('id'), ip_address, user_agent)
+        # Step 6: Record successful login (skip in single-user mode)
+        if security:
+            security.record_login_attempt(ip_address, 'ip', True, ip_address, user_agent)
+            security.record_login_attempt(username, 'account', True, ip_address, user_agent)
+            security.clear_login_attempts(ip_address, 'ip')
+            security.clear_login_attempts(username, 'account')
+            security.log_security_event('login_success', user.get('id'), ip_address, user_agent)
         
         # Build user info for frontend
         userinfo = {

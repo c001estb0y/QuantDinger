@@ -60,6 +60,9 @@ const vueConfig = {
   },
 
   chainWebpack: config => {
+    // Disable progress plugin to fix Node.js v24 compatibility issue
+    config.plugins.delete('progress')
+    
     config.resolve.alias.set('@$', resolve('src'))
 
     // fixed svg-loader by https://github.com/damianstasik/vue-svg-loader/issues/185#issuecomment-1126721069

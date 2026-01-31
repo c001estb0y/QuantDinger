@@ -13,13 +13,13 @@
         <div class="top">
           <div class="header">
             <a href="/">
-              <img src="~@/assets/logo.png" class="logo" alt="logo">
-              <!-- <span class="title">QuantDinger</span> -->
+              <img src="~@/assets/logo-icon.png" class="logo-icon" alt="logo">
+              <span class="title">KaiXingAI</span>
             </a>
           </div>
-          <!-- <div class="desc">
-            {{ $t('layouts.userLayout.title') }}
-          </div> -->
+          <div class="desc">
+            AI driven quantitative insights
+          </div>
         </div>
 
         <div class="main-content">
@@ -155,35 +155,31 @@ export default {
         text-align: center;
 
         .header {
-          height: 56px;
-          line-height: 56px;
+          height: auto;
+          line-height: 1;
+          display: flex;
+          justify-content: center;
 
-          .badge {
-            position: absolute;
-            display: inline-block;
-            line-height: 1;
-            vertical-align: middle;
-            margin-left: -12px;
-            margin-top: -10px;
-            opacity: 0.8;
+          a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
           }
 
-          .logo {
-            width: 342px; // approx 3.8:1 when height ~90px, keep responsive
-            max-width: 42vw;
-            height: auto;
-            vertical-align: middle;
-            margin-right: 0;
+          .logo-icon {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
             border-style: none;
           }
 
           .title {
-            font-size: 33px;
+            font-size: 36px;
             color: rgba(0, 0, 0, .85);
-            font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
-            font-weight: 600;
-            position: relative;
-            top: 2px;
+            font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            font-weight: 700;
+            letter-spacing: 2px;
           }
         }
         .desc {
@@ -240,10 +236,12 @@ export default {
 }
 
 @media (max-width: 576px) {
-  #userLayout.user-layout-wrapper .container .user-layout-content .top .header .logo {
-    width: 208px;
-    max-width: 70vw;
-    margin-top: 8px;
+  #userLayout.user-layout-wrapper .container .user-layout-content .top .header .logo-icon {
+    width: 60px;
+    height: 60px;
+  }
+  #userLayout.user-layout-wrapper .container .user-layout-content .top .header .title {
+    font-size: 28px;
   }
   #userLayout.user-layout-wrapper .container .user-layout-content .main {
     width: 92vw;
