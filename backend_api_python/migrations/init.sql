@@ -275,32 +275,36 @@ CREATE INDEX IF NOT EXISTS idx_notifications_is_read ON qd_strategy_notification
 -- 7. Indicator Codes
 -- =============================================================================
 
-CREATE TABLE IF NOT EXISTS qd_indicator_codes (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL DEFAULT 1 REFERENCES qd_users(id) ON DELETE CASCADE,
-    is_buy INTEGER NOT NULL DEFAULT 0,
-    end_time BIGINT NOT NULL DEFAULT 1,
-    name VARCHAR(255) NOT NULL DEFAULT '',
-    code TEXT,
-    description TEXT DEFAULT '',
-    publish_to_community INTEGER NOT NULL DEFAULT 0,
-    pricing_type VARCHAR(20) NOT NULL DEFAULT 'free',
-    price DECIMAL(10,2) NOT NULL DEFAULT 0,
-    is_encrypted INTEGER NOT NULL DEFAULT 0,
-    preview_image VARCHAR(500) DEFAULT '',
-    -- Review status fields (for admin review feature)
-    review_status VARCHAR(20) DEFAULT 'approved',  -- pending/approved/rejected
-    review_note TEXT DEFAULT '',
-    reviewed_at TIMESTAMP,
-    reviewed_by INTEGER,
-    createtime BIGINT,
-    updatetime BIGINT,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
+CREATE TABLE public.qd_indicator_codes (
+   id serial4 NOT NULL,
+   user_id int4 DEFAULT 1 NOT NULL,
+   is_buy int4 DEFAULT 0 NOT NULL,
+   end_time int8 DEFAULT 1 NOT NULL,
+   name varchar(255) DEFAULT ''::character varying NOT NULL,
+   code text NULL,
+   description text DEFAULT ''::text NULL,
+   publish_to_community int4 DEFAULT 0 NOT NULL,
+   pricing_type varchar(20) DEFAULT 'free'::character varying NOT NULL,
+   price numeric(10, 2) DEFAULT 0 NOT NULL,
+   is_encrypted int4 DEFAULT 0 NOT NULL,
+   preview_image varchar(500) DEFAULT ''::character varying NULL,
+   createtime int8 NULL,
+   updatetime int8 NULL,
+   created_at timestamp DEFAULT now(),
+   updated_at timestamp DEFAULT now(),
+   purchase_count int4 DEFAULT 0 NULL,
+   avg_rating numeric(3, 2) DEFAULT 0 NULL,
+   rating_count int4 DEFAULT 0 NULL,
+   view_count int4 DEFAULT 0 NULL,
+   review_status varchar(20) DEFAULT 'approved'::character varying NULL,
+   review_note text DEFAULT ''::text NULL,
+   reviewed_at timestamp NULL,
+   reviewed_by int4 NULL,
+   CONSTRAINT qd_indicator_codes_pkey PRIMARY KEY (id),
+   CONSTRAINT qd_indicator_codes_user_id_fkey FOREIGN KEY (user_id) REFERENCES qd_users(id) ON DELETE CASCADE
 );
-
-CREATE INDEX IF NOT EXISTS idx_indicator_codes_user_id ON qd_indicator_codes(user_id);
-CREATE INDEX IF NOT EXISTS idx_indicator_review_status ON qd_indicator_codes(review_status);
+CREATE INDEX idx_indicator_codes_user_id ON public.qd_indicator_codes USING btree (user_id);
+CREATE INDEX idx_indicator_review_status ON public.qd_indicator_codes USING btree (review_status);
 
 -- =============================================================================
 -- 8. AI Decisions
