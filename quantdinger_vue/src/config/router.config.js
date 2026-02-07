@@ -51,6 +51,13 @@ export const asyncRouterMap = [
         component: () => import('@/views/portfolio'),
         meta: { title: 'menu.dashboard.portfolio', keepAlive: true, icon: 'fund', permission: ['dashboard'] }
       },
+      // 期货策略
+      {
+        path: '/futures-strategy',
+        name: 'FuturesStrategy',
+        component: () => import('@/views/futures-strategy'),
+        meta: { title: 'menu.futures', keepAlive: true, icon: 'stock', permission: ['dashboard'] }
+      },
       // 用户管理 (admin only)
       {
         path: '/user-manage',

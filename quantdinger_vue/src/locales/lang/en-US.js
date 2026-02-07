@@ -563,6 +563,7 @@ const locale = {
   'dashboard.analysis.market.Crypto': 'Cryptocurrency',
   'dashboard.analysis.market.Forex': 'Forex',
   'dashboard.analysis.market.Futures': 'Futures',
+  'dashboard.analysis.market.CNFutures': 'China Futures',
   'dashboard.analysis.modal.history.title': 'Analysis History',
   'dashboard.analysis.modal.history.viewResult': 'View Result',
   'dashboard.analysis.modal.history.completeTime': 'Complete Time',

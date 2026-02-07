@@ -576,7 +576,18 @@ INSERT INTO qd_market_symbols (market, symbol, name, exchange, currency, is_acti
 ('Futures', 'ZS', 'Soybeans', 'CBOT', 'USD', 1, 1, 94),
 ('Futures', 'ZW', 'Wheat', 'CBOT', 'USD', 1, 1, 93),
 ('Futures', 'ES', 'S&P 500 E-mini', 'CME', 'USD', 1, 1, 92),
-('Futures', 'NQ', 'NASDAQ 100 E-mini', 'CME', 'USD', 1, 1, 91)
+('Futures', 'NQ', 'NASDAQ 100 E-mini', 'CME', 'USD', 1, 1, 91),
+-- CNFutures (China Futures)
+('CNFutures', 'IF', '沪深300股指', 'CFFEX', 'CNY', 1, 1, 100),
+('CNFutures', 'IC', '中证500股指', 'CFFEX', 'CNY', 1, 1, 99),
+('CNFutures', 'IH', '上证50股指', 'CFFEX', 'CNY', 1, 1, 98),
+('CNFutures', 'IM', '中证1000股指', 'CFFEX', 'CNY', 1, 1, 97),
+('CNFutures', 'AU', '黄金', 'SHFE', 'CNY', 1, 1, 96),
+('CNFutures', 'AG', '白银', 'SHFE', 'CNY', 1, 1, 95),
+('CNFutures', 'CU', '沪铜', 'SHFE', 'CNY', 1, 1, 94),
+('CNFutures', 'RB', '螺纹钢', 'SHFE', 'CNY', 1, 1, 93),
+('CNFutures', 'SC', '原油', 'INE', 'CNY', 1, 1, 92),
+('CNFutures', 'MA', '甲醇', 'CZCE', 'CNY', 1, 1, 91)
 ON CONFLICT (market, symbol) DO NOTHING;
 
 -- =============================================================================

@@ -563,6 +563,7 @@ const locale = {
   'dashboard.analysis.market.Crypto': '加密货币',
   'dashboard.analysis.market.Forex': '外汇',
   'dashboard.analysis.market.Futures': '期货',
+  'dashboard.analysis.market.CNFutures': '中国期货',
   'dashboard.analysis.modal.history.title': '历史分析记录',
   'dashboard.analysis.modal.history.viewResult': '查看结果',
   'dashboard.analysis.modal.history.completeTime': '完成时间',

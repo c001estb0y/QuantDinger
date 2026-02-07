@@ -35,13 +35,20 @@ const getColorList = () => {
 
 const updateTheme = (newPrimaryColor, silent = false) => {
   const hideMessage = silent ? null : message.loading(i18n.t('app.setting.theme.switching'), 0)
-  themeColor.changeColor(newPrimaryColor).finally(() => {
-    if (hideMessage) {
-      setTimeout(() => {
+  themeColor.changeColor(newPrimaryColor)
+    .then(() => {
+      if (hideMessage) {
+        setTimeout(() => {
+          hideMessage()
+        }, 10)
+      }
+    })
+    .catch((err) => {
+      console.warn('[Theme] Failed to change color:', err)
+      if (hideMessage) {
         hideMessage()
-      }, 10)
-    }
-  })
+      }
+    })
 }
 
 const updateColorWeak = colorWeak => {

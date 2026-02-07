@@ -416,7 +416,7 @@
         :okText="publishIndicator && publishIndicator.publish_to_community ? $t('dashboard.indicator.publish.update') : $t('dashboard.indicator.publish.confirm')"
         :cancelText="$t('common.cancel')"
       >
-        <a-form-model ref="publishForm" :model="publishForm" :rules="publishRules" layout="vertical">
+        <a-form-model :rules="publishRules" layout="vertical">
           <a-alert
             type="info"
             show-icon
@@ -910,12 +910,13 @@ export default {
             i18nKey: `dashboard.analysis.market.${key}`
           }))
         } else {
-          // Order: USStock > Crypto > Forex > Futures > HShare > AShare
+          // Order: USStock > Crypto > Forex > Futures > CNFutures > HShare > AShare
           marketTypes.value = [
             { value: 'USStock', i18nKey: 'dashboard.analysis.market.USStock' },
             { value: 'Crypto', i18nKey: 'dashboard.analysis.market.Crypto' },
             { value: 'Forex', i18nKey: 'dashboard.analysis.market.Forex' },
             { value: 'Futures', i18nKey: 'dashboard.analysis.market.Futures' },
+            { value: 'CNFutures', i18nKey: 'dashboard.analysis.market.CNFutures' },
             { value: 'HShare', i18nKey: 'dashboard.analysis.market.HShare' },
             { value: 'AShare', i18nKey: 'dashboard.analysis.market.AShare' }
           ]
@@ -926,12 +927,13 @@ export default {
           selectedMarketTab.value = marketTypes.value[0].value
         }
       } catch (error) {
-        // Order: USStock > Crypto > Forex > Futures > HShare > AShare
+        // Order: USStock > Crypto > Forex > Futures > CNFutures > HShare > AShare
         marketTypes.value = [
           { value: 'USStock', i18nKey: 'dashboard.analysis.market.USStock' },
           { value: 'Crypto', i18nKey: 'dashboard.analysis.market.Crypto' },
           { value: 'Forex', i18nKey: 'dashboard.analysis.market.Forex' },
           { value: 'Futures', i18nKey: 'dashboard.analysis.market.Futures' },
+          { value: 'CNFutures', i18nKey: 'dashboard.analysis.market.CNFutures' },
           { value: 'HShare', i18nKey: 'dashboard.analysis.market.HShare' },
           { value: 'AShare', i18nKey: 'dashboard.analysis.market.AShare' }
         ]
@@ -1678,12 +1680,13 @@ export default {
     // 获取市场名称（多语言）
     const getMarketName = (market) => {
       const marketMap = {
-        'AShare': 'dashboard.indicator.market.AShare',
-        'USStock': 'dashboard.indicator.market.USStock',
-        'HShare': 'dashboard.indicator.market.HShare',
-        'Crypto': 'dashboard.indicator.market.Crypto',
-        'Forex': 'dashboard.indicator.market.Forex',
-        'Futures': 'dashboard.indicator.market.Futures'
+        'AShare': 'dashboard.analysis.market.AShare',
+        'USStock': 'dashboard.analysis.market.USStock',
+        'HShare': 'dashboard.analysis.market.HShare',
+        'Crypto': 'dashboard.analysis.market.Crypto',
+        'Forex': 'dashboard.analysis.market.Forex',
+        'Futures': 'dashboard.analysis.market.Futures',
+        'CNFutures': 'dashboard.analysis.market.CNFutures'
       }
       const key = marketMap[market]
       return key && proxy?.$t ? proxy.$t(key) : market
@@ -1696,6 +1699,7 @@ export default {
         'Crypto': 'purple',
         'Forex': 'gold',
         'Futures': 'cyan',
+        'CNFutures': 'red',
         'AShare': 'blue',
         'HShare': 'orange'
       }

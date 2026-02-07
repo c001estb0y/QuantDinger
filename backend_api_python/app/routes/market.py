@@ -83,7 +83,7 @@ def get_public_config():
 @market_bp.route('/types', methods=['GET'])
 def get_market_types():
     """Return supported market types for the add-watchlist modal."""
-    desired_order = ['USStock', 'Crypto', 'Forex', 'Futures', 'HShare', 'AShare']
+    desired_order = ['USStock', 'Crypto', 'Forex', 'Futures', 'CNFutures', 'HShare', 'AShare']
     order_rank = {v: i for i, v in enumerate(desired_order)}
 
     def _normalize_item(x):
@@ -118,6 +118,16 @@ def get_market_types():
 
     # Normalize & force desired order (even if config overrides the list order).
     if isinstance(data, list) and data:
+        data = _sort_items(data)
+        # Ensure all market types in desired_order are included
+        existing_values = {item['value'] for item in data}
+        for market_type in desired_order:
+            if market_type not in existing_values:
+                data.append({
+                    'value': market_type,
+                    'i18nKey': f'dashboard.analysis.market.{market_type}'
+                })
+        # Re-sort to maintain desired order
         data = _sort_items(data)
     else:
         data = _sort_items(desired_order)

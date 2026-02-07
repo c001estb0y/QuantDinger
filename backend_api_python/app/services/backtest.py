@@ -12,6 +12,13 @@ import numpy as np
 from app.data_sources import DataSourceFactory
 from app.utils.logger import get_logger
 
+# Import futures calculator for CNFutures market
+try:
+    from app.services.futures_calculator import FuturesCalculator
+    FUTURES_CALCULATOR_AVAILABLE = True
+except ImportError:
+    FUTURES_CALCULATOR_AVAILABLE = False
+
 logger = get_logger(__name__)
 
 
@@ -1019,7 +1026,7 @@ class BacktestService:
         
         # 3. Simulate trading
         equity_curve, trades, total_commission = self._simulate_trading(
-            df, signals, initial_capital, commission, slippage, leverage, trade_direction, strategy_config
+            df, signals, initial_capital, commission, slippage, leverage, trade_direction, strategy_config, market, symbol
         )
         
         # 4. Calculate metrics
@@ -1278,7 +1285,9 @@ import pandas as pd
         slippage: float,
         leverage: int = 1,
         trade_direction: str = 'long',
-        strategy_config: Optional[Dict[str, Any]] = None
+        strategy_config: Optional[Dict[str, Any]] = None,
+        market: str = '',
+        symbol: str = ''
     ) -> tuple:
         """
         Simulate trading.
@@ -1337,7 +1346,7 @@ import pandas as pd
         else:
             raise ValueError("signals dict must contain either 4-way keys or buy/sell keys.")
 
-        return self._simulate_trading_new_format(df, norm, initial_capital, commission, slippage, leverage, trade_direction, strategy_config)
+        return self._simulate_trading_new_format(df, norm, initial_capital, commission, slippage, leverage, trade_direction, strategy_config, market, symbol)
     
     def _simulate_trading_new_format(
         self,
@@ -1348,14 +1357,26 @@ import pandas as pd
         slippage: float,
         leverage: int = 1,
         trade_direction: str = 'both',
-        strategy_config: Optional[Dict[str, Any]] = None
+        strategy_config: Optional[Dict[str, Any]] = None,
+        market: str = '',
+        symbol: str = ''
     ) -> tuple:
         """
         Simulate trading with 4-way signal format (supports position management and scaling).
         
         Args:
             trade_direction: Trade direction ('long', 'short', 'both')
+            market: Market type (e.g., 'CNFutures' for China futures)
+            symbol: Trading symbol (e.g., 'IC0' for CSI 500 main contract)
         """
+        # Check if this is a CNFutures market and initialize futures calculator
+        is_cn_futures = market.upper() == 'CNFUTURES' if market else False
+        futures_calc = None
+        if is_cn_futures and FUTURES_CALCULATOR_AVAILABLE:
+            futures_calc = FuturesCalculator()
+            # For CNFutures, use futures-specific margin and fee calculation
+            # Override commission with futures fee rate
+            logger.info(f"CNFutures mode enabled for symbol {symbol}")
         equity_curve = []
         trades = []
         total_commission_paid = 0

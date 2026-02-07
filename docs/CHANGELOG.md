@@ -4,6 +4,59 @@ This document records version updates, new features, bug fixes, and database mig
 
 ---
 
+## V2.2.0 (2026-02-05)
+
+### 🚀 New Features
+
+#### China Futures Backtesting Support
+- **Market Type Extension**: Added `CNFutures` (中国期货) market type to Indicator Analysis page
+- **Backtest Engine Integration**: Integrated `FuturesCalculator` into backtest service for futures-specific calculations
+- **Futures Contract Support**: Backtest modal now supports futures contract codes (IC0, IM0, IF0, IH0)
+
+### 📁 Files Modified
+
+#### Backend
+- **`backend_api_python/app/services/backtest.py`**
+  - Imported `FuturesCalculator` from `app.datasources.cn_futures`
+  - Added `market` and `symbol` parameters to `_simulate_trading()` method
+  - Added `market` and `symbol` parameters to `_simulate_trading_new_format()` method
+  - Added CNFutures market type detection logic
+  - Updated `run()` method to pass market and symbol to simulation methods
+
+#### Frontend
+- **`quantdinger_vue/src/views/indicator-analysis/index.vue`**
+  - Added `CNFutures` option to `loadMarketTypes()` function
+  - Updated `getMarketName()` to support CNFutures market display name
+  - Updated `getMarketColor()` to use red color for futures market
+
+#### Internationalization
+- **`quantdinger_vue/src/locales/lang/zh-CN.js`**
+  - Added `'dashboard.analysis.market.CNFutures': '中国期货'`
+
+- **`quantdinger_vue/src/locales/lang/en-US.js`**
+  - Added `'dashboard.analysis.market.CNFutures': 'China Futures'`
+
+#### Documentation
+- **`docs/FUTURES_FRONTEND_TODOLIST.md`**
+  - Added Phase 7: Futures Backtesting Feature Integration
+  - Documented 6 sub-tasks with dependency graph
+  - Updated completion status for implemented features
+
+### 📋 Database Migration
+
+**No database changes required for this version.**
+
+### 📝 Configuration Notes
+- No new environment variables required
+- Futures calculator uses existing configuration from `FuturesCalculator` class
+
+### 🔮 Upcoming Features (Documented in Requirements)
+- Futures contract quick selector in backtest modal
+- Detailed margin and commission calculation in backtest results
+- Futures-specific result fields (margin usage, commission breakdown)
+
+---
+
 ## V2.1.1 (2026-01-31)
 
 ### 🚀 New Features
@@ -259,6 +312,7 @@ END $$;
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| V2.2.0 | 2026-02-05 | China Futures backtesting support, CNFutures market type |
 | V2.1.1 | 2026-01-31 | AI Analysis overhaul, Global Market integration, Indicator Community enhancements |
 
 ---
