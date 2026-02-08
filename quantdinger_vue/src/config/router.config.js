@@ -58,6 +58,13 @@ export const asyncRouterMap = [
         component: () => import('@/views/futures-strategy'),
         meta: { title: 'menu.futures', keepAlive: true, icon: 'stock', permission: ['dashboard'] }
       },
+      // 结算价套利策略
+      {
+        path: '/settlement-strategy',
+        name: 'SettlementStrategy',
+        component: () => import('@/views/settlement-strategy'),
+        meta: { title: 'menu.settlement', keepAlive: true, icon: 'transaction', permission: ['dashboard'] }
+      },
       // 用户管理 (admin only)
       {
         path: '/user-manage',

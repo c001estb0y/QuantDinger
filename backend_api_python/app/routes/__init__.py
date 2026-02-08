@@ -25,6 +25,7 @@ def register_routes(app: Flask):
     from app.routes.community import community_bp
     from app.routes.fast_analysis import fast_analysis_bp
     from app.routes.cn_futures import cn_futures_bp
+    from app.routes.settlement_strategy import settlement_strategy_bp
     
     app.register_blueprint(health_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth')   # Auth routes
@@ -45,3 +46,4 @@ def register_routes(app: Flask):
     app.register_blueprint(community_bp, url_prefix='/api/community')
     app.register_blueprint(fast_analysis_bp, url_prefix='/api/fast-analysis')
     app.register_blueprint(cn_futures_bp, url_prefix='/api/cn-futures')  # CN Futures routes
+    app.register_blueprint(settlement_strategy_bp, url_prefix='/api/settlement-strategy')  # Settlement Arbitrage Strategy

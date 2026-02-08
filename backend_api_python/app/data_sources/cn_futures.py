@@ -506,3 +506,424 @@ class CNFuturesDataSource(BaseDataSource):
         except Exception as e:
             logger.error(f"Failed to get settlement price: {e}")
             return None
+
+    # ========== Minute-level data methods (for Settlement Arbitrage Strategy) ==========
+
+    def get_minute_bars(
+        self,
+        symbol: str,
+        period: int = 1,
+        count: int = 240,
+        start_date: Optional[str] = None
+    ) -> Optional['pd.DataFrame']:
+        """
+        Get minute-level K-line data as a pandas DataFrame.
+        
+        This method is designed for the Settlement Arbitrage Strategy,
+        returning data in DataFrame format with standard column names.
+        
+        Args:
+            symbol: Contract code ("IM0", "IC0", "IM2503", etc.)
+            period: K-line period in minutes (1, 5, 15, 30, 60)
+            count: Number of bars to fetch (default 240 = one trading day of 1-min bars)
+            start_date: Optional start date filter (YYYY-MM-DD)
+            
+        Returns:
+            pandas DataFrame with columns:
+                datetime, open, high, low, close, volume, amount
+            Returns None if data fetch fails.
+        """
+        if not AKSHARE_AVAILABLE:
+            logger.error("akshare not available for get_minute_bars")
+            return None
+
+        try:
+            import pandas as pd
+            product, contract_code, is_main = self._parse_symbol(symbol)
+            
+            # Map period to akshare parameter
+            period_str = str(period)
+            if period_str not in ('1', '5', '15', '30', '60'):
+                logger.warning(f"Unsupported minute period: {period}, using 1")
+                period_str = '1'
+            
+            # Primary source: akshare sina minute data
+            df = self._fetch_minute_bars_primary(contract_code, period_str)
+            
+            if df is None or df.empty:
+                # Fallback source
+                logger.info(f"Primary source failed for {contract_code}, trying fallback")
+                df = self._fetch_minute_bars_fallback(contract_code, product, period_str)
+            
+            if df is None or df.empty:
+                logger.warning(f"No minute data available for {symbol}")
+                return None
+            
+            # Standardize columns
+            df = self._standardize_minute_df(df)
+            
+            if df.empty:
+                return None
+            
+            # Filter by start_date if provided
+            if start_date:
+                try:
+                    start_dt = pd.Timestamp(start_date)
+                    df = df[df['datetime'] >= start_dt]
+                except Exception as e:
+                    logger.warning(f"Invalid start_date filter '{start_date}': {e}")
+            
+            # Sort by datetime ascending
+            df = df.sort_values('datetime').reset_index(drop=True)
+            
+            # Limit to requested count (take latest)
+            if len(df) > count:
+                df = df.tail(count).reset_index(drop=True)
+            
+            # Validate data integrity
+            df = self._validate_minute_data(df)
+            
+            logger.info(
+                f"get_minute_bars: {symbol} ({contract_code}) period={period}m, "
+                f"got {len(df)} bars"
+                + (f", range: {df['datetime'].iloc[0]} ~ {df['datetime'].iloc[-1]}" if not df.empty else "")
+            )
+            
+            return df
+            
+        except Exception as e:
+            logger.error(f"get_minute_bars failed for {symbol}: {e}", exc_info=True)
+            return None
+
+    def _fetch_minute_bars_primary(
+        self, contract_code: str, period: str
+    ) -> Optional['pd.DataFrame']:
+        """
+        Fetch minute bars using primary source (akshare sina).
+        
+        Args:
+            contract_code: Full contract code (e.g., "IM2503")
+            period: Period string ("1", "5", "15", "30", "60")
+            
+        Returns:
+            Raw DataFrame or None
+        """
+        try:
+            df = ak.futures_zh_minute_sina(symbol=contract_code, period=period)
+            if df is not None and not df.empty:
+                return df
+        except Exception as e:
+            logger.warning(f"Primary minute fetch failed for {contract_code}: {e}")
+        return None
+
+    def _fetch_minute_bars_fallback(
+        self, contract_code: str, product: str, period: str
+    ) -> Optional['pd.DataFrame']:
+        """
+        Fetch minute bars using fallback source.
+        
+        Tries alternative akshare APIs or data sources.
+        
+        Args:
+            contract_code: Full contract code
+            product: Product code (IC, IM, etc.)
+            period: Period string
+            
+        Returns:
+            Raw DataFrame or None
+        """
+        # Fallback 1: Try with main contract symbol
+        try:
+            main_symbol = f"{product}0"
+            df = ak.futures_zh_minute_sina(symbol=main_symbol, period=period)
+            if df is not None and not df.empty:
+                return df
+        except Exception as e:
+            logger.debug(f"Fallback 1 failed for {product}: {e}")
+        
+        # Fallback 2: Try futures_zh_realtime for latest quotes
+        try:
+            df = ak.futures_zh_realtime(symbol=product)
+            if df is not None and not df.empty:
+                logger.info(f"Using realtime data as fallback for {product}")
+                return df
+        except Exception as e:
+            logger.debug(f"Fallback 2 failed for {product}: {e}")
+        
+        return None
+
+    def _standardize_minute_df(self, df: 'pd.DataFrame') -> 'pd.DataFrame':
+        """
+        Standardize minute DataFrame to uniform column names.
+        
+        Input columns may vary by data source. This method normalizes
+        them to: datetime, open, high, low, close, volume, amount
+        
+        Args:
+            df: Raw DataFrame from data source
+            
+        Returns:
+            Standardized DataFrame
+        """
+        import pandas as pd
+        
+        result = pd.DataFrame()
+        
+        # Map datetime column
+        dt_col = None
+        for col in ('datetime', 'date', '日期', '时间'):
+            if col in df.columns:
+                dt_col = col
+                break
+        
+        if dt_col is None and df.index.name in ('datetime', 'date'):
+            # datetime is the index
+            result['datetime'] = pd.to_datetime(df.index)
+        elif dt_col:
+            result['datetime'] = pd.to_datetime(df[dt_col])
+        else:
+            # Try using index as datetime
+            try:
+                result['datetime'] = pd.to_datetime(df.index)
+            except Exception:
+                logger.error("Cannot find datetime column in minute data")
+                return pd.DataFrame()
+        
+        # Map OHLCV columns
+        col_map = {
+            'open': ['open', '开盘价', '开盘', 'Open'],
+            'high': ['high', '最高价', '最高', 'High'],
+            'low': ['low', '最低价', '最低', 'Low'],
+            'close': ['close', '收盘价', '收盘', 'Close'],
+            'volume': ['volume', '成交量', '成交', 'Volume'],
+            'amount': ['amount', '成交额', 'Amount', 'turnover'],
+        }
+        
+        for target, candidates in col_map.items():
+            for candidate in candidates:
+                if candidate in df.columns:
+                    result[target] = pd.to_numeric(df[candidate], errors='coerce')
+                    break
+            if target not in result.columns:
+                if target == 'amount':
+                    # amount is optional, fill with 0
+                    result['amount'] = 0.0
+                else:
+                    logger.warning(f"Missing required column: {target}")
+                    return pd.DataFrame()
+        
+        # Drop rows with NaN in essential columns
+        result = result.dropna(subset=['datetime', 'open', 'high', 'low', 'close'])
+        
+        # Ensure numeric types
+        for col in ('open', 'high', 'low', 'close', 'volume', 'amount'):
+            if col in result.columns:
+                result[col] = result[col].astype(float)
+        
+        return result
+
+    def _validate_minute_data(self, df: 'pd.DataFrame') -> 'pd.DataFrame':
+        """
+        Validate and clean minute-level data.
+        
+        Removes invalid rows (zero prices, negative volumes, etc.)
+        
+        Args:
+            df: Standardized DataFrame
+            
+        Returns:
+            Cleaned DataFrame
+        """
+        if df.empty:
+            return df
+        
+        original_len = len(df)
+        
+        # Remove rows with zero or negative prices
+        price_cols = ['open', 'high', 'low', 'close']
+        for col in price_cols:
+            df = df[df[col] > 0]
+        
+        # Remove rows where high < low
+        df = df[df['high'] >= df['low']]
+        
+        # Remove rows with negative volume
+        df = df[df['volume'] >= 0]
+        
+        # Remove duplicate timestamps
+        df = df.drop_duplicates(subset=['datetime'], keep='last')
+        
+        removed = original_len - len(df)
+        if removed > 0:
+            logger.info(f"Minute data validation: removed {removed} invalid rows")
+        
+        return df.reset_index(drop=True)
+
+    def get_realtime_quote(self, symbol: str) -> Optional[Dict[str, Any]]:
+        """
+        Get real-time quote for a futures contract.
+        
+        Returns a more detailed quote than get_ticker(), designed for
+        the Settlement Arbitrage Strategy monitoring.
+        
+        Args:
+            symbol: Contract code (IC0, IM0, etc.)
+            
+        Returns:
+            Dict with: symbol, name, last, open, high, low, pre_close,
+                       bid, ask, volume, amount, timestamp
+            Returns None on failure.
+        """
+        if not AKSHARE_AVAILABLE:
+            return None
+        
+        try:
+            product, contract_code, is_main = self._parse_symbol(symbol)
+            product_info = self.PRODUCTS[product]
+            
+            df = ak.futures_zh_realtime(symbol=product)
+            
+            if df is None or df.empty:
+                return None
+            
+            # Find matching contract row
+            for idx, row in df.iterrows():
+                sym = str(row.get('symbol', row.get('代码', ''))).upper()
+                if sym == contract_code or (is_main and sym.startswith(product)):
+                    last = float(row.get('current_price', row.get('最新价', row.get('close', 0))))
+                    
+                    return {
+                        'symbol': contract_code,
+                        'product': product,
+                        'name': product_info['name'],
+                        'last': last,
+                        'open': float(row.get('open', row.get('开盘价', 0))),
+                        'high': float(row.get('high', row.get('最高价', 0))),
+                        'low': float(row.get('low', row.get('最低价', 0))),
+                        'pre_close': float(row.get('pre_close', row.get('昨收', 0))),
+                        'bid': float(row.get('bid', row.get('买价', last))),
+                        'ask': float(row.get('ask', row.get('卖价', last))),
+                        'volume': float(row.get('volume', row.get('成交量', 0))),
+                        'amount': float(row.get('amount', row.get('成交额', 0))),
+                        'multiplier': product_info['multiplier'],
+                        'margin_ratio': product_info['margin_ratio'],
+                        'timestamp': int(time.time()),
+                    }
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"get_realtime_quote failed for {symbol}: {e}")
+            return None
+
+    def is_trading_time(self) -> bool:
+        """
+        Check if current time is within futures trading hours.
+        
+        Chinese stock index futures trading hours:
+        - Morning: 09:30 - 11:30
+        - Afternoon: 13:00 - 15:00
+        
+        Returns:
+            True if within trading hours, False otherwise
+        """
+        now = datetime.now()
+        current_time = now.time()
+        
+        from datetime import time as dt_time
+        
+        # Morning session: 09:30 - 11:30
+        morning_start = dt_time(9, 30)
+        morning_end = dt_time(11, 30)
+        
+        # Afternoon session: 13:00 - 15:00
+        afternoon_start = dt_time(13, 0)
+        afternoon_end = dt_time(15, 0)
+        
+        return (
+            (morning_start <= current_time <= morning_end) or
+            (afternoon_start <= current_time <= afternoon_end)
+        )
+
+    def is_watch_period(self) -> bool:
+        """
+        Check if current time is within the strategy watch period (14:30 - 15:00).
+        
+        This is the key observation window for the Settlement Arbitrage Strategy.
+        
+        Returns:
+            True if within watch period
+        """
+        now = datetime.now()
+        current_time = now.time()
+        
+        from datetime import time as dt_time
+        return dt_time(14, 30) <= current_time <= dt_time(15, 0)
+
+    def get_trading_calendar(self, year: Optional[int] = None) -> Optional[List[str]]:
+        """
+        Get trading calendar (trading days) for Chinese futures market.
+        
+        Args:
+            year: Year to query. None for current year.
+            
+        Returns:
+            List of date strings (YYYY-MM-DD format) or None
+        """
+        if not AKSHARE_AVAILABLE:
+            return None
+        
+        try:
+            if year is None:
+                year = datetime.now().year
+            
+            # Use akshare to get trading calendar
+            df = ak.tool_trade_date_hist_sina()
+            
+            if df is not None and not df.empty:
+                # Filter by year
+                dates = []
+                for _, row in df.iterrows():
+                    date_val = str(row.get('trade_date', row.iloc[0]))
+                    if date_val.startswith(str(year)):
+                        dates.append(date_val[:10])  # YYYY-MM-DD
+                
+                return dates if dates else None
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"get_trading_calendar failed: {e}")
+            return None
+
+    def is_trading_day(self, date_str: Optional[str] = None) -> bool:
+        """
+        Check if a given date is a trading day.
+        
+        Args:
+            date_str: Date string (YYYY-MM-DD). None for today.
+            
+        Returns:
+            True if it's a trading day
+        """
+        try:
+            if date_str is None:
+                date_str = datetime.now().strftime('%Y-%m-%d')
+            
+            # Simple check: weekends are not trading days
+            from datetime import date as dt_date
+            d = datetime.strptime(date_str, '%Y-%m-%d').date()
+            if d.weekday() >= 5:  # Saturday=5, Sunday=6
+                return False
+            
+            # Try to check against trading calendar
+            calendar = self.get_trading_calendar(d.year)
+            if calendar:
+                return date_str in calendar
+            
+            # If calendar unavailable, assume weekdays are trading days
+            return True
+            
+        except Exception as e:
+            logger.warning(f"is_trading_day check failed: {e}")
+            return True  # Default to True to avoid missing signals

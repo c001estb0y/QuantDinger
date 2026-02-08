@@ -186,11 +186,62 @@ def get_hot_symbols():
     try:
         market = (request.args.get('market') or '').strip()
         limit = int(request.args.get('limit') or 10)
+        logger.info(f"get_hot_symbols called: market={market}, limit={limit}")
         hot = seed_get_hot_symbols(market=market, limit=limit)
+        logger.info(f"get_hot_symbols result: {len(hot)} items")
         return jsonify({'code': 1, 'msg': 'success', 'data': hot})
     except Exception as e:
         logger.error(f"get_hot_symbols failed: {str(e)}")
+        logger.error(traceback.format_exc())
         return jsonify({'code': 0, 'msg': str(e), 'data': []}), 500
+
+
+@market_bp.route('/symbols/init-cnfutures', methods=['POST'])
+def init_cnfutures_symbols():
+    """Initialize CNFutures hot symbols in database (temporary endpoint)."""
+    try:
+        symbols = [
+            ('CNFutures', 'IF', '沪深300股指', 'CFFEX', 'CNY', 1, 1, 100),
+            ('CNFutures', 'IC', '中证500股指', 'CFFEX', 'CNY', 1, 1, 99),
+            ('CNFutures', 'IH', '上证50股指', 'CFFEX', 'CNY', 1, 1, 98),
+            ('CNFutures', 'IM', '中证1000股指', 'CFFEX', 'CNY', 1, 1, 97),
+            ('CNFutures', 'AU', '黄金', 'SHFE', 'CNY', 1, 1, 96),
+            ('CNFutures', 'AG', '白银', 'SHFE', 'CNY', 1, 1, 95),
+            ('CNFutures', 'CU', '沪铜', 'SHFE', 'CNY', 1, 1, 94),
+            ('CNFutures', 'RB', '螺纹钢', 'SHFE', 'CNY', 1, 1, 93),
+            ('CNFutures', 'SC', '原油', 'INE', 'CNY', 1, 1, 92),
+            ('CNFutures', 'MA', '甲醇', 'CZCE', 'CNY', 1, 1, 91),
+        ]
+        
+        inserted = 0
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            for symbol in symbols:
+                try:
+                    cursor.execute("""
+                        INSERT INTO qd_market_symbols 
+                        (market, symbol, name, exchange, currency, is_active, is_hot, sort_order)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                        ON CONFLICT (market, symbol) DO UPDATE SET
+                            name = EXCLUDED.name,
+                            exchange = EXCLUDED.exchange,
+                            currency = EXCLUDED.currency,
+                            is_active = EXCLUDED.is_active,
+                            is_hot = EXCLUDED.is_hot,
+                            sort_order = EXCLUDED.sort_order
+                    """, symbol)
+                    inserted += 1
+                except Exception as e:
+                    logger.error(f"Error inserting {symbol[1]}: {e}")
+            conn.commit()
+        
+        logger.info(f"init_cnfutures_symbols: inserted {inserted} symbols")
+        return jsonify({'code': 1, 'msg': f'Inserted {inserted} CNFutures symbols', 'data': {'inserted': inserted}})
+    except Exception as e:
+        logger.error(f"init_cnfutures_symbols failed: {str(e)}")
+        logger.error(traceback.format_exc())
+        return jsonify({'code': 0, 'msg': str(e), 'data': None}), 500
+
 
 @market_bp.route('/watchlist/get', methods=['GET'])
 @login_required

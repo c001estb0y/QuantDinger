@@ -4,6 +4,152 @@ This document records version updates, new features, bug fixes, and database mig
 
 ---
 
+## V2.3.0 (2026-02-09)
+
+### 🚀 New Features
+
+#### China Futures Strategy Module (中国期货策略模块)
+- **Complete Futures Trading System**: Full-featured futures trading module with real-time quotes, position management, and strategy execution
+- **Settlement Arbitrage Strategy**: Index futures settlement price arbitrage strategy implementation
+- **Futures Calculator**: Professional futures calculation service including margin, P&L, and settlement price calculations
+- **Real-time Quote Panel**: Live market data display for futures contracts (IC/IF/IH/IM)
+- **Position Management**: Complete position tracking with real-time P&L calculation
+- **Trade History**: Detailed trade execution history with filtering and export capabilities
+- **Strategy Panel**: Strategy configuration and execution control interface
+- **Futures Notification Service**: Dedicated notification system for futures trading alerts
+
+### 📁 Files Added/Modified
+
+#### Backend - New Files
+- **`backend_api_python/app/data_sources/cn_futures.py`** - China futures data source implementation
+- **`backend_api_python/app/models/futures.py`** - Futures data models and schemas
+- **`backend_api_python/app/routes/cn_futures.py`** - Futures API endpoints
+- **`backend_api_python/app/services/futures_calculator.py`** - Futures calculation service
+- **`backend_api_python/app/services/futures_notification.py`** - Futures notification service
+- **`backend_api_python/app/services/futures_strategy_executor.py`** - Strategy execution engine
+- **`backend_api_python/scripts/add_cnfutures_symbols.py`** - Script to add futures symbols to database
+
+#### Backend - Modified Files
+- **`backend_api_python/app/data_sources/factory.py`** - Added CNFutures data source factory
+- **`backend_api_python/app/routes/__init__.py`** - Registered futures routes
+- **`backend_api_python/app/routes/market.py`** - Extended market routes for futures
+- **`backend_api_python/app/services/backtest.py`** - Enhanced backtest service for futures
+- **`backend_api_python/migrations/init.sql`** - Added futures-related database tables
+
+#### Frontend - New Files
+- **`quantdinger_vue/src/api/cn_futures.js`** - Futures API client
+- **`quantdinger_vue/src/views/futures-strategy/index.vue`** - Main futures strategy page
+- **`quantdinger_vue/src/views/futures-strategy/components/ContractSelector.vue`** - Contract selection component
+- **`quantdinger_vue/src/views/futures-strategy/components/PnlChart.vue`** - P&L chart visualization
+- **`quantdinger_vue/src/views/futures-strategy/components/PositionTable.vue`** - Position display table
+- **`quantdinger_vue/src/views/futures-strategy/components/QuotePanel.vue`** - Real-time quote panel
+- **`quantdinger_vue/src/views/futures-strategy/components/StrategyPanel.vue`** - Strategy control panel
+- **`quantdinger_vue/src/views/futures-strategy/components/TradeHistory.vue`** - Trade history component
+
+#### Frontend - Modified Files
+- **`quantdinger_vue/src/components/SettingDrawer/settingConfig.js`** - Added futures settings
+- **`quantdinger_vue/src/config/router.config.js`** - Added futures strategy route
+- **`quantdinger_vue/src/locales/lang/en-US.js`** - Added English translations
+- **`quantdinger_vue/src/locales/lang/zh-CN.js`** - Added Chinese translations
+- **`quantdinger_vue/src/views/indicator-analysis/index.vue`** - Enhanced indicator analysis
+
+#### Strategy Templates
+- **`strategies/README.md`** - Strategy development documentation
+- **`strategies/index_futures_settlement_arbitrage.py`** - Settlement arbitrage strategy
+- **`strategies/strategy_template.py`** - Base strategy template
+
+#### Testing
+- **`backend_api_python/tests/test_cn_futures.py`** - Futures unit tests
+- **`backend_api_python/tests/test_futures_integration.py`** - Integration tests
+- **`backend_api_python/run_futures_test.py`** - Futures test runner
+- **`backend_api_python/run_all_tests.py`** - Complete test suite runner
+- **`backend_api_python/validate_futures.py`** - Futures validation script
+- **`backend_api_python/check_mvp.py`** - MVP checklist validator
+
+#### Build & Deployment
+- **`build-and-start.bat`** - Windows build and start script
+
+### 📋 Database Migration
+
+**Run the following SQL on your PostgreSQL database before deploying V2.3.0:**
+
+```sql
+-- ============================================================
+-- QuantDinger V2.3.0 Database Migration
+-- China Futures Strategy Tables
+-- ============================================================
+
+-- 1. Futures Positions Table
+CREATE TABLE IF NOT EXISTS qd_futures_positions (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES qd_users(id) ON DELETE CASCADE,
+    symbol VARCHAR(20) NOT NULL,
+    direction VARCHAR(10) NOT NULL,  -- 'long' or 'short'
+    quantity INTEGER NOT NULL DEFAULT 0,
+    avg_price DECIMAL(18, 4) NOT NULL,
+    margin DECIMAL(18, 4) DEFAULT 0,
+    unrealized_pnl DECIMAL(18, 4) DEFAULT 0,
+    realized_pnl DECIMAL(18, 4) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_futures_positions_user ON qd_futures_positions(user_id);
+CREATE INDEX IF NOT EXISTS idx_futures_positions_symbol ON qd_futures_positions(symbol);
+
+-- 2. Futures Trades Table
+CREATE TABLE IF NOT EXISTS qd_futures_trades (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES qd_users(id) ON DELETE CASCADE,
+    symbol VARCHAR(20) NOT NULL,
+    direction VARCHAR(10) NOT NULL,
+    action VARCHAR(10) NOT NULL,  -- 'open' or 'close'
+    quantity INTEGER NOT NULL,
+    price DECIMAL(18, 4) NOT NULL,
+    commission DECIMAL(18, 4) DEFAULT 0,
+    pnl DECIMAL(18, 4) DEFAULT 0,
+    strategy_name VARCHAR(100),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_futures_trades_user ON qd_futures_trades(user_id);
+CREATE INDEX IF NOT EXISTS idx_futures_trades_symbol ON qd_futures_trades(symbol);
+CREATE INDEX IF NOT EXISTS idx_futures_trades_created ON qd_futures_trades(created_at DESC);
+
+-- 3. Futures Strategy Config Table
+CREATE TABLE IF NOT EXISTS qd_futures_strategy_config (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES qd_users(id) ON DELETE CASCADE,
+    strategy_name VARCHAR(100) NOT NULL,
+    config JSONB NOT NULL DEFAULT '{}',
+    is_active BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id, strategy_name)
+);
+
+CREATE INDEX IF NOT EXISTS idx_futures_strategy_user ON qd_futures_strategy_config(user_id);
+
+-- Migration Complete
+DO $$
+BEGIN
+    RAISE NOTICE '✅ QuantDinger V2.3.0 database migration completed!';
+END $$;
+```
+
+### 📝 Configuration Notes
+- Futures data requires valid market data subscription
+- Strategy execution requires proper broker connection configuration
+- Notification settings can be configured in the Settings page
+
+### 🔮 Upcoming Features
+- Multi-contract spread trading
+- Automated roll-over for expiring contracts
+- Advanced risk management dashboard
+- Historical settlement analysis tools
+
+---
+
 ## V2.2.0 (2026-02-05)
 
 ### 🚀 New Features
@@ -312,6 +458,7 @@ END $$;
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| V2.3.0 | 2026-02-09 | China Futures Strategy module, settlement arbitrage, real-time quotes, position management |
 | V2.2.0 | 2026-02-05 | China Futures backtesting support, CNFutures market type |
 | V2.1.1 | 2026-01-31 | AI Analysis overhaul, Global Market integration, Indicator Community enhancements |
 
