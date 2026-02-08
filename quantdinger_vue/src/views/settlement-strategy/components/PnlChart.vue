@@ -98,8 +98,17 @@
 import { getPnlSummary, getRiskEvents } from '@/api/settlement-strategy'
 
 const eventColumns = [
-  { title: '时间', dataIndex: 'timestamp', key: 'timestamp', width: 180 },
-  { title: '类型', dataIndex: 'event_type', key: 'event_type', width: 120,
+  {
+    title: '时间',
+    dataIndex: 'timestamp',
+    key: 'timestamp',
+    width: 180
+  },
+  {
+    title: '类型',
+    dataIndex: 'event_type',
+    key: 'event_type',
+    width: 120,
     customRender: (text) => {
       const map = {
         'position_limit': '仓位限制',
@@ -110,8 +119,16 @@ const eventColumns = [
       return map[text] || text
     }
   },
-  { title: '描述', dataIndex: 'message', key: 'message' },
-  { title: '操作', dataIndex: 'action_taken', key: 'action_taken', width: 100,
+  {
+    title: '描述',
+    dataIndex: 'message',
+    key: 'message'
+  },
+  {
+    title: '操作',
+    dataIndex: 'action_taken',
+    key: 'action_taken',
+    width: 100,
     customRender: (text) => text || '--'
   }
 ]

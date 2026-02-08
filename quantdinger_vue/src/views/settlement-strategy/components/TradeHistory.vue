@@ -49,20 +49,69 @@
 import { getTrades } from '@/api/settlement-strategy'
 
 const columns = [
-  { title: '平仓时间', dataIndex: 'exit_time', key: 'exit_time', width: 180 },
-  { title: '合约', dataIndex: 'symbol', key: 'symbol', width: 80 },
-  { title: '方向', dataIndex: 'direction', key: 'direction', width: 60, scopedSlots: { customRender: 'direction' } },
-  { title: '档位', dataIndex: 'level', key: 'level', width: 60,
+  {
+    title: '平仓时间',
+    dataIndex: 'exit_time',
+    key: 'exit_time',
+    width: 180
+  },
+  {
+    title: '合约',
+    dataIndex: 'symbol',
+    key: 'symbol',
+    width: 80
+  },
+  {
+    title: '方向',
+    dataIndex: 'direction',
+    key: 'direction',
+    width: 60,
+    scopedSlots: { customRender: 'direction' }
+  },
+  {
+    title: '档位',
+    dataIndex: 'level',
+    key: 'level',
+    width: 60,
     customRender: (text) => `L${text}`
   },
-  { title: '数量', dataIndex: 'quantity', key: 'quantity', width: 60 },
-  { title: '开仓价', dataIndex: 'entry_price', key: 'entry_price', width: 100 },
-  { title: '平仓价', dataIndex: 'exit_price', key: 'exit_price', width: 100 },
-  { title: '盈亏', dataIndex: 'net_pnl', key: 'net_pnl', width: 100, scopedSlots: { customRender: 'pnl' } },
-  { title: '手续费', dataIndex: 'fee', key: 'fee', width: 80,
+  {
+    title: '数量',
+    dataIndex: 'quantity',
+    key: 'quantity',
+    width: 60
+  },
+  {
+    title: '开仓价',
+    dataIndex: 'entry_price',
+    key: 'entry_price',
+    width: 100
+  },
+  {
+    title: '平仓价',
+    dataIndex: 'exit_price',
+    key: 'exit_price',
+    width: 100
+  },
+  {
+    title: '盈亏',
+    dataIndex: 'net_pnl',
+    key: 'net_pnl',
+    width: 100,
+    scopedSlots: { customRender: 'pnl' }
+  },
+  {
+    title: '手续费',
+    dataIndex: 'fee',
+    key: 'fee',
+    width: 80,
     customRender: (text) => text ? text.toFixed(2) : '--'
   },
-  { title: '持仓时长', dataIndex: 'holding_hours', key: 'holding_hours', width: 100,
+  {
+    title: '持仓时长',
+    dataIndex: 'holding_hours',
+    key: 'holding_hours',
+    width: 100,
     customRender: (text) => text ? text.toFixed(1) + 'h' : '--'
   }
 ]

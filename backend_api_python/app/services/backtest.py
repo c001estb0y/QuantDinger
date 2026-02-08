@@ -19,6 +19,13 @@ try:
 except ImportError:
     FUTURES_CALCULATOR_AVAILABLE = False
 
+# Import futures indicator helpers for minute-level strategy support
+try:
+    from app.services.futures_indicator_helpers import FuturesIndicatorHelpers
+    FUTURES_HELPERS_AVAILABLE = True
+except ImportError:
+    FUTURES_HELPERS_AVAILABLE = False
+
 logger = get_logger(__name__)
 
 
@@ -1020,7 +1027,9 @@ class BacktestService:
             'leverage': leverage,
             'initial_capital': initial_capital,
             'commission': commission,
-            'trade_direction': trade_direction
+            'trade_direction': trade_direction,
+            'market': market,
+            'symbol': symbol,
         }
         signals = self._execute_indicator(indicator_code, df, backtest_params)
         
@@ -1101,13 +1110,17 @@ class BacktestService:
         
         try:
             # Prepare execution environment
+            df_copy = df.copy()
+            # Ensure 'datetime' column exists for user scripts (index is time-based)
+            if 'datetime' not in df_copy.columns:
+                df_copy['datetime'] = df_copy.index
             local_vars = {
-                'df': df.copy(),
-                'open': df['open'],
-                'high': df['high'],
-                'low': df['low'],
-                'close': df['close'],
-                'volume': df['volume'],
+                'df': df_copy,
+                'open': df_copy['open'],
+                'high': df_copy['high'],
+                'low': df_copy['low'],
+                'close': df_copy['close'],
+                'volume': df_copy['volume'],
                 'signals': signals,
                 'np': np,
                 'pd': pd,
@@ -1123,6 +1136,21 @@ class BacktestService:
             
             # Add technical indicator functions
             local_vars.update(self._get_indicator_functions())
+            
+            # Inject futures indicator helpers for CNFutures market (FR-1~FR-6)
+            if backtest_params and FUTURES_HELPERS_AVAILABLE:
+                bp_market = backtest_params.get('market', '')
+                bp_symbol = backtest_params.get('symbol', '')
+                if bp_market and bp_market.upper() == 'CNFUTURES':
+                    futures_helpers = FuturesIndicatorHelpers(
+                        symbol=bp_symbol,
+                        daily_df=df,  # Pass daily K-line for fallback minute synthesis
+                    )
+                    local_vars.update(futures_helpers.get_all_functions())
+                    # Parse strategy metadata from code
+                    metadata = FuturesIndicatorHelpers.parse_strategy_metadata(code)
+                    if metadata:
+                        local_vars['strategy_metadata'] = metadata
             
             # Add safe builtins (keep full builtins to support lambda etc.)
             # but remove dangerous functions like eval, exec, open etc.
@@ -1191,6 +1219,7 @@ import pandas as pd
                 )
             
             # Extract signals from executed df
+            # Priority: 4-way > entry_signal (futures cross-day) > buy/sell
             if all(col in executed_df.columns for col in ['open_long', 'close_long', 'open_short', 'close_short']):
                 
                 signals = {
@@ -1202,6 +1231,23 @@ import pandas as pd
                 
                 # Convention: backtest uses 4-way signals only.
                 # Position sizing, TP/SL, trailing, etc must be handled by strategy_config / strategy logic.
+            elif 'entry_signal' in executed_df.columns:
+                # Futures cross-day signal format (FR-4)
+                # entry_signal: boolean, True = open position
+                # exit_type: string, 'next_open' | 'same_day' | 'stop_loss' | 'take_profit'
+                # entry_price_type: string, 'close' | 'open' | 'vwap'
+                signals = {
+                    'entry_signal': executed_df['entry_signal'].fillna(False).astype(bool),
+                    'exit_type': executed_df['exit_type'].fillna('next_open') if 'exit_type' in executed_df.columns else pd.Series('next_open', index=executed_df.index),
+                    'entry_price_type': executed_df['entry_price_type'].fillna('close') if 'entry_price_type' in executed_df.columns else pd.Series('close', index=executed_df.index),
+                    '_is_futures_cross_day': True,
+                }
+                # Also carry through any extra columns the user set (e.g. entry_level)
+                for extra_col in ['entry_level', 'entry_quantity']:
+                    if extra_col in executed_df.columns:
+                        signals[extra_col] = executed_df[extra_col]
+                # Pass the full executed_df for cross-day simulation
+                signals['_executed_df'] = executed_df
             elif all(col in executed_df.columns for col in ['buy', 'sell']):
                 # Simple buy/sell signals (recommended for indicator authors)
                 signals = {
@@ -1212,7 +1258,8 @@ import pandas as pd
             else:
                 raise ValueError(
                     "Indicator must define either 4-way columns "
-                    "(df['open_long'], df['close_long'], df['open_short'], df['close_short']) "
+                    "(df['open_long'], df['close_long'], df['open_short'], df['close_short']), "
+                    "futures cross-day column (df['entry_signal']), "
                     "or simple columns (df['buy'], df['sell'])."
                 )
             
@@ -1305,6 +1352,12 @@ import pandas as pd
 
         if all(k in signals for k in ['open_long', 'close_long', 'open_short', 'close_short']):
             norm = signals
+        elif signals.get('_is_futures_cross_day'):
+            # Futures cross-day signal format (FR-4): entry_signal + exit_type
+            # Delegate to specialized cross-day simulation engine
+            return self._simulate_trading_futures_cross_day(
+                df, signals, initial_capital, commission, slippage, leverage, market, symbol
+            )
         elif all(k in signals for k in ['buy', 'sell']):
             buy = signals['buy'].fillna(False).astype(bool)
             sell = signals['sell'].fillna(False).astype(bool)
@@ -1344,10 +1397,207 @@ import pandas as pd
                     '_both_mode': True,  # Flag to indicate auto-close opposing position
                 }
         else:
-            raise ValueError("signals dict must contain either 4-way keys or buy/sell keys.")
+            raise ValueError("signals dict must contain either 4-way keys, futures cross-day keys, or buy/sell keys.")
 
         return self._simulate_trading_new_format(df, norm, initial_capital, commission, slippage, leverage, trade_direction, strategy_config, market, symbol)
     
+    def _simulate_trading_futures_cross_day(
+        self,
+        df: pd.DataFrame,
+        signals: dict,
+        initial_capital: float,
+        commission: float,
+        slippage: float,
+        leverage: int = 1,
+        market: str = '',
+        symbol: str = ''
+    ) -> tuple:
+        """
+        Simulate futures cross-day trading (FR-4).
+
+        Handles the pattern: entry at today's close → exit at next day's open.
+        This is the core pattern for Settlement Arbitrage and similar strategies.
+
+        Signal format:
+            signals['entry_signal']: bool Series - True on days to open position
+            signals['exit_type']: str Series - 'next_open' | 'same_day'
+            signals['entry_price_type']: str Series - 'close' | 'open' | 'vwap'
+            signals['entry_level']: optional int Series - position level (1, 2, ...)
+            signals['entry_quantity']: optional int Series - number of contracts
+
+        Returns:
+            (equity_curve, trades, total_commission) - same format as other simulation methods
+        """
+        entry_signals = signals['entry_signal']
+        exit_types = signals.get('exit_type', pd.Series('next_open', index=df.index))
+        entry_price_types = signals.get('entry_price_type', pd.Series('close', index=df.index))
+        entry_levels = signals.get('entry_level', pd.Series(1, index=df.index))
+        entry_quantities = signals.get('entry_quantity', pd.Series(1, index=df.index))
+
+        # Get contract info for futures calculations
+        product = symbol[:2].upper() if symbol else ''
+        from app.data_sources.cn_futures import CNFuturesDataSource
+        product_info = CNFuturesDataSource.PRODUCTS.get(product, {})
+        multiplier = product_info.get('multiplier', 200)
+        fee_rate_open = 0.000023
+        fee_rate_close = 0.000023
+
+        equity_curve = []
+        trades = []
+        total_commission_paid = 0.0
+        capital = initial_capital
+
+        # State: pending entry from previous day
+        pending_entry = None  # (entry_idx, entry_price, entry_date, level, quantity)
+
+        for i in range(len(df)):
+            row = df.iloc[i]
+
+            # Get datetime for this row
+            if hasattr(row.name, 'strftime'):
+                current_time = row.name
+            elif 'datetime' in df.columns:
+                current_time = pd.Timestamp(row['datetime'])
+            else:
+                current_time = row.name
+
+            current_date_str = current_time.strftime('%Y-%m-%d') if hasattr(current_time, 'strftime') else str(current_time)
+
+            # Step 1: Close pending position from previous day
+            if pending_entry is not None:
+                entry_idx, entry_price, entry_date, level, qty = pending_entry
+
+                exit_price = float(row['open'])  # Exit at today's open
+
+                # Calculate P&L
+                gross_pnl = (exit_price - entry_price) * qty * multiplier
+                open_fee = entry_price * multiplier * qty * fee_rate_open
+                close_fee = exit_price * multiplier * qty * fee_rate_close
+                fee = open_fee + close_fee
+                net_pnl = gross_pnl - fee
+
+                capital += net_pnl
+                total_commission_paid += fee
+
+                trade = {
+                    'type': 'long',
+                    'entry_time': entry_date,
+                    'exit_time': current_date_str,
+                    'entry_price': round(entry_price, 2),
+                    'exit_price': round(exit_price, 2),
+                    'quantity': qty,
+                    'multiplier': multiplier,
+                    'gross_pnl': round(gross_pnl, 2),
+                    'fee': round(fee, 2),
+                    'pnl': round(net_pnl, 2),
+                    'return_pct': round(net_pnl / (entry_price * multiplier * qty) * 100, 4) if entry_price > 0 else 0,
+                    'level': level,
+                    'exit_reason': 'next_open',
+                }
+                trades.append(trade)
+                pending_entry = None
+
+            # Record equity
+            equity_curve.append({
+                'time': current_date_str,
+                'value': round(capital, 2),
+            })
+
+            # Step 2: Check for entry signal today
+            if i < len(entry_signals) and bool(entry_signals.iloc[i]):
+                exit_type = str(exit_types.iloc[i]) if i < len(exit_types) else 'next_open'
+                entry_price_type = str(entry_price_types.iloc[i]) if i < len(entry_price_types) else 'close'
+                level = int(entry_levels.iloc[i]) if i < len(entry_levels) else 1
+                qty = int(entry_quantities.iloc[i]) if i < len(entry_quantities) else 1
+
+                # Determine entry price
+                if entry_price_type == 'open':
+                    entry_price = float(row['open'])
+                elif entry_price_type == 'vwap':
+                    # If VWAP is available in the executed_df, use it
+                    executed_df = signals.get('_executed_df')
+                    if executed_df is not None and 'vwap' in executed_df.columns:
+                        entry_price = float(executed_df.iloc[i]['vwap'])
+                    else:
+                        entry_price = float(row['close'])
+                else:
+                    entry_price = float(row['close'])
+
+                if exit_type == 'next_open':
+                    # Store pending entry → will be closed at next day's open
+                    pending_entry = (i, entry_price, current_date_str, level, qty)
+                elif exit_type == 'same_day':
+                    # Same-day close: entry and exit on the same bar (close price)
+                    exit_price = float(row['close'])
+                    gross_pnl = 0  # Same price, no P&L
+                    fee = entry_price * multiplier * qty * fee_rate_open + exit_price * multiplier * qty * fee_rate_close
+                    net_pnl = gross_pnl - fee
+                    capital += net_pnl
+                    total_commission_paid += fee
+
+                    trades.append({
+                        'type': 'long',
+                        'entry_time': current_date_str,
+                        'exit_time': current_date_str,
+                        'entry_price': round(entry_price, 2),
+                        'exit_price': round(exit_price, 2),
+                        'quantity': qty,
+                        'multiplier': multiplier,
+                        'gross_pnl': round(gross_pnl, 2),
+                        'fee': round(fee, 2),
+                        'pnl': round(net_pnl, 2),
+                        'return_pct': 0,
+                        'level': level,
+                        'exit_reason': 'same_day',
+                    })
+
+        # Handle pending entry at end of data (close at last close price)
+        if pending_entry is not None and len(df) > 0:
+            entry_idx, entry_price, entry_date, level, qty = pending_entry
+            last_row = df.iloc[-1]
+            exit_price = float(last_row['close'])
+
+            if hasattr(last_row.name, 'strftime'):
+                exit_date = last_row.name.strftime('%Y-%m-%d')
+            elif 'datetime' in df.columns:
+                exit_date = pd.Timestamp(last_row['datetime']).strftime('%Y-%m-%d')
+            else:
+                exit_date = str(last_row.name)
+
+            gross_pnl = (exit_price - entry_price) * qty * multiplier
+            fee = entry_price * multiplier * qty * fee_rate_open + exit_price * multiplier * qty * fee_rate_close
+            net_pnl = gross_pnl - fee
+            capital += net_pnl
+            total_commission_paid += fee
+
+            trades.append({
+                'type': 'long',
+                'entry_time': entry_date,
+                'exit_time': exit_date,
+                'entry_price': round(entry_price, 2),
+                'exit_price': round(exit_price, 2),
+                'quantity': qty,
+                'multiplier': multiplier,
+                'gross_pnl': round(gross_pnl, 2),
+                'fee': round(fee, 2),
+                'pnl': round(net_pnl, 2),
+                'return_pct': round(net_pnl / (entry_price * multiplier * qty) * 100, 4) if entry_price > 0 else 0,
+                'level': level,
+                'exit_reason': 'end_of_data',
+            })
+
+            equity_curve.append({
+                'time': exit_date,
+                'value': round(capital, 2),
+            })
+
+        logger.info(
+            f"Futures cross-day simulation: {len(trades)} trades, "
+            f"final equity={capital:.2f}, total commission={total_commission_paid:.2f}"
+        )
+
+        return equity_curve, trades, total_commission_paid
+
     def _simulate_trading_new_format(
         self,
         df: pd.DataFrame,

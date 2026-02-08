@@ -4,6 +4,63 @@ This document records version updates, new features, bug fixes, and database mig
 
 ---
 
+## V2.3.1 (2026-02-09)
+
+### 🚀 New Features
+
+#### Futures Unified Backtest Engine (期货统一回测引擎)
+- **Cross-Day Trading Simulation (FR-4)**: New `_simulate_trading_futures_cross_day()` engine supporting the settlement arbitrage core pattern — entry at today's close, exit at next day's open
+- **Futures Indicator Helpers (FR-1~FR-6)**: New `FuturesIndicatorHelpers` module providing built-in helper functions for minute-level futures strategies, automatically injected when market type is `CNFutures`
+- **Strategy Metadata Parsing**: Auto-detect `# @strategy_type`, `# @timeframe` and other metadata directives from indicator code
+- **Entry Signal Format**: New `entry_signal` / `exit_type` / `entry_price_type` signal format for futures cross-day strategies, in addition to existing 4-way and buy/sell formats
+- **VWAP Entry Support**: Supports VWAP-based entry pricing when available in executed DataFrame
+- **Futures Fee Calculation**: Automatic contract multiplier and commission rate lookup from `CNFuturesDataSource.PRODUCTS`
+
+### 🐛 Bug Fixes
+- **Fixed `KeyError: 'datetime'`**: Backtest execution now auto-injects `datetime` column from DataFrame index when missing, preventing user script errors
+- **Fixed signal validation error**: Improved signal dict validation to accept futures cross-day format alongside existing formats
+
+### 🎨 UI/UX Improvements
+- **MonitorPanel.vue**: Refactored column definitions for better readability and maintainability
+- **PnlChart.vue**: Enhanced P&L chart with improved data visualization
+- **PositionTable.vue**: Enhanced position table with richer display fields
+- **TradeHistory.vue**: Enhanced trade history with more detailed trade information
+
+### 📁 Files Added/Modified
+
+#### Backend - New Files
+- **`backend_api_python/app/services/futures_indicator_helpers.py`** - Futures indicator helper functions module (FR-1~FR-6), provides `get_minute_kline()`, `get_settlement_price()`, `calc_vwap()`, etc.
+
+#### Backend - Modified Files
+- **`backend_api_python/app/services/backtest.py`** (+268 lines)
+  - Imported `FuturesIndicatorHelpers` with graceful fallback
+  - Added `market` / `symbol` parameters to backtest params dict
+  - Auto-inject `datetime` column in execution environment
+  - Auto-inject futures helper functions for CNFutures market
+  - New `entry_signal` signal extraction path (priority: 4-way > entry_signal > buy/sell)
+  - New `_simulate_trading_futures_cross_day()` method for cross-day simulation
+
+#### Frontend - Modified Files
+- **`quantdinger_vue/src/views/settlement-strategy/components/MonitorPanel.vue`** - Column definitions refactored to multi-line format
+- **`quantdinger_vue/src/views/settlement-strategy/components/PnlChart.vue`** - Enhanced chart features
+- **`quantdinger_vue/src/views/settlement-strategy/components/PositionTable.vue`** - Enhanced position display
+- **`quantdinger_vue/src/views/settlement-strategy/components/TradeHistory.vue`** - Enhanced trade history display
+
+#### Documentation - New Files
+- **`docs/china-futures/FUTURES_UNIFIED_BACKTEST_REQUIREMENT.md`** - Futures unified backtest system requirement document
+- **`docs/china-futures/FUTURES_UNIFIED_BACKTEST_TODOLIST.md`** - Futures unified backtest implementation todolist
+
+### 📋 Database Migration
+
+**No database changes required for this version.**
+
+### 📝 Configuration Notes
+- No new environment variables required
+- Futures indicator helpers are auto-loaded when `market=CNFutures` is selected in backtest
+- Strategy scripts can now use `# @strategy_type: settlement_arbitrage` metadata directives
+
+---
+
 ## V2.3.0 (2026-02-09)
 
 ### 🚀 New Features
@@ -458,6 +515,7 @@ END $$;
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| V2.3.1 | 2026-02-09 | Futures unified backtest engine, cross-day simulation, indicator helpers, UI enhancements |
 | V2.3.0 | 2026-02-09 | China Futures Strategy module, settlement arbitrage, real-time quotes, position management |
 | V2.2.0 | 2026-02-05 | China Futures backtesting support, CNFutures market type |
 | V2.1.1 | 2026-01-31 | AI Analysis overhaul, Global Market integration, Indicator Community enhancements |

@@ -121,8 +121,17 @@ const STATE_LABELS = {
 }
 
 const signalColumns = [
-  { title: '时间', dataIndex: 'timestamp', key: 'timestamp', width: 180 },
-  { title: '类型', dataIndex: 'signal_type', key: 'signal_type', width: 120,
+  {
+    title: '时间',
+    dataIndex: 'timestamp',
+    key: 'timestamp',
+    width: 180
+  },
+  {
+    title: '类型',
+    dataIndex: 'signal_type',
+    key: 'signal_type',
+    width: 120,
     customRender: (text) => {
       const map = {
         'buy_level_1': '🟢 买入L1',
@@ -133,20 +142,50 @@ const signalColumns = [
       return map[text] || text
     }
   },
-  { title: '合约', dataIndex: 'symbol', key: 'symbol', width: 80 },
-  { title: '价格', dataIndex: 'price', key: 'price', width: 100 },
-  { title: '基准价', dataIndex: 'base_price', key: 'base_price', width: 100 },
-  { title: '跌幅', dataIndex: 'drop_pct', key: 'drop_pct', width: 100,
+  {
+    title: '合约',
+    dataIndex: 'symbol',
+    key: 'symbol',
+    width: 80
+  },
+  {
+    title: '价格',
+    dataIndex: 'price',
+    key: 'price',
+    width: 100
+  },
+  {
+    title: '基准价',
+    dataIndex: 'base_price',
+    key: 'base_price',
+    width: 100
+  },
+  {
+    title: '跌幅',
+    dataIndex: 'drop_pct',
+    key: 'drop_pct',
+    width: 100,
     customRender: (text) => text ? (text * 100).toFixed(2) + '%' : '--'
   },
-  { title: '数量', dataIndex: 'quantity', key: 'quantity', width: 60 }
+  {
+    title: '数量',
+    dataIndex: 'quantity',
+    key: 'quantity',
+    width: 60
+  }
 ]
 
 export default {
   name: 'MonitorPanel',
   props: {
-    status: { type: Object, default: () => ({}) },
-    isRunning: { type: Boolean, default: false }
+    status: {
+      type: Object,
+      default: () => ({})
+    },
+    isRunning: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {

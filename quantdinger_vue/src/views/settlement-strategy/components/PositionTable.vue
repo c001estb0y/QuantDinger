@@ -53,20 +53,70 @@
 import { getPositions } from '@/api/settlement-strategy'
 
 const columns = [
-  { title: '合约', dataIndex: 'symbol', key: 'symbol', width: 80 },
-  { title: '方向', dataIndex: 'direction', key: 'direction', width: 60, scopedSlots: { customRender: 'direction' } },
-  { title: '档位', dataIndex: 'level', key: 'level', width: 60, scopedSlots: { customRender: 'level' } },
-  { title: '数量', dataIndex: 'quantity', key: 'quantity', width: 60 },
-  { title: '开仓价', dataIndex: 'entry_price', key: 'entry_price', width: 100 },
-  { title: '基准价', dataIndex: 'base_price', key: 'base_price', width: 100 },
-  { title: '跌幅', dataIndex: 'drop_pct', key: 'drop_pct', width: 80,
+  {
+    title: '合约',
+    dataIndex: 'symbol',
+    key: 'symbol',
+    width: 80
+  },
+  {
+    title: '方向',
+    dataIndex: 'direction',
+    key: 'direction',
+    width: 60,
+    scopedSlots: { customRender: 'direction' }
+  },
+  {
+    title: '档位',
+    dataIndex: 'level',
+    key: 'level',
+    width: 60,
+    scopedSlots: { customRender: 'level' }
+  },
+  {
+    title: '数量',
+    dataIndex: 'quantity',
+    key: 'quantity',
+    width: 60
+  },
+  {
+    title: '开仓价',
+    dataIndex: 'entry_price',
+    key: 'entry_price',
+    width: 100
+  },
+  {
+    title: '基准价',
+    dataIndex: 'base_price',
+    key: 'base_price',
+    width: 100
+  },
+  {
+    title: '跌幅',
+    dataIndex: 'drop_pct',
+    key: 'drop_pct',
+    width: 80,
     customRender: (text) => text ? (text * 100).toFixed(2) + '%' : '--'
   },
-  { title: '保证金', dataIndex: 'margin', key: 'margin', width: 100,
+  {
+    title: '保证金',
+    dataIndex: 'margin',
+    key: 'margin',
+    width: 100,
     customRender: (text) => text ? text.toFixed(0) + '元' : '--'
   },
-  { title: '浮盈', key: 'pnl', width: 100, scopedSlots: { customRender: 'pnl' } },
-  { title: '开仓时间', dataIndex: 'entry_time', key: 'entry_time', width: 180 }
+  {
+    title: '浮盈',
+    key: 'pnl',
+    width: 100,
+    scopedSlots: { customRender: 'pnl' }
+  },
+  {
+    title: '开仓时间',
+    dataIndex: 'entry_time',
+    key: 'entry_time',
+    width: 180
+  }
 ]
 
 export default {
