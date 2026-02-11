@@ -1114,6 +1114,14 @@ class BacktestService:
             # Ensure 'datetime' column exists for user scripts (index is time-based)
             if 'datetime' not in df_copy.columns:
                 df_copy['datetime'] = df_copy.index
+            
+            # Debug logging for df_copy structure
+            logger.debug(f"[_execute_indicator] df_copy shape: {df_copy.shape}")
+            logger.debug(f"[_execute_indicator] df_copy columns: {df_copy.columns.tolist()}")
+            logger.debug(f"[_execute_indicator] df_copy index type: {type(df_copy.index)}")
+            if len(df_copy) > 0:
+                logger.debug(f"[_execute_indicator] df_copy first row datetime: {df_copy['datetime'].iloc[0]}")
+            
             local_vars = {
                 'df': df_copy,
                 'open': df_copy['open'],
@@ -1144,7 +1152,7 @@ class BacktestService:
                 if bp_market and bp_market.upper() == 'CNFUTURES':
                     futures_helpers = FuturesIndicatorHelpers(
                         symbol=bp_symbol,
-                        daily_df=df,  # Pass daily K-line for fallback minute synthesis
+                        daily_df=df_copy,  # Pass daily K-line with datetime column for fallback minute synthesis
                     )
                     local_vars.update(futures_helpers.get_all_functions())
                     # Parse strategy metadata from code

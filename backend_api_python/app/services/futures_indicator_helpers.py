@@ -160,7 +160,12 @@ class FuturesIndicatorHelpers:
         """
         try:
             df = self._daily_df
+            if df is None or df.empty:
+                logger.debug(f"_synthesize_minute_from_daily: _daily_df is None or empty for {date_str}")
+                return None
+            
             target_date = pd.Timestamp(date_str).date()
+            logger.debug(f"_synthesize_minute_from_daily: looking for date {target_date} in {len(df)} daily bars")
 
             # Find the daily bar for this date
             daily_row = None
